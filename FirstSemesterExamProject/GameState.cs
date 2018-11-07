@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace FirstSemesterExamProject
 {
-    abstract class GameState
+    public abstract class GameState
     {
         public GameState(Window window)
         {
