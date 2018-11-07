@@ -454,6 +454,10 @@ namespace FirstSemesterExamProject
                 AddMage.Visible = false;
                 RemoveUnit.Visible = false;
                 muteButton.Visible = false;
+                Host.Visible = false;
+                JoinGame.Visible = false;
+                Online.Visible = false;
+                EnterIP.Visible = false;
                 EndTurn.Visible = true;
                 //Starts the game
                 gs = new BattleGameState(this, number, dc);
@@ -999,6 +1003,7 @@ namespace FirstSemesterExamProject
             AddMage.Visible = false;
             RemoveUnit.Visible = false;
             muteButton.Visible = true;
+            EnterIP.Visible = true;
         }
         /// <summary>
         /// Makes you the host/server that is in control of the game
@@ -1007,7 +1012,9 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Host_Click(object sender, EventArgs e)
         {
-
+            JoinGame.Visible = false;
+            EnterIP.Visible = false;
+            HostIPAdress.Visible = true;
         }
         /// <summary>
         /// Make it possible to join a host through their IP-adress
@@ -1024,6 +1031,15 @@ namespace FirstSemesterExamProject
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EnterIP_TextChanged(object sender, EventArgs e)
+        {
+
+        }        
+        /// <summary>
+        /// Shall contain the IP adress of the host
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HostIPAdress_Click(object sender, EventArgs e)
         {
 
         }
@@ -1061,7 +1077,6 @@ namespace FirstSemesterExamProject
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
-
 
     }
 }
