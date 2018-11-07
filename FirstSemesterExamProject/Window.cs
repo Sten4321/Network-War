@@ -1024,13 +1024,12 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = true;
-            /*
-             * ipLabel.Visible = true;
-             * portLabel.Visible = true;
-             *
-            ipLabel.Text = Server.Instance.serverIp;
-            portLabel.Text = Server.Instance.port;
-            */
+
+            //portLabel.Visible = true;
+
+            HostIPAdress.Text = Server.Instance.serverIp;
+            //portLabel.Text = Server.Instance.port;
+
         }
         /// <summary>
         /// Make it possible to join a host through their IP-adress
@@ -1064,7 +1063,7 @@ namespace FirstSemesterExamProject
         private void EnterIP_TextChanged(object sender, EventArgs e)
         {
             // TODO: Change ip field
-        }        
+        }
         /// <summary>
         /// Shall contain the IP adress of the host
         /// </summary>
