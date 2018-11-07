@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BattleGameState.cs" />
+    <Compile Include="Network\Client.cs" />
     <Compile Include="Network\Data.cs" />
     <Compile Include="Network\Server.cs" />
     <Compile Include="Units\Cleric.cs" />
@@ -77,14 +78,14 @@
     <Compile Include="GameInstance.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameState.cs" />
-    <Compile Include="IHeal.cs" />
-    <Compile Include="IRanged.cs" />
+    <Compile Include="Interface\IHeal.cs" />
+    <Compile Include="Interface\IRanged.cs" />
     <Compile Include="SoundEngine.cs" />
     <Compile Include="Keyboard.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="UnitChoiceGameState.cs" />
-    <Compile Include="Unit.cs" />
+    <Compile Include="Units\Unit.cs" />
     <Compile Include="Units\Archer.cs" />
     <Compile Include="Units\Artifact.cs" />
     <Compile Include="Units\Knight.cs" />

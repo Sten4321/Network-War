@@ -59,6 +59,7 @@ namespace FirstSemesterExamProject
             this.Host = new System.Windows.Forms.Button();
             this.JoinGame = new System.Windows.Forms.Button();
             this.EnterIP = new System.Windows.Forms.TextBox();
+            this.HostIPAdress = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Tick
@@ -404,7 +405,7 @@ namespace FirstSemesterExamProject
             this.muteButton.TabIndex = 37;
             this.muteButton.TabStop = false;
             this.muteButton.UseVisualStyleBackColor = false;
-            this.muteButton.Click += new System.EventHandler(this.muteButton_Click);
+            this.muteButton.Click += new System.EventHandler(this.MuteButton_Click);
             // 
             // Online
             // 
@@ -444,11 +445,22 @@ namespace FirstSemesterExamProject
             this.EnterIP.TabIndex = 41;
             this.EnterIP.TextChanged += new System.EventHandler(this.EnterIP_TextChanged);
             // 
+            // HostIPAdress
+            // 
+            this.HostIPAdress.AutoSize = true;
+            this.HostIPAdress.Location = new System.Drawing.Point(897, 545);
+            this.HostIPAdress.Name = "HostIPAdress";
+            this.HostIPAdress.Size = new System.Drawing.Size(37, 13);
+            this.HostIPAdress.TabIndex = 42;
+            this.HostIPAdress.Text = "00000";
+            this.HostIPAdress.Click += new System.EventHandler(this.HostIPAdress_Click);
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1265, 639);
+            this.Controls.Add(this.HostIPAdress);
             this.Controls.Add(this.EnterIP);
             this.Controls.Add(this.JoinGame);
             this.Controls.Add(this.Host);
@@ -518,5 +530,6 @@ namespace FirstSemesterExamProject
         private System.Windows.Forms.Button Host;
         private System.Windows.Forms.Button JoinGame;
         private System.Windows.Forms.TextBox EnterIP;
+        private System.Windows.Forms.Label HostIPAdress;
     }
 }

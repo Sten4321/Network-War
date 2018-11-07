@@ -951,7 +951,7 @@ namespace FirstSemesterExamProject
         }
 
         /// <summary>
-        /// renders hov many moves the player have left
+        /// renders how many moves the player have left
         /// </summary>
         /// <param name="graphics"></param>
         private void RenderPlayerMoveCount(Graphics graphics)
