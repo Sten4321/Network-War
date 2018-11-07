@@ -12,38 +12,31 @@ using System.Threading.Tasks;
 namespace FirstSemesterExamProject
 {
     class Server
-    {
+    {           
+
+
+        //Server Settings / info
+        public string serverIp;
+        public int port = 13000;
+        public bool isOnline = false;
+        private readonly byte clientsMaxAmount = 3;
+        public TcpListener tcpListener;
+
+        //Collections
+        private List<TcpClient> clients = new List<TcpClient>();
+        private Queue<Data> receivedDataQueue = new Queue<Data>();
+
+        //Threading
         private readonly object clientsListKey = new object();
         private readonly object receivedDataKey = new object();
 
 
 
-        public int port = 13000;
-        public bool isOnline = false;
-
-        private bool shouldLookForClients = true;
-
-
-        private List<TcpClient> clients = new List<TcpClient>();
-        private TcpClient lastClientToSendMessage = null;
-
-
-
-
-        private Queue<Data> receivedDataQueue = new Queue<Data>();
-
-
+        //Singleton Instance
         private static Server instance;
 
-        public TcpListener tcpListener;
-
-        public string serverIp;
-
-
-        private readonly byte clientsMaxAmount = 3;
-
         /// <summary>
-        /// server Singleton
+        /// server Singleton Property
         /// </summary>
         public static Server Instance
         {
@@ -62,13 +55,13 @@ namespace FirstSemesterExamProject
             }
         }
 
-
+        /// <summary>
+        /// Private Singleton constructor used by property to make sure there can never be more than one server.
+        /// </summary>
         private Server()
         {
             //Finds the local Ip
-            serverIp = FindLocalIp(NetworkInterfaceType.Wireless80211);
-
-           
+            serverIp = FindLocalIp();
         }
 
         /// <summary>
@@ -101,7 +94,7 @@ namespace FirstSemesterExamProject
             System.Diagnostics.Debug.WriteLine("IP: " + serverIp + "     Port:" + port);
         }
 
-        public static string FindLocalIp(NetworkInterfaceType _networkType)
+        public static string FindLocalIp()
         {
             //string hostName = Dns.GetHostName(); // Retrive the Name of HOST  
 
@@ -115,15 +108,22 @@ namespace FirstSemesterExamProject
             string output = "";
 
 
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            foreach (NetworkInterface networkInterface in NetworkInterface.GetAllNetworkInterfaces())
             {
-                if (item.NetworkInterfaceType == _networkType && item.OperationalStatus == OperationalStatus.Up)
+                //If Wifi or Ethernet and is online
+                if ((networkInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || networkInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                    && networkInterface.OperationalStatus == OperationalStatus.Up)
                 {
-                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    
+                    foreach (UnicastIPAddressInformation ip in networkInterface.GetIPProperties().UnicastAddresses)
                     {
+                        
                         if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                         {
-                            output = ip.Address.ToString();
+                            output = ip.Address.ToString();                                                                                
+
+                            //Writes whether what kind of internet connection you have
+                            System.Diagnostics.Debug.WriteLine(networkInterface.NetworkInterfaceType.ToString());
                         }
                     }
                 }
@@ -131,7 +131,7 @@ namespace FirstSemesterExamProject
 
             if (output == "")
             {
-                System.Diagnostics.Debug.WriteLine("IP Error!");
+                System.Diagnostics.Debug.WriteLine("IP Error! OR NO INTERNET ACCESS");
             }
             return output;
         }
@@ -191,9 +191,11 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void FindNewClients()
         {
-            while (LessThanMaxClients() && shouldLookForClients)
+            while (LessThanMaxClients() && isOnline)
             {
                 SearchAndAddClient();
+
+                System.Diagnostics.Debug.WriteLine("Clients found: "+clients.Count);
 
             }
         }
@@ -322,6 +324,12 @@ namespace FirstSemesterExamProject
                     sWriter.Flush();
                 }
             }
+        }
+
+        public void ShutDownServer()
+        {
+            isOnline = false;
+            instance = null;
         }
     }
 }

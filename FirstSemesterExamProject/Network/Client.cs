@@ -18,8 +18,9 @@ namespace FirstSemesterExamProject
         StreamReader sReader;
         private bool validIp = false;
         private IPAddress iP;
-        PlayerTeam team;
-        Boolean bClientConnected = false;
+        public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
+
+        public bool clientConnected = false;
 
         public bool ValidIp
         {
@@ -108,14 +109,23 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReaderThread()
         {
+
+
             string sData;
-            bClientConnected = true;
-            while (bClientConnected)
+            clientConnected = true;
+            while (clientConnected)
             {
-                sData = ReceiveFromHost();
-                UseServerData(sData);
-                Thread.Sleep(sleepDelay);
+                if (Team != null) //Starts when it has been assigned to a team
+                {
+                    sData = ReceiveFromHost();
+                    UseServerData(sData);
+
+                    System.Diagnostics.Debug.WriteLine(sData);
+
+                    Thread.Sleep(sleepDelay);
+                }
             }
+
         }
 
         /// < summary >
@@ -131,8 +141,10 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReceiveTeamInt(object callback)
         {
-            team = (PlayerTeam)Convert.ToInt32(ReceiveFromHost());
-            //Then host would be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
+            Team = (PlayerTeam)Convert.ToInt32(ReceiveFromHost());
+            //Then host will be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
+
+            System.Diagnostics.Debug.WriteLine(Team.ToString());
         }
 
         /// <summary>
