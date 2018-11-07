@@ -500,6 +500,8 @@ namespace FirstSemesterExamProject
             Online.Visible = true;
             JoinGame.Visible = false;
             Host.Visible = false;
+            EnterIP.Visible = false;
+            HostIPAdress.Visible = false;
             if (RedTeam.Visible == true)
             {
                 RedTeam.Visible = false;
@@ -968,7 +970,7 @@ namespace FirstSemesterExamProject
         }
 
         /// <summary>
-        /// a label that displays the amount of points that a player has used out of how many kan be used
+        /// a label that displays the amount of points that a player has used out of how many can be used
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1003,6 +1005,8 @@ namespace FirstSemesterExamProject
             AddMage.Visible = false;
             RemoveUnit.Visible = false;
             muteButton.Visible = true;
+            Host.Visible = true;
+            JoinGame.Visible = true;
             EnterIP.Visible = true;
         }
         /// <summary>
@@ -1015,6 +1019,18 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = true;
+            Back.Visible = true;
+            PointsLabel.Visible = true;
+            ListBox1.Visible = true;
+            AddArcher.Visible = true;
+            AddCleric.Visible = true;
+            AddKnight.Visible = true;
+            AddScout.Visible = true;
+            AddArtifact.Visible = true;
+            AddMage.Visible = true;
+            RemoveUnit.Visible = true;
+            Label.Visible = true;
+
         }
         /// <summary>
         /// Make it possible to join a host through their IP-adress
