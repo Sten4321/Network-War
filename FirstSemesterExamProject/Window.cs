@@ -11,7 +11,7 @@ namespace FirstSemesterExamProject
     public partial class Window : Form
     {
         private Graphics dc;
-        private GameState gs;
+        private static GameState gs;
         //Time Keeping
         private DateTime endTime;
         private float currentFps;
@@ -39,12 +39,14 @@ namespace FirstSemesterExamProject
         //Server
         private Thread clientThread;
 
-
-
-
-
-
-
+        /// <summary>
+        /// propety gamestate
+        /// </summary>
+        public static GameState GameState
+        {
+            get { return gs; }
+            set { gs = value; }
+        }
         /// <summary>
         /// getter for redteam stack
         /// </summary>

@@ -20,6 +20,18 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// Property for players list
         /// </summary>
+        public GameBoard GetGameBoard()
+        { return gameBoard; }
+
+        /// <summary>
+        /// Property for players list
+        /// </summary>
+        public void SetGameBoard(GameBoard value)
+        { gameBoard = value; }
+
+        /// <summary>
+        /// Property for players list
+        /// </summary>
         public static List<Player> Players
         {
             get { return players; }
@@ -38,7 +50,16 @@ namespace FirstSemesterExamProject
             this.playerNumber = playerNumber;
             players = new List<Player>();
             playersUnitCount = new List<int>();
-            gameBoard = new GameBoard(playerNumber);
+
+            if (Client.Instance.clientConnected)
+            {
+                // TODO: implement code for gameBord: -> look at client
+            }
+            else
+            {
+                gameBoard = new GameBoard(playerNumber);
+            }
+
             CreatePlayers();
 
         }
