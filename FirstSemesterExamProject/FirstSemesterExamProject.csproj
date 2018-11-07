@@ -69,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BattleGameState.cs" />
+    <Compile Include="Network\Data.cs" />
+    <Compile Include="Network\Server.cs" />
     <Compile Include="Units\Cleric.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="GameBoard.cs" />

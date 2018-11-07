@@ -1,0 +1,291 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace FirstSemesterExamProject
+{
+    class Server
+    {
+        private readonly object clientsListKey = new object();
+        private readonly object receivedDataKey = new object();
+
+
+
+        private int port = 13000;
+        private bool isOnline = false;
+
+        private bool shouldLookForClients = true;
+
+
+        private List<TcpClient> clients = new List<TcpClient>();
+        private TcpClient lastClientToSendMessage = null;
+
+
+
+
+        private Queue<Data> receivedDataQueue = new Queue<Data>();
+
+
+        private static Server instance;
+
+        public TcpListener tcpListener;
+
+
+        private readonly byte clientsMaxAmount = 3;
+
+        /// <summary>
+        /// server Singleton
+        /// </summary>
+        public static Server Instance
+        {
+            get
+            {
+                if (instance != null)
+                {
+
+                    return instance;
+                }
+                else
+                {
+                    instance = new Server();
+                    return instance;
+                }
+            }
+        }
+
+
+        private Server()
+        {
+            // starts the actual server
+            tcpListener = new TcpListener(IPAddress.Any, port);
+            tcpListener.Start();
+            //
+
+            isOnline = true;
+
+            //a thread to handle server logic
+            Thread serverUpdateThread = new Thread(ServerUpdate)
+            {
+                IsBackground = true
+            };
+            serverUpdateThread.Start();
+
+            //a thread to handle new clients
+            Thread searchForClientsThread = new Thread(FindNewClients)
+            {
+                IsBackground = true
+            };
+            searchForClientsThread.Start();
+
+
+        }
+
+        /// <summary>
+        /// Updates server logic - Distributes the latest information to all clients
+        /// </summary>
+        private void ServerUpdate()
+        {
+            while (isOnline)
+            {
+                // Sends the latest data to all clients but the one who sent it
+                SendDataToOtherClients();
+
+
+            }
+
+        }
+
+        /// <summary>
+        /// Sends the latest data to all clients but the one who sent it
+        /// </summary>
+        private void SendDataToOtherClients()
+        {
+            if (receivedDataQueue.Count > 0) // there is data to send
+            {
+                lock (receivedDataKey)
+                {
+                    Data data = receivedDataQueue.Dequeue(); // Queue -> chronologically 
+
+                    lock (clientsListKey)
+                    {
+                        for (int i = 0; i < clients.Count; i++)
+                        {
+                            if (clients[i] != data.client) //if the client is not the sender of the data
+                            {
+                                //Writes to the specefic client
+                                StreamWriter sWriter = new StreamWriter(clients[i].GetStream(), Encoding.ASCII);
+
+
+                                //sends data
+                                sWriter.WriteLine(data.information);
+
+                                //Clears buffer
+                                sWriter.Flush();
+
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Continuesly searches for new clients, untill max amount has been reached, or it is told not to.
+        /// </summary>
+        private void FindNewClients()
+        {
+            while (LessThanMaxClients() && shouldLookForClients)
+            {
+                SearchAndAddClient();
+
+            }
+        }
+        /// <summary>
+        /// Listens for clients, and adds them to the server
+        /// </summary>
+        private void SearchAndAddClient()
+        {
+            // wait for client connection
+            TcpClient newClient = tcpListener.AcceptTcpClient();
+
+            // client found.
+            clients.Add(newClient);
+
+            AssignNewClientToTeam(newClient);
+
+            // create a thread to handle communication
+            Thread clientThread = new Thread(new ParameterizedThreadStart(ClientUpdate));
+            clientThread.Start(newClient);
+        }
+
+        private void AssignNewClientToTeam(TcpClient client)
+        {
+            StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+
+            //sends data
+            sWriter.WriteLine(clients.Count);
+
+            //Clears buffer
+            sWriter.Flush();
+
+
+
+
+            // CLIENT DO THIS RIGHT AFTER CONNECTING TO SERVER:
+            
+            ///// < summary >
+            ///// Receive an immediate respons from Server, assigning client to a team
+            ///// </ summary >
+            //private void ReceiveTeamAssignment()
+            //{
+            //    Thread initialServerMessageThread = new Thread(ReceiveTeamInt)
+            //    {
+            //        IsBackground = true
+            //    };
+
+            //    initialServerMessageThread.Start();
+            //}
+
+            //private void ReceiveTeamInt()
+            //{
+            //    sData = sReader.ReadLine();
+
+            //    team = (PlayerTeam)Convert.ToInt32(sData);
+            //    //Then host would be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
+            //}
+
+
+        }
+
+        
+
+
+
+        /// <summary>
+        /// returns whether or not we have reached the maximum amount of clients
+        /// </summary>
+        /// <returns></returns>
+        private bool LessThanMaxClients()
+        {
+            return clients.Count < clientsMaxAmount;
+
+        }
+
+        public void ClientUpdate(object obj)
+        {
+            // retrieve client from parameter passed to thread
+            TcpClient client = (TcpClient)obj;
+
+            // sets two streams
+            StreamReader sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
+
+            bool isConnected = true;
+            string sData = null;
+
+            IPEndPoint endPoint = (IPEndPoint)client.Client.RemoteEndPoint;
+            IPEndPoint localPoint = (IPEndPoint)client.Client.LocalEndPoint;
+
+            while (isConnected)
+            {
+                // reads from stream
+                try
+                {
+
+                    //Reading untill data is received..
+                    sData = sReader.ReadLine();
+                }
+                catch (Exception e)
+                {
+                    //if client disconnects
+
+                    Console.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
+                    lock (clientsListKey)
+                    {
+                        clients.Remove(client);
+                    }
+                    Thread.CurrentThread.Abort();
+                }
+
+                //when data has arrived or client has disconnected
+                if (sData != null)
+                {
+                    //evaluate the Data and the client who sent it
+                    EvaluateData(sData, client);
+                }
+
+
+
+
+            }
+        }
+
+        /// <summary>
+        /// handles the received data and its client. 
+        /// </summary>
+        /// <param name="sData">the data received</param>
+        /// <param name="client">the client who sent it</param>
+        private void EvaluateData(string sData, TcpClient client)
+        {
+
+
+            Data data = new Data(sData, client);
+
+            lock (receivedDataKey)
+            {
+                receivedDataQueue.Enqueue(data);
+            }
+
+
+
+        }
+    }
+}
+
+
