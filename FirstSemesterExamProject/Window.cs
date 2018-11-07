@@ -51,6 +51,7 @@ namespace FirstSemesterExamProject
         public static Stack<Enum> RedTeamStack
         {
             get { return redteam; }
+            set { redteam = value; }
         }
         /// <summary>
         /// getter for blueteam stack
@@ -58,6 +59,8 @@ namespace FirstSemesterExamProject
         public static Stack<Enum> BlueTeamStack
         {
             get { return blueteam; }
+            set { blueteam = value; }
+
         }
         /// <summary>
         /// getter for greenteam stack
@@ -65,6 +68,8 @@ namespace FirstSemesterExamProject
         public static Stack<Enum> GreenTeamStack
         {
             get { return greenteam; }
+            set { greenteam = value; }
+
         }
         /// <summary>
         /// getter for yellowteam stack
@@ -72,6 +77,8 @@ namespace FirstSemesterExamProject
         public static Stack<Enum> YellowTeamStack
         {
             get { return yellowteam; }
+            set { yellowteam = value; }
+
         }
 
         public Window()
@@ -149,11 +156,14 @@ namespace FirstSemesterExamProject
             {
                 //empties the list
                 showList.Clear();
-                if (Server.Instance.isOnline || Client.Instance.clientConnected)
+                if (OnlineGame())
                 {
-                    foreach (Enum unit in onlineUnitStack)
+                    if (onlineUnitStack != null)
                     {
-                        showList.Add(unit);
+                        foreach (Enum unit in onlineUnitStack)
+                        {
+                            showList.Add(unit);
+                        }
                     }
                 }
                 else
@@ -275,38 +285,38 @@ namespace FirstSemesterExamProject
             else
             {
 
-            switch (teamSelect)
-            {
-                //makes the listbox contain the chosen units depending on the team chosen
-                case PlayerTeam.RedTeam:
-                    foreach (Enum unit in redteam)
-                    {
-                        PointAdd(unit);
-                    }
-                    break;
+                switch (teamSelect)
+                {
+                    //makes the listbox contain the chosen units depending on the team chosen
+                    case PlayerTeam.RedTeam:
+                        foreach (Enum unit in redteam)
+                        {
+                            PointAdd(unit);
+                        }
+                        break;
 
-                case PlayerTeam.BlueTeam:
-                    foreach (Enum unit in blueteam)
-                    {
-                        PointAdd(unit);
-                    }
-                    break;
+                    case PlayerTeam.BlueTeam:
+                        foreach (Enum unit in blueteam)
+                        {
+                            PointAdd(unit);
+                        }
+                        break;
 
-                case PlayerTeam.GreenTeam:
-                    foreach (Enum unit in greenteam)
-                    {
-                        PointAdd(unit);
-                    }
-                    break;
+                    case PlayerTeam.GreenTeam:
+                        foreach (Enum unit in greenteam)
+                        {
+                            PointAdd(unit);
+                        }
+                        break;
 
-                case PlayerTeam.YellowTeam:
-                    foreach (Enum unit in yellowteam)
-                    {
-                        PointAdd(unit);
-                    }
-                    break;
+                    case PlayerTeam.YellowTeam:
+                        foreach (Enum unit in yellowteam)
+                        {
+                            PointAdd(unit);
+                        }
+                        break;
 
-            }
+                }
             }
 
             PointsLabel.Text = pointUsed + "/" + pointMax + " Points Used";
@@ -1104,7 +1114,7 @@ namespace FirstSemesterExamProject
             Start.Visible = false;
             PointsLabel.Visible = false;
             ListBox1.Visible = false;
-            AddArcher.Visible = false; 
+            AddArcher.Visible = false;
             AddCleric.Visible = false;
             AddKnight.Visible = false;
             AddScout.Visible = false;
