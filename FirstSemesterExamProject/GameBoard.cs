@@ -21,10 +21,23 @@ namespace FirstSemesterExamProject
         private static float tileSize;
         public static float scaleFactor;
 
-
+        /// <summary>
+        /// Local
+        /// </summary>
+        /// <param name="playerNumber"></param>
         public GameBoard(int playerNumber)
         {
             CreateBoard(playerNumber);
+            SetUnit();
+        }
+
+        /// <summary>
+        /// Online
+        /// </summary>
+        /// <param name="playerNumber"></param>
+        public GameBoard(int bord, int s)
+        {
+            CreateBoard(bord, s);
             SetUnit();
         }
 
@@ -43,6 +56,35 @@ namespace FirstSemesterExamProject
             else if (playerNumber <= 4)
             {
                 mapNumber = rnd.Next(Constant.lessPlayerThan4 + 1, Constant.lessPlayerThan4 + Constant.numberPlayerMaps4 + 1);
+                tileSize = Constant.tileSizeSmall;
+            }
+            scaleFactor = (TileSize / 64);
+            //makes a new board from the map number choosen
+            board = new GameInstance(mapNumber);
+            //Makes the ground map of tiles via the generate map function from board
+            GroundMap = board.GenerateMap();
+
+            unitMap = new GameObject[GroundMap.GetLength(0), GroundMap.GetLength(1)];
+            addObjects = new GameObject[GroundMap.GetLength(0), GroundMap.GetLength(1)];
+            removeObjects = new GameObject[GroundMap.GetLength(0), GroundMap.GetLength(1)];
+
+            // TODO: if Host Send mapnumber to all clients
+        }
+
+        /// <summary>
+        /// the defined map players for online play
+        /// </summary>
+        /// <param name="playerNumber"></param>
+        /// <param name="tileSize"></param>
+        private void CreateBoard(int bord, int s)
+        {
+            mapNumber = bord;
+            if (bord < Constant.numberPlayerMaps2 + 1)
+            {
+                tileSize = Constant.tileSizeNormal;
+            }
+            else if (bord < Constant.lessPlayerThan4 + Constant.numberPlayerMaps4 + 1)
+            {
                 tileSize = Constant.tileSizeSmall;
             }
             scaleFactor = (TileSize / 64);
@@ -235,7 +277,7 @@ namespace FirstSemesterExamProject
         /// <param name="team"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        private void PlaceUnit( Enum unit, PlayerTeam team, int x, int y)
+        private void PlaceUnit(Enum unit, PlayerTeam team, int x, int y)
         {
             switch (unit)
             {

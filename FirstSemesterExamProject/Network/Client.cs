@@ -174,7 +174,31 @@ namespace FirstSemesterExamProject
         /// <param name="Data"></param>
         private void UseServerData(string sData)
         {
+            // TODO: Insert message translater:
+        }
 
+        /// <summary>
+        /// Sets the clients map to be equal to the recived map number
+        /// </summary>
+        /// <param name="sData"></param>
+        private void SetMap(string sData)
+        {
+            // TODO: sData to a GameBord...
+            GameBoard gameBoard = new GameBoard(int.Parse(sData), int.Parse(sData));
+
+            if (Window.GameState is BattleGameState)
+            {
+                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
+            }
+        }
+
+        /// <summary>
+        /// Translates a move for the player
+        /// </summary>
+        /// <param name="sData"></param>
+        private void MoveUnit(string sData)
+        {
+            //TODO: Insert Code/Hook for moving unit
         }
     }
 }
