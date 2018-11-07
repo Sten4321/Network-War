@@ -55,6 +55,10 @@ namespace FirstSemesterExamProject
             this.TwoPlayer = new System.Windows.Forms.Button();
             this.myTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.muteButton = new System.Windows.Forms.Button();
+            this.Online = new System.Windows.Forms.Button();
+            this.Host = new System.Windows.Forms.Button();
+            this.JoinGame = new System.Windows.Forms.Button();
+            this.EnterIP = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // Tick
@@ -67,7 +71,7 @@ namespace FirstSemesterExamProject
             // 
             this.EndTurn.FlatAppearance.BorderSize = 0;
             this.EndTurn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.EndTurn.Font = new System.Drawing.Font("Garamond", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EndTurn.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EndTurn.Image = global::FirstSemesterExamProject.Properties.Resources.EndTurn;
             this.EndTurn.Location = new System.Drawing.Point(1070, 560);
             this.EndTurn.Margin = new System.Windows.Forms.Padding(5);
@@ -164,7 +168,7 @@ namespace FirstSemesterExamProject
             this.Label.BackColor = System.Drawing.Color.Transparent;
             this.Label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Label.Cursor = System.Windows.Forms.Cursors.Default;
-            this.Label.Font = new System.Drawing.Font("Garamond", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label.ForeColor = System.Drawing.SystemColors.InfoText;
             this.Label.Location = new System.Drawing.Point(522, 295);
             this.Label.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
@@ -265,10 +269,10 @@ namespace FirstSemesterExamProject
             // 
             this.PointsLabel.AutoSize = true;
             this.PointsLabel.Cursor = System.Windows.Forms.Cursors.Default;
-            this.PointsLabel.Font = new System.Drawing.Font("Garamond", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PointsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PointsLabel.Location = new System.Drawing.Point(554, 528);
             this.PointsLabel.Name = "PointsLabel";
-            this.PointsLabel.Size = new System.Drawing.Size(32, 18);
+            this.PointsLabel.Size = new System.Drawing.Size(31, 20);
             this.PointsLabel.TabIndex = 30;
             this.PointsLabel.Text = "0/0";
             this.PointsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -402,11 +406,53 @@ namespace FirstSemesterExamProject
             this.muteButton.UseVisualStyleBackColor = false;
             this.muteButton.Click += new System.EventHandler(this.muteButton_Click);
             // 
+            // Online
+            // 
+            this.Online.Location = new System.Drawing.Point(587, 566);
+            this.Online.Name = "Online";
+            this.Online.Size = new System.Drawing.Size(75, 23);
+            this.Online.TabIndex = 38;
+            this.Online.Text = "Online";
+            this.Online.UseVisualStyleBackColor = true;
+            this.Online.Click += new System.EventHandler(this.Online_Click);
+            // 
+            // Host
+            // 
+            this.Host.Location = new System.Drawing.Point(944, 392);
+            this.Host.Name = "Host";
+            this.Host.Size = new System.Drawing.Size(75, 23);
+            this.Host.TabIndex = 39;
+            this.Host.Text = "Host";
+            this.Host.UseVisualStyleBackColor = true;
+            this.Host.Click += new System.EventHandler(this.Host_Click);
+            // 
+            // JoinGame
+            // 
+            this.JoinGame.Location = new System.Drawing.Point(944, 425);
+            this.JoinGame.Name = "JoinGame";
+            this.JoinGame.Size = new System.Drawing.Size(75, 23);
+            this.JoinGame.TabIndex = 40;
+            this.JoinGame.Text = "Join Game";
+            this.JoinGame.UseVisualStyleBackColor = true;
+            this.JoinGame.Click += new System.EventHandler(this.JoinGame_Click);
+            // 
+            // EnterIP
+            // 
+            this.EnterIP.Location = new System.Drawing.Point(727, 560);
+            this.EnterIP.Name = "EnterIP";
+            this.EnterIP.Size = new System.Drawing.Size(100, 19);
+            this.EnterIP.TabIndex = 41;
+            this.EnterIP.TextChanged += new System.EventHandler(this.EnterIP_TextChanged);
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1265, 639);
+            this.Controls.Add(this.EnterIP);
+            this.Controls.Add(this.JoinGame);
+            this.Controls.Add(this.Host);
+            this.Controls.Add(this.Online);
             this.Controls.Add(this.muteButton);
             this.Controls.Add(this.AddArtifact);
             this.Controls.Add(this.AddScout);
@@ -468,5 +514,9 @@ namespace FirstSemesterExamProject
         private System.Windows.Forms.Button AddArtifact;
         private System.Windows.Forms.ToolTip myTooltip;
         private System.Windows.Forms.Button muteButton;
+        private System.Windows.Forms.Button Online;
+        private System.Windows.Forms.Button Host;
+        private System.Windows.Forms.Button JoinGame;
+        private System.Windows.Forms.TextBox EnterIP;
     }
 }
