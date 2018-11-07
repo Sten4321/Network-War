@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BattleGameState.cs" />
+    <Compile Include="SendScore.cs" />
     <Compile Include="Units\Cleric.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="GameBoard.cs" />

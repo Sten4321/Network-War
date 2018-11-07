@@ -9,6 +9,8 @@ namespace HighScore.Controllers
 {
     public class HighscoreController : ApiController
     {
+        List<string> myHighscore = new List<string>();
+
         // GET: api/Highscore
         public IEnumerable<string> Get()
         {
