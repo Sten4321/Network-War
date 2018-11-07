@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using System.Windows.Forms;
 
 namespace FirstSemesterExamProject
@@ -404,7 +401,7 @@ namespace FirstSemesterExamProject
 
             }
         }
-        private void muteButton_Click(object sender, EventArgs e)
+        private void MuteButton_Click(object sender, EventArgs e)
         {
             if (menuMusicOn == true)
             {
@@ -976,6 +973,7 @@ namespace FirstSemesterExamProject
         {
 
         }
+
         /// <summary>
         /// Button that takes you to a screen where you have to choose between hosting a game or joining a game.
         /// </summary>
@@ -1004,7 +1002,10 @@ namespace FirstSemesterExamProject
             RemoveUnit.Visible = false;
             muteButton.Visible = true;
             EnterIP.Visible = true;
+            Client.Instance.ValidIp = false;
+            // TODO: Online Buttom
         }
+
         /// <summary>
         /// Makes you the host/server that is in control of the game
         /// </summary>
@@ -1015,7 +1016,9 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = true;
+            //TODO: HostGame Buttom
         }
+
         /// <summary>
         /// Make it possible to join a host through their IP-adress
         /// </summary>
@@ -1023,8 +1026,23 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void JoinGame_Click(object sender, EventArgs e)
         {
+            CheckIP();
 
+            if (Client.Instance.ValidIp == true)
+            {
+                Client.Instance.ConnectClient();
+            }
+            // TODO: JoinGame Buttom
         }
+
+        /// <summary>
+        /// Handles what happens after a successfull join
+        /// </summary>
+        public void ApplyJoined()
+        {
+            // TODO: ApplyJoined
+        }
+
         /// <summary>
         /// To enter IP adress given from the host
         /// </summary>
@@ -1032,7 +1050,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void EnterIP_TextChanged(object sender, EventArgs e)
         {
-
+            // TODO: Change ip field
         }        
         /// <summary>
         /// Shall contain the IP adress of the host
@@ -1044,6 +1062,26 @@ namespace FirstSemesterExamProject
 
         }
         #endregion
+
+        /// <summary>
+        /// Checks if the text in EnterIP TextBox is valid
+        /// </summary>
+        private void CheckIP()
+        {
+            IPAddress ipAddress;
+            if (IPAddress.TryParse(EnterIP.Text, out ipAddress))
+            {
+                Client.Instance.IP = ipAddress;
+                Client.Instance.ValidIp = true;
+                //valid ip
+            }
+            else
+            {
+                Client.Instance.ValidIp = false;
+                //is not valid ip
+            }
+            // TODO: Check valid ip
+        }
 
         /// <summary>
         /// Allows the player to use the mouse to select units
