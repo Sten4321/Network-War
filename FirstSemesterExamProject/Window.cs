@@ -451,6 +451,10 @@ namespace FirstSemesterExamProject
                 AddMage.Visible = false;
                 RemoveUnit.Visible = false;
                 muteButton.Visible = false;
+                Host.Visible = false;
+                JoinGame.Visible = false;
+                Online.Visible = false;
+                EnterIP.Visible = false;
                 EndTurn.Visible = true;
                 //Starts the game
                 gs = new BattleGameState(this, number, dc);
@@ -997,6 +1001,7 @@ namespace FirstSemesterExamProject
             AddMage.Visible = false;
             RemoveUnit.Visible = false;
             muteButton.Visible = true;
+            EnterIP.Visible = true;
             Client.Instance.ValidIp = false;
             // TODO: Online Buttom
         }
@@ -1008,6 +1013,9 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Host_Click(object sender, EventArgs e)
         {
+            JoinGame.Visible = false;
+            EnterIP.Visible = false;
+            HostIPAdress.Visible = true;
             //TODO: HostGame Buttom
         }
 
@@ -1043,6 +1051,15 @@ namespace FirstSemesterExamProject
         private void EnterIP_TextChanged(object sender, EventArgs e)
         {
             // TODO: Change ip field
+        }        
+        /// <summary>
+        /// Shall contain the IP adress of the host
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HostIPAdress_Click(object sender, EventArgs e)
+        {
+
         }
         #endregion
 
@@ -1098,7 +1115,6 @@ namespace FirstSemesterExamProject
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
-
 
     }
 }
