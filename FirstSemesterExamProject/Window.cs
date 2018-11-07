@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace FirstSemesterExamProject
@@ -33,6 +34,8 @@ namespace FirstSemesterExamProject
         public static bool canMute;
         public static bool musicOn = true;
         public static bool menuMusicOn = true;
+        //Server
+        private Thread clientThread;
 
 
 
@@ -1042,7 +1045,9 @@ namespace FirstSemesterExamProject
 
             if (Client.Instance.ValidIp == true)
             {
-                Client.Instance.ConnectClient();
+                clientThread = new Thread(Client.Instance.ConnectClient);
+                clientThread.Start();
+                clientThread.IsBackground = true;
             }
             // TODO: JoinGame Buttom
         }
