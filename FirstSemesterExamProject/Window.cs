@@ -493,6 +493,9 @@ namespace FirstSemesterExamProject
             PointsLabel.Visible = false;
             Back.Visible = false;
             PointsLabel.Visible = false;
+            Online.Visible = true;
+            JoinGame.Visible = false;
+            Host.Visible = false;
             if (RedTeam.Visible == true)
             {
                 RedTeam.Visible = false;
@@ -969,6 +972,61 @@ namespace FirstSemesterExamProject
         {
 
         }
+        /// <summary>
+        /// Button that takes you to a screen where you have to choose between hosting a game or joining a game.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Online_Click(object sender, EventArgs e)
+        {
+            RedTeam.Visible = false;
+            BlueTeam.Visible = false;
+            GreenTeam.Visible = false;
+            YellowTeam.Visible = false;
+            TwoPlayer.Visible = false;
+            ThreePlayer.Visible = false;
+            FourPlayer.Visible = false;
+            Back.Visible = true;
+            Label.Visible = false;
+            Start.Visible = false;
+            PointsLabel.Visible = false;
+            ListBox1.Visible = false;
+            AddArcher.Visible = false;
+            AddCleric.Visible = false;
+            AddKnight.Visible = false;
+            AddScout.Visible = false;
+            AddArtifact.Visible = false;
+            AddMage.Visible = false;
+            RemoveUnit.Visible = false;
+            muteButton.Visible = true;
+        }
+        /// <summary>
+        /// Makes you the host/server that is in control of the game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Host_Click(object sender, EventArgs e)
+        {
+
+        }
+        /// <summary>
+        /// Make it possible to join a host through their IP-adress
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void JoinGame_Click(object sender, EventArgs e)
+        {
+
+        }
+        /// <summary>
+        /// To enter IP adress given from the host
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnterIP_TextChanged(object sender, EventArgs e)
+        {
+
+        }
         #endregion
 
         /// <summary>
@@ -1003,6 +1061,8 @@ namespace FirstSemesterExamProject
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
+
+
     }
 }
 
