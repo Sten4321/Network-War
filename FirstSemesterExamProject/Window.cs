@@ -502,6 +502,9 @@ namespace FirstSemesterExamProject
             Host.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = false;
+            Server.Instance.isOnline = false;
+            // TODO: Make the server host stop
+
             if (RedTeam.Visible == true)
             {
                 RedTeam.Visible = false;
@@ -1011,7 +1014,7 @@ namespace FirstSemesterExamProject
             EnterIP.Visible = true;
             Client.Instance.ValidIp = false;
             // TODO: Online Buttom
-            Online.Visible = true;
+            Online.Visible = false;
         }
 
         /// <summary>
@@ -1021,6 +1024,10 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Host_Click(object sender, EventArgs e)
         {
+            Online.Visible = false;
+            Host.Visible = false;
+            HostIPAdress.Visible = true;
+
             if (Server.Instance.isOnline == false)
             {
                 Server.Instance.StartServer();
@@ -1031,7 +1038,6 @@ namespace FirstSemesterExamProject
         {
             JoinGame.Visible = false;
             EnterIP.Visible = false;
-            HostIPAdress.Visible = true;
             Back.Visible = true;
             PointsLabel.Visible = true;
             ListBox1.Visible = true;
@@ -1059,6 +1065,7 @@ namespace FirstSemesterExamProject
                 clientThread = new Thread(Client.Instance.ConnectClient);
                 clientThread.Start();
                 clientThread.IsBackground = true;
+                UpdateIpLabelText();
             }
             // TODO: JoinGame Buttom
         }

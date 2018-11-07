@@ -80,7 +80,7 @@ namespace FirstSemesterExamProject
             tcpListener = new TcpListener(IPAddress.Any, port);
             tcpListener.Start();
             //
-
+            
             isOnline = true;
 
             //a thread to handle server logic

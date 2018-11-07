@@ -419,7 +419,7 @@ namespace FirstSemesterExamProject
             // 
             // Host
             // 
-            this.Host.Location = new System.Drawing.Point(944, 392);
+            this.Host.Location = new System.Drawing.Point(587, 422);
             this.Host.Name = "Host";
             this.Host.Size = new System.Drawing.Size(75, 23);
             this.Host.TabIndex = 39;
@@ -430,7 +430,7 @@ namespace FirstSemesterExamProject
             // 
             // JoinGame
             // 
-            this.JoinGame.Location = new System.Drawing.Point(944, 425);
+            this.JoinGame.Location = new System.Drawing.Point(748, 596);
             this.JoinGame.Name = "JoinGame";
             this.JoinGame.Size = new System.Drawing.Size(75, 23);
             this.JoinGame.TabIndex = 40;
@@ -441,9 +441,9 @@ namespace FirstSemesterExamProject
             // 
             // EnterIP
             // 
-            this.EnterIP.Location = new System.Drawing.Point(727, 560);
+            this.EnterIP.Location = new System.Drawing.Point(522, 598);
             this.EnterIP.Name = "EnterIP";
-            this.EnterIP.Size = new System.Drawing.Size(100, 19);
+            this.EnterIP.Size = new System.Drawing.Size(220, 19);
             this.EnterIP.TabIndex = 41;
             this.EnterIP.Visible = false;
             this.EnterIP.TextChanged += new System.EventHandler(this.EnterIP_TextChanged);
@@ -451,7 +451,7 @@ namespace FirstSemesterExamProject
             // HostIPAdress
             // 
             this.HostIPAdress.AutoSize = true;
-            this.HostIPAdress.Location = new System.Drawing.Point(897, 545);
+            this.HostIPAdress.Location = new System.Drawing.Point(605, 601);
             this.HostIPAdress.Name = "HostIPAdress";
             this.HostIPAdress.Size = new System.Drawing.Size(37, 13);
             this.HostIPAdress.TabIndex = 42;
