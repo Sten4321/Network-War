@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace FirstSemesterExamProject
 {
     class Server
-    {           
+    {
 
 
         //Server Settings / info
@@ -29,7 +29,7 @@ namespace FirstSemesterExamProject
         //Threading
         private readonly object clientsListKey = new object();
         private readonly object receivedDataKey = new object();
-
+        List<Thread> serverThreads = new List<Thread>();
 
 
         //Singleton Instance
@@ -82,6 +82,7 @@ namespace FirstSemesterExamProject
                 IsBackground = true
             };
             serverUpdateThread.Start();
+            serverThreads.Add(serverUpdateThread);
 
             //a thread to handle new clients
             Thread searchForClientsThread = new Thread(FindNewClients)
@@ -89,6 +90,8 @@ namespace FirstSemesterExamProject
                 IsBackground = true
             };
             searchForClientsThread.Start();
+            serverThreads.Add(searchForClientsThread);
+
 
             System.Diagnostics.Debug.WriteLine("Server online status: " + isOnline);
             System.Diagnostics.Debug.WriteLine("IP: " + serverIp + "     Port:" + port);
@@ -114,13 +117,13 @@ namespace FirstSemesterExamProject
                 if ((networkInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || networkInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
                     && networkInterface.OperationalStatus == OperationalStatus.Up)
                 {
-                    
+
                     foreach (UnicastIPAddressInformation ip in networkInterface.GetIPProperties().UnicastAddresses)
                     {
-                        
+
                         if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                         {
-                            output = ip.Address.ToString();                                                                                
+                            output = ip.Address.ToString();
 
                             //Writes whether what kind of internet connection you have
                             System.Diagnostics.Debug.WriteLine(networkInterface.NetworkInterfaceType.ToString());
@@ -145,7 +148,6 @@ namespace FirstSemesterExamProject
             {
                 // Sends the latest data to all clients but the one who sent it
                 SendDataToOtherClients();
-
 
             }
 
@@ -195,7 +197,7 @@ namespace FirstSemesterExamProject
             {
                 SearchAndAddClient();
 
-                System.Diagnostics.Debug.WriteLine("Clients found: "+clients.Count);
+                System.Diagnostics.Debug.WriteLine("Clients found: " + clients.Count);
 
             }
         }
@@ -328,8 +330,13 @@ namespace FirstSemesterExamProject
 
         public void ShutDownServer()
         {
-            isOnline = false;
+            foreach (Thread thread in serverThreads)
+            {
+                thread.Abort();
+            }
+            
             instance = null;
+
         }
     }
 }
