@@ -97,8 +97,8 @@ namespace FirstSemesterExamProject
             };
             searchForClientsThread.Start();
 
-            Console.WriteLine("Server online status: " + isOnline);
-            Console.WriteLine("IP: " + serverIp + "     Port:" + port);
+            System.Diagnostics.Debug.WriteLine("Server online status: " + isOnline);
+            System.Diagnostics.Debug.WriteLine("IP: " + serverIp + "     Port:" + port);
         }
 
         public static string FindLocalIp(NetworkInterfaceType _networkType)
@@ -131,7 +131,7 @@ namespace FirstSemesterExamProject
 
             if (output == "")
             {
-                Console.WriteLine("IP Error!");
+                System.Diagnostics.Debug.WriteLine("IP Error!");
             }
             return output;
         }
@@ -267,7 +267,7 @@ namespace FirstSemesterExamProject
                 {
                     //if client disconnects
 
-                    Console.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
+                    System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
                     lock (clientsListKey)
                     {
                         clients.Remove(client);
