@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -17,7 +18,7 @@ namespace FirstSemesterExamProject
 
 
 
-        private int port = 13000;
+        public int port = 13000;
         public bool isOnline = false;
 
         private bool shouldLookForClients = true;
@@ -35,6 +36,8 @@ namespace FirstSemesterExamProject
         private static Server instance;
 
         public TcpListener tcpListener;
+
+        public string serverIp;
 
 
         private readonly byte clientsMaxAmount = 3;
@@ -62,6 +65,17 @@ namespace FirstSemesterExamProject
 
         private Server()
         {
+            //Finds the local Ip
+            serverIp = FindLocalIp(NetworkInterfaceType.Wireless80211);
+
+           
+        }
+
+        /// <summary>
+        /// Called when hosting a Lobby
+        /// </summary>
+        public void StartServer()
+        {
             // starts the actual server
             tcpListener = new TcpListener(IPAddress.Any, port);
             tcpListener.Start();
@@ -83,7 +97,43 @@ namespace FirstSemesterExamProject
             };
             searchForClientsThread.Start();
 
+            Console.WriteLine("Server online status: " + isOnline);
+            Console.WriteLine("IP: " + serverIp + "     Port:" + port);
+        }
 
+        public static string FindLocalIp(NetworkInterfaceType _networkType)
+        {
+            //string hostName = Dns.GetHostName(); // Retrive the Name of HOST  
+
+            //// Get the IP
+            //IPHostEntry host = Dns.GetHostEntry(hostName);
+
+
+            //return host.AddressList[1].ToString(); //IP
+
+
+            string output = "";
+
+
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == _networkType && item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            output = ip.Address.ToString();
+                        }
+                    }
+                }
+            }
+
+            if (output == "")
+            {
+                Console.WriteLine("IP Error!");
+            }
+            return output;
         }
 
         /// <summary>
