@@ -18,7 +18,7 @@ namespace FirstSemesterExamProject
 
 
         private int port = 13000;
-        private bool isOnline = false;
+        public bool isOnline = false;
 
         private bool shouldLookForClients = true;
 
@@ -175,36 +175,9 @@ namespace FirstSemesterExamProject
             //Clears buffer
             sWriter.Flush();
 
-
-
-
-            // CLIENT DO THIS RIGHT AFTER CONNECTING TO SERVER:
-            
-            ///// < summary >
-            ///// Receive an immediate respons from Server, assigning client to a team
-            ///// </ summary >
-            //private void ReceiveTeamAssignment()
-            //{
-            //    Thread initialServerMessageThread = new Thread(ReceiveTeamInt)
-            //    {
-            //        IsBackground = true
-            //    };
-
-            //    initialServerMessageThread.Start();
-            //}
-
-            //private void ReceiveTeamInt()
-            //{
-            //    sData = sReader.ReadLine();
-
-            //    team = (PlayerTeam)Convert.ToInt32(sData);
-            //    //Then host would be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
-            //}
-
-
         }
 
-        
+
 
 
 
@@ -237,7 +210,6 @@ namespace FirstSemesterExamProject
                 // reads from stream
                 try
                 {
-
                     //Reading untill data is received..
                     sData = sReader.ReadLine();
                 }
@@ -259,10 +231,6 @@ namespace FirstSemesterExamProject
                     //evaluate the Data and the client who sent it
                     EvaluateData(sData, client);
                 }
-
-
-
-
             }
         }
 
@@ -273,17 +241,37 @@ namespace FirstSemesterExamProject
         /// <param name="client">the client who sent it</param>
         private void EvaluateData(string sData, TcpClient client)
         {
-
-
             Data data = new Data(sData, client);
 
             lock (receivedDataKey)
             {
                 receivedDataQueue.Enqueue(data);
             }
+        }
 
 
+        /// <summary>
+        /// For testing purposes
+        /// </summary>
+        /// <param name="message"></param>
+        public void WriteToAllClients(string message)
+        {
+            lock (clientsListKey)
+            {
+                foreach (TcpClient client in clients)
+                {
 
+                    //Writes to the specefic client
+                    StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+
+
+                    //sends data
+                    sWriter.WriteLine(message);
+
+                    //Clears buffer
+                    sWriter.Flush();
+                }
+            }
         }
     }
 }
