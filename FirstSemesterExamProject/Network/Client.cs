@@ -19,6 +19,7 @@ namespace FirstSemesterExamProject
         private bool validIp = false;
         private IPAddress iP;
         PlayerTeam team;
+        Boolean bClientConnected = false;
 
         public bool ValidIp
         {
@@ -67,10 +68,12 @@ namespace FirstSemesterExamProject
             try
             {
                 client.Connect(iP, port);
+                Console.WriteLine("Connected");
             }
             catch (Exception)
             {
                 error = true;
+                Console.WriteLine("Server unavaible");
             }
 
             if (error != true)
@@ -91,23 +94,16 @@ namespace FirstSemesterExamProject
 
             ReceiveTeamAssignment();// sets the team
 
-            // you could use the NetworkStream to read and write, 
-            // but there is no forcing flush, even when requested
-            IPEndPoint endPoint = (IPEndPoint)client.Client.RemoteEndPoint;
-            IPEndPoint localPoint = (IPEndPoint)client.Client.LocalEndPoint;
-
-            Console.WriteLine("Connected");
-
-            Thread readerThread = new Thread(ReaderThread);
-            readerThread.Start();
-            readerThread.IsBackground = true;
-
+            ReaderThread();
         }
 
+        /// <summary>
+        /// the loop that the clients thread come into
+        /// </summary>
         private void ReaderThread()
         {
             string sData;
-            Boolean bClientConnected = true;
+            bClientConnected = true;
             while (bClientConnected)
             {
                 sData = ReceiveFromHost();
@@ -154,7 +150,11 @@ namespace FirstSemesterExamProject
             return sData;
         }
 
-        private void UseServerData(string Data)
+        /// <summary>
+        /// Method that handles the recieved Data
+        /// </summary>
+        /// <param name="Data"></param>
+        private void UseServerData(string sData)
         {
 
         }
