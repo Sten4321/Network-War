@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace ConsoleApp1
 {
@@ -17,14 +18,15 @@ namespace ConsoleApp1
             Console.ReadLine();
         }
 
-
+        //Get
+        static string urlGet = "http://localhost:52788/api/Highscore";
         //Set
-        static string url = "http://localhost:59787/api/Highscore";
+        static string urlSet = "http://localhost:52788/api/Highscore";
         static string myParameters = "Test";
 
         public static void Testc()
         {
-            string insertLine = "http://localhost:51286/api/Highscore";
+            string insertLine = "http://localhost:52788//api/Highscore";
             var client = new HttpClient();
             var result = client.GetStringAsync(insertLine);
             Console.WriteLine(result);
@@ -34,9 +36,8 @@ namespace ConsoleApp1
         {
             using (var client = new System.Net.WebClient()) //WebClient  
             {
-                client.Headers.Add("Content-Type:application/json"); //Content-Type  
-                client.Headers.Add("Accept:application/json");
-                var result = client.DownloadString("http://localhost:59787/api/Highscore"); //URI  
+                client.Headers[System.Net.HttpRequestHeader.ContentType] ="application/json"; //Content-Type  
+                var result = client.DownloadString(urlGet);  
                 Console.WriteLine(Environment.NewLine + result);
             }
         }
@@ -45,8 +46,11 @@ namespace ConsoleApp1
         {
             using (var client = new System.Net.WebClient()) //WebClient  
             {
-                client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                string HtmlResult = client.UploadString(url,"Post", myParameters);
+                client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json";
+                var serialize = JsonConvert.SerializeObject(myParameters);
+                string response = client.UploadString(urlSet, serialize);
+                var result = JsonConvert.DeserializeObject(response);
+                Console.WriteLine(result);
             }
         }
     }

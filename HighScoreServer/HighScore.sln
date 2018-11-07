@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighScore", "HighScore\HighScore.csproj", "{90E0914C-F1F0-49FD-B150-2F7E550C52D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighScoreServer", "HighScoreServer\HighScoreServer.csproj", "{B45FF88E-99CC-4DB4-9443-ED7966FFF6FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{90E0914C-F1F0-49FD-B150-2F7E550C52D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90E0914C-F1F0-49FD-B150-2F7E550C52D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90E0914C-F1F0-49FD-B150-2F7E550C52D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90E0914C-F1F0-49FD-B150-2F7E550C52D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B45FF88E-99CC-4DB4-9443-ED7966FFF6FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B45FF88E-99CC-4DB4-9443-ED7966FFF6FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B45FF88E-99CC-4DB4-9443-ED7966FFF6FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B45FF88E-99CC-4DB4-9443-ED7966FFF6FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
