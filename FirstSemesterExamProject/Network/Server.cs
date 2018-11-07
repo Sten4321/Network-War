@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -17,8 +18,8 @@ namespace FirstSemesterExamProject
 
 
 
-        private int port = 13000;
-        private bool isOnline = false;
+        public int port = 13000;
+        public bool isOnline = false;
 
         private bool shouldLookForClients = true;
 
@@ -35,6 +36,8 @@ namespace FirstSemesterExamProject
         private static Server instance;
 
         public TcpListener tcpListener;
+
+        public string serverIp;
 
 
         private readonly byte clientsMaxAmount = 3;
@@ -62,6 +65,17 @@ namespace FirstSemesterExamProject
 
         private Server()
         {
+            //Finds the local Ip
+            serverIp = FindLocalIp(NetworkInterfaceType.Wireless80211);
+
+           
+        }
+
+        /// <summary>
+        /// Called when hosting a Lobby
+        /// </summary>
+        public void StartServer()
+        {
             // starts the actual server
             tcpListener = new TcpListener(IPAddress.Any, port);
             tcpListener.Start();
@@ -83,7 +97,43 @@ namespace FirstSemesterExamProject
             };
             searchForClientsThread.Start();
 
+            System.Diagnostics.Debug.WriteLine("Server online status: " + isOnline);
+            System.Diagnostics.Debug.WriteLine("IP: " + serverIp + "     Port:" + port);
+        }
 
+        public static string FindLocalIp(NetworkInterfaceType _networkType)
+        {
+            //string hostName = Dns.GetHostName(); // Retrive the Name of HOST  
+
+            //// Get the IP
+            //IPHostEntry host = Dns.GetHostEntry(hostName);
+
+
+            //return host.AddressList[1].ToString(); //IP
+
+
+            string output = "";
+
+
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == _networkType && item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            output = ip.Address.ToString();
+                        }
+                    }
+                }
+            }
+
+            if (output == "")
+            {
+                System.Diagnostics.Debug.WriteLine("IP Error!");
+            }
+            return output;
         }
 
         /// <summary>
@@ -175,36 +225,9 @@ namespace FirstSemesterExamProject
             //Clears buffer
             sWriter.Flush();
 
-
-
-
-            // CLIENT DO THIS RIGHT AFTER CONNECTING TO SERVER:
-            
-            ///// < summary >
-            ///// Receive an immediate respons from Server, assigning client to a team
-            ///// </ summary >
-            //private void ReceiveTeamAssignment()
-            //{
-            //    Thread initialServerMessageThread = new Thread(ReceiveTeamInt)
-            //    {
-            //        IsBackground = true
-            //    };
-
-            //    initialServerMessageThread.Start();
-            //}
-
-            //private void ReceiveTeamInt()
-            //{
-            //    sData = sReader.ReadLine();
-
-            //    team = (PlayerTeam)Convert.ToInt32(sData);
-            //    //Then host would be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
-            //}
-
-
         }
 
-        
+
 
 
 
@@ -237,7 +260,6 @@ namespace FirstSemesterExamProject
                 // reads from stream
                 try
                 {
-
                     //Reading untill data is received..
                     sData = sReader.ReadLine();
                 }
@@ -245,7 +267,7 @@ namespace FirstSemesterExamProject
                 {
                     //if client disconnects
 
-                    Console.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
+                    System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
                     lock (clientsListKey)
                     {
                         clients.Remove(client);
@@ -259,10 +281,6 @@ namespace FirstSemesterExamProject
                     //evaluate the Data and the client who sent it
                     EvaluateData(sData, client);
                 }
-
-
-
-
             }
         }
 
@@ -273,17 +291,37 @@ namespace FirstSemesterExamProject
         /// <param name="client">the client who sent it</param>
         private void EvaluateData(string sData, TcpClient client)
         {
-
-
             Data data = new Data(sData, client);
 
             lock (receivedDataKey)
             {
                 receivedDataQueue.Enqueue(data);
             }
+        }
 
 
+        /// <summary>
+        /// For testing purposes
+        /// </summary>
+        /// <param name="message"></param>
+        public void WriteToAllClients(string message)
+        {
+            lock (clientsListKey)
+            {
+                foreach (TcpClient client in clients)
+                {
 
+                    //Writes to the specefic client
+                    StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+
+
+                    //sends data
+                    sWriter.WriteLine(message);
+
+                    //Clears buffer
+                    sWriter.Flush();
+                }
+            }
         }
     }
 }
