@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace FirstSemesterExamProject
@@ -36,6 +34,8 @@ namespace FirstSemesterExamProject
         public static bool canMute;
         public static bool musicOn = true;
         public static bool menuMusicOn = true;
+        //Server
+        private Thread clientThread;
 
 
 
@@ -404,7 +404,7 @@ namespace FirstSemesterExamProject
 
             }
         }
-        private void muteButton_Click(object sender, EventArgs e)
+        private void MuteButton_Click(object sender, EventArgs e)
         {
             if (menuMusicOn == true)
             {
@@ -978,6 +978,7 @@ namespace FirstSemesterExamProject
         {
 
         }
+
         /// <summary>
         /// Button that takes you to a screen where you have to choose between hosting a game or joining a game.
         /// </summary>
@@ -1008,14 +1009,25 @@ namespace FirstSemesterExamProject
             Host.Visible = true;
             JoinGame.Visible = true;
             EnterIP.Visible = true;
+            Client.Instance.ValidIp = false;
+            // TODO: Online Buttom
             Online.Visible = true;
         }
+
         /// <summary>
         /// Makes you the host/server that is in control of the game
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Host_Click(object sender, EventArgs e)
+        {
+            if (Server.Instance.isOnline == false)
+            {
+                Server.Instance.StartServer();
+                UpdateIpLabelText();
+            }
+        }
+        private void UpdateIpLabelText()
         {
             JoinGame.Visible = false;
             EnterIP.Visible = false;
@@ -1040,8 +1052,25 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void JoinGame_Click(object sender, EventArgs e)
         {
+            CheckIP();
 
+            if (Client.Instance.ValidIp == true)
+            {
+                clientThread = new Thread(Client.Instance.ConnectClient);
+                clientThread.Start();
+                clientThread.IsBackground = true;
+            }
+            // TODO: JoinGame Buttom
         }
+
+        /// <summary>
+        /// Handles what happens after a successfull join
+        /// </summary>
+        public void ApplyJoined()
+        {
+            // TODO: ApplyJoined
+        }
+
         /// <summary>
         /// To enter IP adress given from the host
         /// </summary>
@@ -1049,8 +1078,8 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void EnterIP_TextChanged(object sender, EventArgs e)
         {
-
-        }        
+            // TODO: Change ip field
+        }
         /// <summary>
         /// Shall contain the IP adress of the host
         /// </summary>
@@ -1061,6 +1090,26 @@ namespace FirstSemesterExamProject
 
         }
         #endregion
+
+        /// <summary>
+        /// Checks if the text in EnterIP TextBox is valid
+        /// </summary>
+        private void CheckIP()
+        {
+            IPAddress ipAddress;
+            if (IPAddress.TryParse(EnterIP.Text, out ipAddress))
+            {
+                Client.Instance.IP = ipAddress;
+                Client.Instance.ValidIp = true;
+                //valid ip
+            }
+            else
+            {
+                Client.Instance.ValidIp = false;
+                //is not valid ip
+            }
+            // TODO: Check valid ip
+        }
 
         /// <summary>
         /// Allows the player to use the mouse to select units
