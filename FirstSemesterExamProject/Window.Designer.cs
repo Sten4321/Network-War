@@ -404,7 +404,7 @@ namespace FirstSemesterExamProject
             this.muteButton.TabIndex = 37;
             this.muteButton.TabStop = false;
             this.muteButton.UseVisualStyleBackColor = false;
-            this.muteButton.Click += new System.EventHandler(this.muteButton_Click);
+            this.muteButton.Click += new System.EventHandler(this.MuteButton_Click);
             // 
             // Online
             // 

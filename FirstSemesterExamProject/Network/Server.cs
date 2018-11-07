@@ -241,7 +241,7 @@ namespace FirstSemesterExamProject
                     //Reading untill data is received..
                     sData = sReader.ReadLine();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //if client disconnects
 

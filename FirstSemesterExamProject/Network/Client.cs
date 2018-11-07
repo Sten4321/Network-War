@@ -9,26 +9,82 @@ namespace FirstSemesterExamProject
 {
     class Client
     {
+        private static Client instance;
+        TcpClient client;
         public static readonly object key = new object();
         int sleepDelay = 17;
         public int port = 25565;//The port to connect to
         StreamWriter sWriter;
         StreamReader sReader;
-        public string ip = "192.168.1.1";
-        public IPAddress iP;
-        private Boolean _isRunning;
+        private bool validIp = false;
+        private IPAddress iP;
         PlayerTeam team;
+
+        public bool ValidIp
+        {
+            get { return validIp; }
+            set { validIp = value; }
+        }
+
+        public IPAddress IP
+        {
+            get { return iP; }
+            set { iP = value; }
+        }
+
+        /// <summary>
+        /// server Singleton
+        /// </summary>
+        public static Client Instance
+        {
+            get
+            {
+                if (instance != null)
+                {
+
+                    return instance;
+                }
+                else
+                {
+                    instance = new Client();
+                    return instance;
+                }
+            }
+        }
+
+        public bool ValidIp1 { get => validIp; set => validIp = value; }
+
+        private Client() { }
+
+        /// <summary>
+        /// checks if connection is successfull
+        /// </summary>
+        public void ConnectClient()
+        {
+            // retrieve connect to server
+            client = new TcpClient();
+            bool error = false;
+            try
+            {
+                client.Connect(iP, port);
+            }
+            catch (Exception)
+            {
+                error = true;
+            }
+
+            if (error != true)
+            {
+                ClientHandler();
+            }
+        }
 
         /// <summary>
         /// handles each client
         /// </summary>
         /// <param name="obj"></param>
-        public void ClientHandler()
+        private void ClientHandler()
         {
-            IPAddress.TryParse(ip, out iP);
-            // retrieve connect to server
-            TcpClient client = new TcpClient();
-            client.Connect(iP, port);
             // sets two streams
             sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
             sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
@@ -50,10 +106,12 @@ namespace FirstSemesterExamProject
 
         private void ReaderThread()
         {
+            string sData;
             Boolean bClientConnected = true;
             while (bClientConnected)
             {
-
+                sData = ReceiveFromHost();
+                UseServerData(sData);
                 Thread.Sleep(sleepDelay);
             }
         }
@@ -82,6 +140,7 @@ namespace FirstSemesterExamProject
         private void SendToHost(string message)
         {
             sWriter.WriteLine(message);
+            sWriter.Flush();
         }
 
         /// <summary>
@@ -93,6 +152,11 @@ namespace FirstSemesterExamProject
             string sData;
             sData = sReader.ReadLine();
             return sData;
+        }
+
+        private void UseServerData(string Data)
+        {
+
         }
     }
 }
