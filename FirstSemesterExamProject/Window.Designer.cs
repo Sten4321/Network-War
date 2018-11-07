@@ -425,6 +425,7 @@ namespace FirstSemesterExamProject
             this.Host.TabIndex = 39;
             this.Host.Text = "Host";
             this.Host.UseVisualStyleBackColor = true;
+            this.Host.Visible = false;
             this.Host.Click += new System.EventHandler(this.Host_Click);
             // 
             // JoinGame
@@ -435,6 +436,7 @@ namespace FirstSemesterExamProject
             this.JoinGame.TabIndex = 40;
             this.JoinGame.Text = "Join Game";
             this.JoinGame.UseVisualStyleBackColor = true;
+            this.JoinGame.Visible = false;
             this.JoinGame.Click += new System.EventHandler(this.JoinGame_Click);
             // 
             // EnterIP
@@ -443,6 +445,7 @@ namespace FirstSemesterExamProject
             this.EnterIP.Name = "EnterIP";
             this.EnterIP.Size = new System.Drawing.Size(100, 19);
             this.EnterIP.TabIndex = 41;
+            this.EnterIP.Visible = false;
             this.EnterIP.TextChanged += new System.EventHandler(this.EnterIP_TextChanged);
             // 
             // HostIPAdress
@@ -453,6 +456,7 @@ namespace FirstSemesterExamProject
             this.HostIPAdress.Size = new System.Drawing.Size(37, 13);
             this.HostIPAdress.TabIndex = 42;
             this.HostIPAdress.Text = "00000";
+            this.HostIPAdress.Visible = false;
             this.HostIPAdress.Click += new System.EventHandler(this.HostIPAdress_Click);
             // 
             // Window

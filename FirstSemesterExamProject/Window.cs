@@ -1008,6 +1008,7 @@ namespace FirstSemesterExamProject
             Host.Visible = true;
             JoinGame.Visible = true;
             EnterIP.Visible = true;
+            Online.Visible = true;
         }
         /// <summary>
         /// Makes you the host/server that is in control of the game
