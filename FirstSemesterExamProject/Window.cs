@@ -1016,12 +1016,24 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Host_Click(object sender, EventArgs e)
         {
+            if (Server.Instance.isOnline == false)
+            {
+                Server.Instance.StartServer();
+                UpdateIpLabelText();
+            }
+        }
+        private void UpdateIpLabelText()
+        {
             JoinGame.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = true;
-            //TODO: HostGame Buttom
-        }
 
+            //portLabel.Visible = true;
+
+            HostIPAdress.Text = Server.Instance.serverIp;
+            //portLabel.Text = Server.Instance.port;
+
+        }
         /// <summary>
         /// Make it possible to join a host through their IP-adress
         /// </summary>
