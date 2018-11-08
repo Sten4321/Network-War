@@ -51,7 +51,6 @@ namespace FirstSemesterExamProject
             {
                 if (instance != null)
                 {
-
                     return instance;
                 }
                 else
@@ -174,17 +173,7 @@ namespace FirstSemesterExamProject
         /// <param name="Data"></param>
         private void UseServerData(string sData)
         {
-            // TODO: Insert message translater:
             DataConverter.ApplyDataToself(sData);
-        }
-
-        /// <summary>
-        /// Translates a move for the player
-        /// </summary>
-        /// <param name="sData"></param>
-        private void MoveUnit(string sData)
-        {
-            //TODO: Insert Code/Hook for moving unit
         }
     }
 }
