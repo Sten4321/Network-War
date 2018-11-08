@@ -13,13 +13,14 @@ namespace FirstSemesterExamProject
         TcpClient client;
         public static readonly object key = new object();
         int sleepDelay = 17;
-        public int port = 25565;//The port to connect to
+        public int port = 13000;//The port to connect to
         StreamWriter sWriter;
         StreamReader sReader;
         private bool validIp = false;
         private IPAddress iP;
-        PlayerTeam team;
-        Boolean bClientConnected = false;
+        public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
+
+        public bool clientConnected = false;
 
         public bool ValidIp
         {
@@ -31,6 +32,12 @@ namespace FirstSemesterExamProject
         {
             get { return iP; }
             set { iP = value; }
+        }
+
+        public int Port
+        {
+            get { return port; }
+            set { port = value; }
         }
 
         /// <summary>
@@ -102,14 +109,23 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReaderThread()
         {
+
+
             string sData;
-            bClientConnected = true;
-            while (bClientConnected)
+            clientConnected = true;
+            while (clientConnected)
             {
-                sData = ReceiveFromHost();
-                UseServerData(sData);
-                Thread.Sleep(sleepDelay);
+                if (Team != null) //Starts when it has been assigned to a team
+                {
+                    sData = ReceiveFromHost();
+                    UseServerData(sData);
+
+                    System.Diagnostics.Debug.WriteLine(sData);
+
+                    Thread.Sleep(sleepDelay);
+                }
             }
+
         }
 
         /// < summary >
@@ -125,8 +141,10 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReceiveTeamInt(object callback)
         {
-            team = (PlayerTeam)Convert.ToInt32(ReceiveFromHost());
-            //Then host would be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
+            Team = (PlayerTeam)Convert.ToInt32(ReceiveFromHost());
+            //Then host will be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
+
+            System.Diagnostics.Debug.WriteLine(Team.ToString());
         }
 
         /// <summary>
@@ -156,7 +174,31 @@ namespace FirstSemesterExamProject
         /// <param name="Data"></param>
         private void UseServerData(string sData)
         {
+            // TODO: Insert message translater:
+        }
 
+        /// <summary>
+        /// Sets the clients map to be equal to the recived map number
+        /// </summary>
+        /// <param name="sData"></param>
+        private void SetMap(string sData)
+        {
+            // TODO: sData to a GameBord...
+            GameBoard gameBoard = new GameBoard(int.Parse(sData), int.Parse(sData));
+
+            if (Window.GameState is BattleGameState)
+            {
+                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
+            }
+        }
+
+        /// <summary>
+        /// Translates a move for the player
+        /// </summary>
+        /// <param name="sData"></param>
+        private void MoveUnit(string sData)
+        {
+            //TODO: Insert Code/Hook for moving unit
         }
     }
 }

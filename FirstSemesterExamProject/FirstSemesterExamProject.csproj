@@ -69,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BattleGameState.cs" />
+    <Compile Include="DataConverter.cs" />
+    <Compile Include="Network\ClientStruct.cs" />
     <Compile Include="Network\Client.cs" />
     <Compile Include="Network\Data.cs" />
     <Compile Include="Network\Server.cs" />

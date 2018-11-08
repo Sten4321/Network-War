@@ -13,37 +13,30 @@ namespace FirstSemesterExamProject
 {
     class Server
     {
-        private readonly object clientsListKey = new object();
-        private readonly object receivedDataKey = new object();
 
 
-
+        //Server Settings / info
+        public string serverIp;
         public int port = 13000;
         public bool isOnline = false;
-
-        private bool shouldLookForClients = true;
-
-
-        private List<TcpClient> clients = new List<TcpClient>();
-        private TcpClient lastClientToSendMessage = null;
-
-
-
-
-        private Queue<Data> receivedDataQueue = new Queue<Data>();
-
-
-        private static Server instance;
-
+        private readonly byte clientsMaxAmount = 3;
         public TcpListener tcpListener;
 
-        public string serverIp;
+        //Collections
+        private List<ClientStruct> clientStructs = new List<ClientStruct>(); //Client Structs contain the clients TcpClient and Team (could add ip ect.)
+        private Queue<Data> receivedDataQueue = new Queue<Data>(); // Datas contains messages and the clients who sent them 
+
+        //Threading
+        private readonly object clientsListKey = new object();
+        private readonly object receivedDataKey = new object();
+        List<Thread> serverThreads = new List<Thread>();
 
 
-        private readonly byte clientsMaxAmount = 3;
+        //Singleton Instance
+        private static Server instance;
 
         /// <summary>
-        /// server Singleton
+        /// server Singleton Property
         /// </summary>
         public static Server Instance
         {
@@ -62,13 +55,12 @@ namespace FirstSemesterExamProject
             }
         }
 
-
+        /// <summary>
+        /// Private Singleton constructor used by property to make sure there can never be more than one server.
+        /// </summary>
         private Server()
         {
-            //Finds the local Ip
-            serverIp = FindLocalIp(NetworkInterfaceType.Wireless80211);
 
-           
         }
 
         /// <summary>
@@ -76,6 +68,9 @@ namespace FirstSemesterExamProject
         /// </summary>
         public void StartServer()
         {
+            //Finds the local Ip
+            serverIp = FindLocalIp();
+
             // starts the actual server
             tcpListener = new TcpListener(IPAddress.Any, port);
             tcpListener.Start();
@@ -83,12 +78,23 @@ namespace FirstSemesterExamProject
             
             isOnline = true;
 
+            StartServerThreads();
+
+
+            //Prints Status and info to debug output
+            System.Diagnostics.Debug.WriteLine("Server online status: " + isOnline);
+            System.Diagnostics.Debug.WriteLine("IP: " + serverIp + "     Port:" + port);
+        }
+
+        private void StartServerThreads()
+        {
             //a thread to handle server logic
             Thread serverUpdateThread = new Thread(ServerUpdate)
             {
                 IsBackground = true
             };
             serverUpdateThread.Start();
+            serverThreads.Add(serverUpdateThread);
 
             //a thread to handle new clients
             Thread searchForClientsThread = new Thread(FindNewClients)
@@ -96,34 +102,31 @@ namespace FirstSemesterExamProject
                 IsBackground = true
             };
             searchForClientsThread.Start();
-
-            System.Diagnostics.Debug.WriteLine("Server online status: " + isOnline);
-            System.Diagnostics.Debug.WriteLine("IP: " + serverIp + "     Port:" + port);
+            serverThreads.Add(searchForClientsThread);
         }
-
-        public static string FindLocalIp(NetworkInterfaceType _networkType)
+        private static string FindLocalIp()
         {
-            //string hostName = Dns.GetHostName(); // Retrive the Name of HOST  
-
-            //// Get the IP
-            //IPHostEntry host = Dns.GetHostEntry(hostName);
-
-
-            //return host.AddressList[1].ToString(); //IP
-
 
             string output = "";
 
 
-            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            foreach (NetworkInterface networkInterface in NetworkInterface.GetAllNetworkInterfaces())
             {
-                if (item.NetworkInterfaceType == _networkType && item.OperationalStatus == OperationalStatus.Up)
+                //If Wifi or Ethernet and is online
+                if ((networkInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ||
+                    networkInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                    && networkInterface.OperationalStatus == OperationalStatus.Up)
                 {
-                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+
+                    foreach (UnicastIPAddressInformation ip in networkInterface.GetIPProperties().UnicastAddresses)
                     {
+
                         if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                         {
                             output = ip.Address.ToString();
+
+                            //Writes whether what kind of internet connection you have
+                            System.Diagnostics.Debug.WriteLine("Internet type: " + networkInterface.NetworkInterfaceType.ToString());
                         }
                     }
                 }
@@ -131,7 +134,7 @@ namespace FirstSemesterExamProject
 
             if (output == "")
             {
-                System.Diagnostics.Debug.WriteLine("IP Error!");
+                output = "No connection found";
             }
             return output;
         }
@@ -146,7 +149,6 @@ namespace FirstSemesterExamProject
                 // Sends the latest data to all clients but the one who sent it
                 SendDataToOtherClients();
 
-
             }
 
         }
@@ -160,29 +162,11 @@ namespace FirstSemesterExamProject
             {
                 lock (receivedDataKey)
                 {
-                    Data data = receivedDataQueue.Dequeue(); // Queue -> chronologically 
+                    Data _data = receivedDataQueue.Dequeue(); // Queue -> chronologically 
 
-                    lock (clientsListKey)
-                    {
-                        for (int i = 0; i < clients.Count; i++)
-                        {
-                            if (clients[i] != data.client) //if the client is not the sender of the data
-                            {
-                                //Writes to the specefic client
-                                StreamWriter sWriter = new StreamWriter(clients[i].GetStream(), Encoding.ASCII);
-
-
-                                //sends data
-                                sWriter.WriteLine(data.information);
-
-                                //Clears buffer
-                                sWriter.Flush();
-
-
-                            }
-                        }
-                    }
+                    SendDataToAllOtherClients(_data);
                 }
+
             }
         }
 
@@ -191,9 +175,11 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void FindNewClients()
         {
-            while (LessThanMaxClients() && shouldLookForClients)
+            while (LessThanMaxClients() && isOnline)
             {
                 SearchAndAddClient();
+
+                System.Diagnostics.Debug.WriteLine("Clients found: " + clientStructs.Count);
 
             }
         }
@@ -204,26 +190,36 @@ namespace FirstSemesterExamProject
         {
             // wait for client connection
             TcpClient newClient = tcpListener.AcceptTcpClient();
-
             // client found.
-            clients.Add(newClient);
 
-            AssignNewClientToTeam(newClient);
+            ClientStruct _clientStruct = new ClientStruct(newClient);
+
+            //add to collection
+            _clientStruct.Team = (PlayerTeam)clientStructs.Count + 1;
+            clientStructs.Add(_clientStruct);
+
+            //Tells the client what team it's assigned to
+            AssignNewClientToTeam(_clientStruct);
 
             // create a thread to handle communication
             Thread clientThread = new Thread(new ParameterizedThreadStart(ClientUpdate));
-            clientThread.Start(newClient);
+            clientThread.Start(_clientStruct);
         }
 
-        private void AssignNewClientToTeam(TcpClient client)
+        /// <summary>
+        /// Writes a team assignment message to the client
+        /// </summary>
+        /// <param name="_clientStruct">client to assign</param>
+        private void AssignNewClientToTeam(ClientStruct _clientStruct)
         {
-            StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+            StreamWriter sWriter = new StreamWriter(_clientStruct.client.GetStream(), Encoding.ASCII);
 
             //sends data
-            sWriter.WriteLine(clients.Count);
+            sWriter.WriteLine(clientStructs.Count);
 
             //Clears buffer
             sWriter.Flush();
+
 
         }
 
@@ -237,23 +233,23 @@ namespace FirstSemesterExamProject
         /// <returns></returns>
         private bool LessThanMaxClients()
         {
-            return clients.Count < clientsMaxAmount;
+            return clientStructs.Count < clientsMaxAmount;
 
         }
 
         public void ClientUpdate(object obj)
         {
             // retrieve client from parameter passed to thread
-            TcpClient client = (TcpClient)obj;
+            ClientStruct _clientStruct = (ClientStruct)obj;
 
             // sets two streams
-            StreamReader sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
+            StreamReader sReader = new StreamReader(_clientStruct.client.GetStream(), Encoding.ASCII);
 
             bool isConnected = true;
             string sData = null;
 
-            IPEndPoint endPoint = (IPEndPoint)client.Client.RemoteEndPoint;
-            IPEndPoint localPoint = (IPEndPoint)client.Client.LocalEndPoint;
+            IPEndPoint endPoint = (IPEndPoint)_clientStruct.client.Client.RemoteEndPoint;
+            IPEndPoint localPoint = (IPEndPoint)_clientStruct.client.Client.LocalEndPoint;
 
             while (isConnected)
             {
@@ -270,7 +266,7 @@ namespace FirstSemesterExamProject
                     System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
                     lock (clientsListKey)
                     {
-                        clients.Remove(client);
+                        clientStructs.Remove(_clientStruct);
                     }
                     Thread.CurrentThread.Abort();
                 }
@@ -279,7 +275,7 @@ namespace FirstSemesterExamProject
                 if (sData != null)
                 {
                     //evaluate the Data and the client who sent it
-                    EvaluateData(sData, client);
+                    EvaluateData(sData, _clientStruct);
                 }
             }
         }
@@ -289,7 +285,7 @@ namespace FirstSemesterExamProject
         /// </summary>
         /// <param name="sData">the data received</param>
         /// <param name="client">the client who sent it</param>
-        private void EvaluateData(string sData, TcpClient client)
+        private void EvaluateData(string sData, ClientStruct client)
         {
             Data data = new Data(sData, client);
 
@@ -297,22 +293,51 @@ namespace FirstSemesterExamProject
             {
                 receivedDataQueue.Enqueue(data);
             }
+
+            //Applies data to own game
+            DataConverter.ApplyDataToself(data.information);
         }
 
 
+
+
         /// <summary>
-        /// For testing purposes
+        /// Sends data to all other clients but the one who sent it
         /// </summary>
         /// <param name="message"></param>
-        public void WriteToAllClients(string message)
+        private void SendDataToAllOtherClients(Data data)
         {
             lock (clientsListKey)
             {
-                foreach (TcpClient client in clients)
+                for (int i = 0; i < clientStructs.Count; i++)
+                {
+                    if (clientStructs[i].client != data.clientStruct.client) //if the client is not the sender of the data
+                    {
+                        //Writes to the specefic client
+                        StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
+
+
+                        //sends data
+                        sWriter.WriteLine(data.information);
+
+                        //Clears buffer
+                        sWriter.Flush();
+
+
+                    }
+                }
+            }
+
+        }
+        public void WriteServerMessage(string message)
+        {
+            lock (clientsListKey)
+            {
+                for (int i = 0; i < clientStructs.Count; i++)
                 {
 
                     //Writes to the specefic client
-                    StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+                    StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
 
 
                     //sends data
@@ -323,6 +348,22 @@ namespace FirstSemesterExamProject
                 }
             }
         }
+        /// <summary>
+        /// Turns off server
+        /// </summary>
+        public void ShutDownServer()
+        {
+            foreach (Thread thread in serverThreads)
+            {
+                thread.Abort();
+            }
+
+            instance = null; // Resets all variables and connections
+
+            System.Diagnostics.Debug.WriteLine("Server has been shut down");
+        }
+
+
     }
 }
 

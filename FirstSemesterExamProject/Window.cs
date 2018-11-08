@@ -11,7 +11,7 @@ namespace FirstSemesterExamProject
     public partial class Window : Form
     {
         private Graphics dc;
-        private GameState gs;
+        private static GameState gs;
         //Time Keeping
         private DateTime endTime;
         private float currentFps;
@@ -23,6 +23,8 @@ namespace FirstSemesterExamProject
         private static Stack<Enum> redteam;
         private static Stack<Enum> greenteam;
         private static Stack<Enum> yellowteam;
+        public static Stack<Enum> onlineUnitStack;
+
         private PlayerTeam teamSelect;
         //UnitSelect
         private int pointUsed;
@@ -37,18 +39,21 @@ namespace FirstSemesterExamProject
         //Server
         private Thread clientThread;
 
-
-
-
-
-
-
+        /// <summary>
+        /// propety gamestate
+        /// </summary>
+        public static GameState GameState
+        {
+            get { return gs; }
+            set { gs = value; }
+        }
         /// <summary>
         /// getter for redteam stack
         /// </summary>
         public static Stack<Enum> RedTeamStack
         {
             get { return redteam; }
+            set { redteam = value; }
         }
         /// <summary>
         /// getter for blueteam stack
@@ -56,6 +61,8 @@ namespace FirstSemesterExamProject
         public static Stack<Enum> BlueTeamStack
         {
             get { return blueteam; }
+            set { blueteam = value; }
+
         }
         /// <summary>
         /// getter for greenteam stack
@@ -63,6 +70,8 @@ namespace FirstSemesterExamProject
         public static Stack<Enum> GreenTeamStack
         {
             get { return greenteam; }
+            set { greenteam = value; }
+
         }
         /// <summary>
         /// getter for yellowteam stack
@@ -70,6 +79,8 @@ namespace FirstSemesterExamProject
         public static Stack<Enum> YellowTeamStack
         {
             get { return yellowteam; }
+            set { yellowteam = value; }
+
         }
 
         public Window()
@@ -147,38 +158,51 @@ namespace FirstSemesterExamProject
             {
                 //empties the list
                 showList.Clear();
-
-                switch (teamSelect)
+                if (OnlineGame())
                 {
-                    //makes the listbox contain the chosen units depending on the team chosen
-                    case PlayerTeam.RedTeam:
-                        foreach (Enum unit in redteam)
+                    if (onlineUnitStack != null)
+                    {
+                        foreach (Enum unit in onlineUnitStack)
                         {
                             showList.Add(unit);
                         }
-                        break;
+                    }
+                }
+                else
+                {
 
-                    case PlayerTeam.BlueTeam:
-                        foreach (Enum unit in blueteam)
-                        {
-                            showList.Add(unit);
-                        }
-                        break;
+                    switch (teamSelect)
+                    {
+                        //makes the listbox contain the chosen units depending on the team chosen
+                        case PlayerTeam.RedTeam:
+                            foreach (Enum unit in redteam)
+                            {
+                                showList.Add(unit);
+                            }
+                            break;
 
-                    case PlayerTeam.GreenTeam:
-                        foreach (Enum unit in greenteam)
-                        {
-                            showList.Add(unit);
-                        }
-                        break;
+                        case PlayerTeam.BlueTeam:
+                            foreach (Enum unit in blueteam)
+                            {
+                                showList.Add(unit);
+                            }
+                            break;
 
-                    case PlayerTeam.YellowTeam:
-                        foreach (Enum unit in yellowteam)
-                        {
-                            showList.Add(unit);
-                        }
-                        break;
+                        case PlayerTeam.GreenTeam:
+                            foreach (Enum unit in greenteam)
+                            {
+                                showList.Add(unit);
+                            }
+                            break;
 
+                        case PlayerTeam.YellowTeam:
+                            foreach (Enum unit in yellowteam)
+                            {
+                                showList.Add(unit);
+                            }
+                            break;
+
+                    }
                 }
 
             }
@@ -253,37 +277,52 @@ namespace FirstSemesterExamProject
         {
             pointUsed = 0;
 
-            switch (teamSelect)
+            if (OnlineGame())
             {
-                //makes the listbox contain the chosen units depending on the team chosen
-                case PlayerTeam.RedTeam:
-                    foreach (Enum unit in redteam)
+                if (onlineUnitStack != null)
+                {
+
+                    foreach (Enum unit in onlineUnitStack)
                     {
                         PointAdd(unit);
                     }
-                    break;
+                }
+            }
+            else
+            {
 
-                case PlayerTeam.BlueTeam:
-                    foreach (Enum unit in blueteam)
-                    {
-                        PointAdd(unit);
-                    }
-                    break;
+                switch (teamSelect)
+                {
+                    //makes the listbox contain the chosen units depending on the team chosen
+                    case PlayerTeam.RedTeam:
+                        foreach (Enum unit in redteam)
+                        {
+                            PointAdd(unit);
+                        }
+                        break;
 
-                case PlayerTeam.GreenTeam:
-                    foreach (Enum unit in greenteam)
-                    {
-                        PointAdd(unit);
-                    }
-                    break;
+                    case PlayerTeam.BlueTeam:
+                        foreach (Enum unit in blueteam)
+                        {
+                            PointAdd(unit);
+                        }
+                        break;
 
-                case PlayerTeam.YellowTeam:
-                    foreach (Enum unit in yellowteam)
-                    {
-                        PointAdd(unit);
-                    }
-                    break;
+                    case PlayerTeam.GreenTeam:
+                        foreach (Enum unit in greenteam)
+                        {
+                            PointAdd(unit);
+                        }
+                        break;
 
+                    case PlayerTeam.YellowTeam:
+                        foreach (Enum unit in yellowteam)
+                        {
+                            PointAdd(unit);
+                        }
+                        break;
+
+                }
             }
 
             PointsLabel.Text = pointUsed + "/" + pointMax + " Points Used";
@@ -480,7 +519,35 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Back_Click(object sender, EventArgs e)
         {
+            OnlineBackClick();
+
             SoundEngine.PlaySound(Constant.menuBackSound);
+
+            BackClickUIHandler();
+        }
+        /// <summary>
+        /// Handles what happens when clicking back button in online game
+        /// </summary>
+        private void OnlineBackClick()
+        {
+            if (OnlineGame())
+            {
+                onlineUnitStack = null;
+
+            }
+            if (Server.Instance.isOnline)
+            {
+                Server.Instance.ShutDownServer();
+
+                System.Diagnostics.Debug.WriteLine(Server.Instance.isOnline);
+            }
+            if (Client.Instance.clientConnected)
+            {
+                //TO DO: disconnect client
+            }
+        }
+        private void BackClickUIHandler()
+        {
             TwoPlayer.Visible = true;
             ThreePlayer.Visible = true;
             FourPlayer.Visible = true;
@@ -622,25 +689,37 @@ namespace FirstSemesterExamProject
             SoundEngine.PlaySound(Constant.menuAddUnitSound);
             if (pointUsed + Constant.archerUnitCost <= pointMax)
             {
-                switch (teamSelect)
+                if (OnlineGame())
                 {
-                    case PlayerTeam.RedTeam:
-                        redteam.Push(Units.Archer);
-                        System.Diagnostics.Debug.WriteLine("Add Archer");
-                        break;
+                    if (onlineUnitStack != null)
+                    {
 
-                    case PlayerTeam.BlueTeam:
-                        blueteam.Push(Units.Archer);
-                        break;
+                    onlineUnitStack.Push(Units.Archer);
+                    }
+                }
+                else
+                {
 
-                    case PlayerTeam.GreenTeam:
-                        greenteam.Push(Units.Archer);
-                        break;
+                    switch (teamSelect)
+                    {
+                        case PlayerTeam.RedTeam:
+                            redteam.Push(Units.Archer);
+                            System.Diagnostics.Debug.WriteLine("Add Archer");
+                            break;
 
-                    case PlayerTeam.YellowTeam:
-                        yellowteam.Push(Units.Archer);
-                        break;
+                        case PlayerTeam.BlueTeam:
+                            blueteam.Push(Units.Archer);
+                            break;
 
+                        case PlayerTeam.GreenTeam:
+                            greenteam.Push(Units.Archer);
+                            break;
+
+                        case PlayerTeam.YellowTeam:
+                            yellowteam.Push(Units.Archer);
+                            break;
+
+                    }
                 }
                 ListUpdate();
                 PointUsing();
@@ -657,24 +736,35 @@ namespace FirstSemesterExamProject
             SoundEngine.PlaySound(Constant.menuAddUnitSound);
             if (pointUsed + Constant.knightUnitCost <= pointMax)
             {
-                switch (teamSelect)
+                if (OnlineGame())
                 {
-                    case PlayerTeam.RedTeam:
-                        redteam.Push(Units.Knight);
-                        break;
+                    if (onlineUnitStack != null)
+                    {
 
-                    case PlayerTeam.BlueTeam:
-                        blueteam.Push(Units.Knight);
-                        break;
+                    onlineUnitStack.Push(Units.Knight);
+                    }
+                }
+                else
+                {
+                    switch (teamSelect)
+                    {
+                        case PlayerTeam.RedTeam:
+                            redteam.Push(Units.Knight);
+                            break;
 
-                    case PlayerTeam.GreenTeam:
-                        greenteam.Push(Units.Knight);
-                        break;
+                        case PlayerTeam.BlueTeam:
+                            blueteam.Push(Units.Knight);
+                            break;
 
-                    case PlayerTeam.YellowTeam:
-                        yellowteam.Push(Units.Knight);
-                        break;
+                        case PlayerTeam.GreenTeam:
+                            greenteam.Push(Units.Knight);
+                            break;
 
+                        case PlayerTeam.YellowTeam:
+                            yellowteam.Push(Units.Knight);
+                            break;
+
+                    }
                 }
                 ListUpdate();
                 PointUsing();
@@ -690,24 +780,35 @@ namespace FirstSemesterExamProject
             SoundEngine.PlaySound(Constant.menuAddUnitSound);
             if (pointUsed + Constant.mageUnitCost <= pointMax)
             {
-                switch (teamSelect)
+                if (OnlineGame())
                 {
-                    case PlayerTeam.RedTeam:
-                        redteam.Push(Units.Mage);
-                        break;
+                    if (onlineUnitStack != null)
+                    {
 
-                    case PlayerTeam.BlueTeam:
-                        blueteam.Push(Units.Mage);
-                        break;
+                    onlineUnitStack.Push(Units.Mage);
+                    }
+                }
+                else
+                {
+                    switch (teamSelect)
+                    {
+                        case PlayerTeam.RedTeam:
+                            redteam.Push(Units.Mage);
+                            break;
 
-                    case PlayerTeam.GreenTeam:
-                        greenteam.Push(Units.Mage);
-                        break;
+                        case PlayerTeam.BlueTeam:
+                            blueteam.Push(Units.Mage);
+                            break;
 
-                    case PlayerTeam.YellowTeam:
-                        yellowteam.Push(Units.Mage);
-                        break;
+                        case PlayerTeam.GreenTeam:
+                            greenteam.Push(Units.Mage);
+                            break;
 
+                        case PlayerTeam.YellowTeam:
+                            yellowteam.Push(Units.Mage);
+                            break;
+
+                    }
                 }
                 ListUpdate();
                 PointUsing();
@@ -724,24 +825,35 @@ namespace FirstSemesterExamProject
             SoundEngine.PlaySound(Constant.menuAddUnitSound);
             if (pointUsed + Constant.clericUnitCost <= pointMax)
             {
-                switch (teamSelect)
+                if (OnlineGame())
                 {
-                    case PlayerTeam.RedTeam:
-                        redteam.Push(Units.Cleric);
-                        break;
+                    if (onlineUnitStack != null)
+                    {
 
-                    case PlayerTeam.BlueTeam:
-                        blueteam.Push(Units.Cleric);
-                        break;
+                    onlineUnitStack.Push(Units.Cleric);
+                    }
+                }
+                else
+                {
+                    switch (teamSelect)
+                    {
+                        case PlayerTeam.RedTeam:
+                            redteam.Push(Units.Cleric);
+                            break;
 
-                    case PlayerTeam.GreenTeam:
-                        greenteam.Push(Units.Cleric);
-                        break;
+                        case PlayerTeam.BlueTeam:
+                            blueteam.Push(Units.Cleric);
+                            break;
 
-                    case PlayerTeam.YellowTeam:
-                        yellowteam.Push(Units.Cleric);
-                        break;
+                        case PlayerTeam.GreenTeam:
+                            greenteam.Push(Units.Cleric);
+                            break;
 
+                        case PlayerTeam.YellowTeam:
+                            yellowteam.Push(Units.Cleric);
+                            break;
+
+                    }
                 }
                 ListUpdate();
                 PointUsing();
@@ -757,24 +869,35 @@ namespace FirstSemesterExamProject
             SoundEngine.PlaySound(Constant.menuAddUnitSound);
             if (pointUsed + Constant.artifactUnitCost <= pointMax)
             {
-                switch (teamSelect)
+                if (OnlineGame())
                 {
-                    case PlayerTeam.RedTeam:
-                        redteam.Push(Units.Artifact);
-                        break;
+                    if (onlineUnitStack != null)
+                    {
 
-                    case PlayerTeam.BlueTeam:
-                        blueteam.Push(Units.Artifact);
-                        break;
+                    onlineUnitStack.Push(Units.Artifact);
+                    }
+                }
+                else
+                {
+                    switch (teamSelect)
+                    {
+                        case PlayerTeam.RedTeam:
+                            redteam.Push(Units.Artifact);
+                            break;
 
-                    case PlayerTeam.GreenTeam:
-                        greenteam.Push(Units.Artifact);
-                        break;
+                        case PlayerTeam.BlueTeam:
+                            blueteam.Push(Units.Artifact);
+                            break;
 
-                    case PlayerTeam.YellowTeam:
-                        yellowteam.Push(Units.Artifact);
-                        break;
+                        case PlayerTeam.GreenTeam:
+                            greenteam.Push(Units.Artifact);
+                            break;
 
+                        case PlayerTeam.YellowTeam:
+                            yellowteam.Push(Units.Artifact);
+                            break;
+
+                    }
                 }
                 ListUpdate();
                 PointUsing();
@@ -791,24 +914,35 @@ namespace FirstSemesterExamProject
             SoundEngine.PlaySound(Constant.menuAddUnitSound);
             if (pointUsed + Constant.scoutUnitCost <= pointMax)
             {
-                switch (teamSelect)
+                if (OnlineGame())
                 {
-                    case PlayerTeam.RedTeam:
-                        redteam.Push(Units.Scout);
-                        break;
+                    if (onlineUnitStack != null)
+                    {
 
-                    case PlayerTeam.BlueTeam:
-                        blueteam.Push(Units.Scout);
-                        break;
+                        onlineUnitStack.Push(Units.Scout);
+                    }
+                }
+                else
+                {
+                    switch (teamSelect)
+                    {
+                        case PlayerTeam.RedTeam:
+                            redteam.Push(Units.Scout);
+                            break;
 
-                    case PlayerTeam.GreenTeam:
-                        greenteam.Push(Units.Scout);
-                        break;
+                        case PlayerTeam.BlueTeam:
+                            blueteam.Push(Units.Scout);
+                            break;
 
-                    case PlayerTeam.YellowTeam:
-                        yellowteam.Push(Units.Scout);
-                        break;
+                        case PlayerTeam.GreenTeam:
+                            greenteam.Push(Units.Scout);
+                            break;
 
+                        case PlayerTeam.YellowTeam:
+                            yellowteam.Push(Units.Scout);
+                            break;
+
+                    }
                 }
                 ListUpdate();
                 PointUsing();
@@ -829,36 +963,51 @@ namespace FirstSemesterExamProject
             SoundEngine.PlaySound(Constant.menuBackSound);
             Enum removed;
 
-            switch (teamSelect)
+            if (OnlineGame())
             {
+                if (onlineUnitStack != null)
+                {
 
-                case PlayerTeam.RedTeam:
-                    if (!(redteam.Count <= 0))
+                    if (!(onlineUnitStack.Count <= 0))
                     {
-                        removed = redteam.Pop();
-                    }
-                    break;
 
-                case PlayerTeam.BlueTeam:
-                    if (!(blueteam.Count <= 0))
-                    {
-                        removed = blueteam.Pop();
+                        removed = onlineUnitStack.Pop();
                     }
-                    break;
+                }
+            }
+            else
+            {
+                switch (teamSelect)
+                {
 
-                case PlayerTeam.GreenTeam:
-                    if (!(greenteam.Count <= 0))
-                    {
-                        removed = greenteam.Pop();
-                    }
-                    break;
+                    case PlayerTeam.RedTeam:
+                        if (!(redteam.Count <= 0))
+                        {
+                            removed = redteam.Pop();
+                        }
+                        break;
 
-                case PlayerTeam.YellowTeam:
-                    if (!(yellowteam.Count <= 0))
-                    {
-                        removed = yellowteam.Pop();
-                    }
-                    break;
+                    case PlayerTeam.BlueTeam:
+                        if (!(blueteam.Count <= 0))
+                        {
+                            removed = blueteam.Pop();
+                        }
+                        break;
+
+                    case PlayerTeam.GreenTeam:
+                        if (!(greenteam.Count <= 0))
+                        {
+                            removed = greenteam.Pop();
+                        }
+                        break;
+
+                    case PlayerTeam.YellowTeam:
+                        if (!(yellowteam.Count <= 0))
+                        {
+                            removed = yellowteam.Pop();
+                        }
+                        break;
+                }
             }
             ListUpdate();
             PointUsing();
@@ -989,6 +1138,8 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Online_Click(object sender, EventArgs e)
         {
+            onlineUnitStack = new Stack<Enum>();
+
             RedTeam.Visible = false;
             BlueTeam.Visible = false;
             GreenTeam.Visible = false;
@@ -1038,18 +1189,14 @@ namespace FirstSemesterExamProject
         {
             JoinGame.Visible = false;
             EnterIP.Visible = false;
-            Back.Visible = true;
-            PointsLabel.Visible = true;
-            ListBox1.Visible = true;
-            AddArcher.Visible = true;
-            AddCleric.Visible = true;
-            AddKnight.Visible = true;
-            AddScout.Visible = true;
-            AddArtifact.Visible = true;
-            AddMage.Visible = true;
-            RemoveUnit.Visible = true;
-            Label.Visible = true;
-
+            HostIPAdress.Visible = true;
+            /*
+             * ipLabel.Visible = true;
+             * portLabel.Visible = true;
+             *
+            ipLabel.Text = Server.Instance.serverIp;
+            portLabel.Text = Server.Instance.port;
+            */
         }
         /// <summary>
         /// Make it possible to join a host through their IP-adress
@@ -1160,7 +1307,6 @@ namespace FirstSemesterExamProject
             }
         }
 
-
     }
 }
 
@@ -1169,3 +1315,31 @@ namespace FirstSemesterExamProject
 
 
 
+
+            Back.Visible = true;
+            PointsLabel.Visible = true;
+            ListBox1.Visible = true;
+            AddArcher.Visible = true;
+            AddCleric.Visible = true;
+            AddKnight.Visible = true;
+            AddScout.Visible = true;
+            AddArtifact.Visible = true;
+            AddMage.Visible = true;
+            RemoveUnit.Visible = true;
+            Label.Visible = true;
+
+            HostIPAdress.Text = Server.Instance.serverIp;
+            //portLabel.Text = Server.Instance.port;
+        private bool OnlineGame()
+        {
+            if (Server.Instance.isOnline || Client.Instance.clientConnected)
+            {
+
+                return true;
+            }
+            else
+            {
+
+                return false;
+            }
+        }
