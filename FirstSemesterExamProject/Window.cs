@@ -519,6 +519,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Back_Click(object sender, EventArgs e)
         {
+
             OnlineBackClick();
 
             SoundEngine.PlaySound(Constant.menuBackSound);
@@ -569,6 +570,7 @@ namespace FirstSemesterExamProject
             Host.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = false;
+            Ready.Visible = false;
             Server.Instance.isOnline = false;
             // TODO: Make the server host stop
 
@@ -1178,6 +1180,7 @@ namespace FirstSemesterExamProject
             Online.Visible = false;
             Host.Visible = false;
             HostIPAdress.Visible = true;
+            Ready.Visible = true; 
 
             if (Server.Instance.isOnline == false)
             {

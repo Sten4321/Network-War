@@ -357,7 +357,7 @@ namespace FirstSemesterExamProject
             {
                 thread.Abort();
             }
-
+            tcpListener.Stop();
             instance = null; // Resets all variables and connections
 
             System.Diagnostics.Debug.WriteLine("Server has been shut down");
