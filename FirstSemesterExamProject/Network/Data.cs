@@ -10,9 +10,10 @@ namespace FirstSemesterExamProject
     /// <summary>
     /// Struct that contains information and the client who sent it.
     /// </summary>
-    struct Data
+    public struct Data
     {
-        public TcpClient client;
+        public ClientStruct clientStruct;
+
         public string information;
 
         /// <summary>
@@ -20,10 +21,11 @@ namespace FirstSemesterExamProject
         /// </summary>
         /// <param name="_data"> the information sent from the client</param>
         /// <param name="_sender">the client who sent the infornation</param>
-        public Data (string _data, TcpClient _sender)
+        public Data (string _data, ClientStruct _sender)
         {
-            client = _sender;
+            clientStruct = _sender;
             information = _data;
         }
+       
     }
 }

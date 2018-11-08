@@ -7,8 +7,8 @@ using System.Drawing;
 
 namespace FirstSemesterExamProject
 {
-    enum PlayerTeam { RedTeam, BlueTeam, GreenTeam, YellowTeam }
-    enum Units { Archer, Artifact, Cleric, Knight, Mage, Scout }
+    public enum PlayerTeam { RedTeam, BlueTeam, GreenTeam, YellowTeam }
+    public enum Units { Archer, Artifact, Cleric, Knight, Mage, Scout }
 
     static class Constant
     {
