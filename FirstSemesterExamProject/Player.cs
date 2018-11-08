@@ -288,13 +288,13 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// Selects and moves for the Online game recived data
         /// </summary>
-        public void Select(int x, int y)
+        public void Select(int x, int y, int dx, int dy)
         {
             if (Window.OnlineGame())
             {
                 NotSelected(x, y);
 
-                Selected(x, y);
+                Selected(dx, dy);
             }
         }
 
