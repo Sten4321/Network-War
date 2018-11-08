@@ -565,7 +565,7 @@ namespace FirstSemesterExamProject
             }
             if (Client.Instance.clientConnected)
             {
-                //TO DO: disconnect client
+                //TODO: disconnect client
             }
         }
         private void BackClickUIHandler()
@@ -592,7 +592,6 @@ namespace FirstSemesterExamProject
             EnterIP.Visible = false;
             HostIPAdress.Visible = false;
             Server.Instance.isOnline = false;
-            // TODO: Make the server host stop
 
             if (RedTeam.Visible == true)
             {

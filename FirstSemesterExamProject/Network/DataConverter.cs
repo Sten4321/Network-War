@@ -42,6 +42,8 @@ namespace FirstSemesterExamProject
                         SetMap(information);
                         break;
 
+                    
+
 
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");

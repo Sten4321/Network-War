@@ -30,9 +30,9 @@ namespace FirstSemesterExamProject
         //Turn Handeling
         public bool turn = false;
 
-
         //Singleton Instance
         private static Server instance;
+        public PlayerTeam serverTeam = PlayerTeam.RedTeam;
 
         /// <summary>
         /// server Singleton Property
@@ -297,40 +297,91 @@ namespace FirstSemesterExamProject
                 receivedDataQueue.Enqueue(data);
             }
 
-            //Applies data to own game
-            DataConverter.ApplyDataToself(data.information);
+            //Applies data to own game - if it's not a message to the server (Ready, EndTurn ect)
+
+            if (!MessageDirectlyToServer(data))
+            {
+                DataConverter.ApplyDataToself(data.information);
+            }
+
+        }
+        private bool MessageDirectlyToServer(Data data)
+        {
+
+            if (data.information == "Ready;")
+            {
+                ReadyMessageHandler(data);
+                return true;
+            }
+
+            return false;
         }
 
+        private void ReadyMessageHandler(Data data)
+        {
+            //This client is ready
+            data.clientStruct.ready = true;
 
+            int readyCount = 0;
+
+            //Check if all clients are ready
+            foreach (ClientStruct client in clientStructs)
+            {
+                if (client.ready)
+                {
+                    readyCount++;
+                }
+            }
+            if (readyCount == clientStructs.Count)
+            {
+                
+                StartGame();
+            }
+
+        }
+
+        private void StartGame()
+        {
+            Random rnd = new Random();
+            int mapNum = rnd.Next(1, 7 + 1);
+
+            WriteServerMessage("Map;" + mapNum.ToString());
+
+
+
+
+
+
+            // TODO: Start Game based on map, ClientStructs.Count
+        }
 
 
         /// <summary>
         /// Sends data to all other clients but the one who sent it
         /// </summary>
         /// <param name="message"></param>
-        private void SendDataToAllOtherClients(Data data)
+        private void SendDataToAllOtherClients(Data _data)
         {
             lock (clientsListKey)
             {
                 for (int i = 0; i < clientStructs.Count; i++)
                 {
-                    if (clientStructs[i].client != data.clientStruct.client) //if the client is not the sender of the data
+                    if (clientStructs[i].client != _data.clientStruct.client) //if the client is not the sender of the data
                     {
                         //Writes to the specefic client
                         StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
 
 
                         //sends data
-                        sWriter.WriteLine(data.information);
+                        sWriter.WriteLine(_data.information);
 
                         //Clears buffer
                         sWriter.Flush();
 
-
                     }
 
                 }
-                System.Diagnostics.Debug.WriteLine("Forwarded Client Message: " + data.information);
+                System.Diagnostics.Debug.WriteLine("Forwarded Client Message From " + _data.clientStruct.Team.ToString() + ": " + _data.information);
             }
 
         }
