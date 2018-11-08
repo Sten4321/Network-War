@@ -1269,7 +1269,7 @@ namespace FirstSemesterExamProject
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Ready_Click(object sender, EventArgs e)
-        {
+        {///test
             ServerReadyClick();
             ClientReadyClick();
         }
