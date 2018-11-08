@@ -1267,7 +1267,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Ready_Click(object sender, EventArgs e)
         {
-
+            // TODO: Make sure to check if all are ready
         }
         #endregion
 
