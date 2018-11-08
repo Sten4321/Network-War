@@ -1186,7 +1186,7 @@ namespace FirstSemesterExamProject
         {
             Online.Visible = false;
             HostIPAdress.Visible = true;
-            ReadyCheck.Visible = true; 
+            StartOnlineGame.Visible = true;
 
             if (Server.Instance.isOnline == false)
             {
@@ -1212,6 +1212,7 @@ namespace FirstSemesterExamProject
             Label.Visible = true;
             Host.Visible = false;
             StartOnlineGame.Visible = false;
+            ReadyCheck.Visible = true;
             HostIPAdress.Text = Server.Instance.serverIp;
             //portLabel.Text = Server.Instance.port;
             /*
@@ -1267,19 +1268,27 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void StartOnlineGame_Click(object sender, EventArgs e)
         {
-            ServerReadyClick();
-            ClientReadyClick();
+
             //Set visible her når alle er klar
         }
         /// <summary>
         /// Checkbox for all to check to see if you are ready!!!!
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ReadyCheck_CheckedChanged(object sender, EventArgs e)
+        /// <param name="e"></param>        
+        private void ReadyCheck_Click(object sender, EventArgs e)
         {
-            //TODO: Check to see if everyone has clicked it!!!
+            if (onlineUnitStack != null && onlineUnitStack.Count > 0)
+            {
+                ServerReadyClick();
+                ClientReadyClick();
+            }
+            else
+            {
+                MessageBox.Show("Select atleast one unit", "Oops", MessageBoxButtons.OK);
+            }
         }
+
         private void ClientReadyClick()
         {
             if (!(Server.Instance.isOnline) && Client.Instance.clientConnected)
@@ -1421,6 +1430,7 @@ namespace FirstSemesterExamProject
                 return false;
             }
         }
+
 
     }
 }
