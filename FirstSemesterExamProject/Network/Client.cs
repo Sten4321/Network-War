@@ -157,6 +157,8 @@ namespace FirstSemesterExamProject
         {
             sWriter.WriteLine(message);
             sWriter.Flush();
+
+            System.Diagnostics.Debug.WriteLine("Message written to host: " + message);
         }
 
         /// <summary>
@@ -167,7 +169,11 @@ namespace FirstSemesterExamProject
         {
             string sData;
             sData = sReader.ReadLine();
+            System.Diagnostics.Debug.WriteLine("Message received from host: " + sData);
+
             return sData;
+
+
         }
 
         /// <summary>

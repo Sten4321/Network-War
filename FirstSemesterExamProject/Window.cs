@@ -1186,7 +1186,7 @@ namespace FirstSemesterExamProject
         {
             Online.Visible = false;
             HostIPAdress.Visible = true;
-            StartOnlineGame.Visible = true;
+            ReadyCheck.Visible = true; 
 
             if (Server.Instance.isOnline == false)
             {
@@ -1239,7 +1239,7 @@ namespace FirstSemesterExamProject
                 clientThread.IsBackground = true;
                 UpdateIpLabelText();
             }
-            
+
         }
 
 
@@ -1250,7 +1250,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void EnterIP_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
         /// <summary>
         /// Shall contain the IP adress of the host
@@ -1261,16 +1261,7 @@ namespace FirstSemesterExamProject
         {
 
         }
-        /// <summary>
-        /// Button to click when everyone is ready to play
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StartOnlineGame_Click(object sender, EventArgs e)
-        {
-
-            //Set visible her når alle er klar
-        }
+     
         /// <summary>
         /// Checkbox for all to check to see if you are ready!!!!
         /// </summary>
@@ -1296,7 +1287,7 @@ namespace FirstSemesterExamProject
                 switch (Client.Instance.Team)
                 {
                     case PlayerTeam.RedTeam:
-                        System.Diagnostics.Debug.WriteLine("Client Tried to be Red Team (Client ClientReadyClick()))");
+                        System.Diagnostics.Debug.WriteLine("Client Tried to be Red Team (ClientReadyClick()))");
                         break;
 
                     case PlayerTeam.BlueTeam:
@@ -1353,7 +1344,8 @@ namespace FirstSemesterExamProject
                 }
 
                 // UnitStack;TeamColor,unit1,unit2,unit3 ect
-                Server.Instance.WriteServerMessage(message);
+                Server.Instance.WriteServerMessage(message); // TODO: Andreas -> client crashes
+
 
             }
         }
@@ -1378,7 +1370,7 @@ namespace FirstSemesterExamProject
                 Client.Instance.ValidIp = false;
                 //is not valid ip
             }
-            
+
         }
 
         /// <summary>

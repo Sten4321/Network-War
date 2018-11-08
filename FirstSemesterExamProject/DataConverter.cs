@@ -29,6 +29,8 @@ namespace FirstSemesterExamProject
 
                 information = splitStrings[1];
 
+                System.Diagnostics.Debug.WriteLine(command + ": " + information);
+
                 splitStrings = information.Split(',');
 
                 switch (command)
@@ -65,7 +67,7 @@ namespace FirstSemesterExamProject
             Stack<Enum> tmpStack = new Stack<Enum>();
 
             // i = 1 because the first string is Team colour
-            for (int i = 1; i <= unitStrings.Length; i++)
+            for (int i = 1; i < unitStrings.Length; i++)
             {
                 Enum.TryParse(unitStrings[i], out Units unit); //tries to convert string to enum ("Knight" => Units.Knight)
 
@@ -98,6 +100,9 @@ namespace FirstSemesterExamProject
                     System.Diagnostics.Debug.WriteLine("DataConverter could not add units to stack.. AddUnitsToTeamStack() ");
                     break;
             }
+
+            System.Diagnostics.Debug.WriteLine(_team.ToString() + " Amount of Units:" + tmpStack.Count);
+
         }
 
         /// <summary>

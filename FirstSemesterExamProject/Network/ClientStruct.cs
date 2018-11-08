@@ -30,5 +30,10 @@ namespace FirstSemesterExamProject
             ready = false;
             clientsTurn = false;
         }
+
+        public void SetReady()
+        {
+            ready = true;
+        }
     }
 }
