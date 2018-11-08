@@ -16,7 +16,7 @@ namespace FirstSemesterExamProject
         public int port = 13000;
         public bool isOnline = false;
         private readonly byte clientsMaxAmount = 3;
-        public TcpListener tcpListener;
+        private static TcpListener tcpListener;
 
         //Collections
         private List<ClientStruct> clientStructs = new List<ClientStruct>(); //Client Structs contain the clients TcpClient and Team (could add ip ect.)
@@ -27,14 +27,16 @@ namespace FirstSemesterExamProject
         private readonly object receivedDataKey = new object();
         List<Thread> serverThreads = new List<Thread>();
 
-        //Turn Handeling
-        public bool turn = false;
 
 
-        //Singleton Instance
+        //Singleton Instance 
         private static Server instance;
+
+        //Host info
         public PlayerTeam serverTeam = PlayerTeam.RedTeam;
         public bool isReady = false;
+        public bool turn = false;
+
 
         /// <summary>
         /// server Singleton Property
@@ -73,10 +75,14 @@ namespace FirstSemesterExamProject
             serverIp = FindLocalIp();
 
             // starts the actual server
-            tcpListener = new TcpListener(IPAddress.Any, port);
-            tcpListener.Start();
-            //
-            
+            if (tcpListener == null)
+            {
+                tcpListener = new TcpListener(IPAddress.Any, port);
+                tcpListener.Start();
+                //
+            }
+
+
             isOnline = true;
 
             StartServerThreads();
@@ -303,13 +309,22 @@ namespace FirstSemesterExamProject
             }
 
         }
+        private bool MessageDirectlyToServer(Data data)
+        {
 
+            if (data.information == "Ready;")
+            {
+                ReadyMessageHandler(data);
+                return true;
+            }
 
+            return false;
+        }
 
         private void ReadyMessageHandler(Data data)
         {
             //This client is ready
-          
+
             foreach (ClientStruct _client in clientStructs)
             {
                 if (_client.client == data.clientStruct.client)
@@ -321,7 +336,8 @@ namespace FirstSemesterExamProject
 
             if (AllIsReady())
             {
-                StartGame(); //StartGameButton.IsVisible = true;
+
+                // TODO: StartGameButton.IsVisible = true; => StartGame();
             }
         }
         private bool AllIsReady()
@@ -370,27 +386,28 @@ namespace FirstSemesterExamProject
         /// Sends data to all other clients but the one who sent it
         /// </summary>
         /// <param name="message"></param>
-        private void SendDataToAllOtherClients(Data data)
+        private void SendDataToAllOtherClients(Data _data)
         {
             lock (clientsListKey)
             {
                 for (int i = 0; i < clientStructs.Count; i++)
                 {
-                    if (clientStructs[i].client != data.clientStruct.client) //if the client is not the sender of the data
+                    if (clientStructs[i].client != _data.clientStruct.client) //if the client is not the sender of the data
                     {
                         //Writes to the specefic client
                         StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
 
 
                         //sends data
-                        sWriter.WriteLine(data.information);
+                        sWriter.WriteLine(_data.information);
 
                         //Clears buffer
                         sWriter.Flush();
 
-
                     }
+
                 }
+                System.Diagnostics.Debug.WriteLine("Forwarded Client Message From " + _data.clientStruct.Team.ToString() + ": " + _data.information);
             }
 
         }
@@ -410,7 +427,10 @@ namespace FirstSemesterExamProject
 
                     //Clears buffer
                     sWriter.Flush();
+
                 }
+                System.Diagnostics.Debug.WriteLine("ServerMessage Sent: " + message);
+
             }
         }
         /// <summary>
@@ -422,8 +442,8 @@ namespace FirstSemesterExamProject
             {
                 thread.Abort();
             }
-            tcpListener.Stop();
-            instance = null; // Resets all variables and connections
+
+            instance = null;
 
             System.Diagnostics.Debug.WriteLine("Server has been shut down");
         }

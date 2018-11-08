@@ -1186,7 +1186,7 @@ namespace FirstSemesterExamProject
         {
             Online.Visible = false;
             HostIPAdress.Visible = true;
-            Ready.Visible = true; 
+            ReadyCheck.Visible = true; 
 
             if (Server.Instance.isOnline == false)
             {
@@ -1261,16 +1261,7 @@ namespace FirstSemesterExamProject
         {
 
         }
-        /// <summary>
-        /// Button to click when everyone is ready to play
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Ready_Click(object sender, EventArgs e)
-        {
-            ServerReadyClick();
-            ClientReadyClick();
-        }
+     
         /// <summary>
         /// Checkbox for all to check to see if you are ready!!!!
         /// </summary>
@@ -1296,7 +1287,7 @@ namespace FirstSemesterExamProject
                 switch (Client.Instance.Team)
                 {
                     case PlayerTeam.RedTeam:
-                        System.Diagnostics.Debug.WriteLine("Client Tried to be Red Team (Client ClientReadyClick()))");
+                        System.Diagnostics.Debug.WriteLine("Client Tried to be Red Team (ClientReadyClick()))");
                         break;
 
                     case PlayerTeam.BlueTeam:
@@ -1353,7 +1344,8 @@ namespace FirstSemesterExamProject
                 }
 
                 // UnitStack;TeamColor,unit1,unit2,unit3 ect
-                Server.Instance.WriteServerMessage(message);
+                Server.Instance.WriteServerMessage(message); // TODO: Andreas -> client crashes
+
 
             }
         }

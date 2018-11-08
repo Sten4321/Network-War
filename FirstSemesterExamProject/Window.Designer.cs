@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace FirstSemesterExamProject
 {
@@ -528,6 +529,14 @@ namespace FirstSemesterExamProject
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Window_MouseClick);
             this.ResumeLayout(false);
             this.PerformLayout();
+
+        }
+
+        private void StartOnlineGame_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+
+            // TODO: Server.Instance.StartGame(); 
 
         }
 
