@@ -385,7 +385,7 @@ namespace FirstSemesterExamProject
         {
             if (gs is BattleGameState bs)
             {
-                bs.ChangeTurn();
+                bs.ChangeTurn();// TODO: update endturn funktionality for keypress
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
@@ -1316,11 +1316,16 @@ namespace FirstSemesterExamProject
         {
             if (gs is BattleGameState bs)
             {
-                bs.ChangeTurn();
+                bs.ChangeTurn();// TODO: update ChangeTurn Funktionality for mouseClick
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
         private static bool OnlineGame()
+        {
+            if (Server.Instance.isOnline || Client.Instance.clientConnected)
+            {
+
+        private bool OnlineGame()
         {
             if (Server.Instance.isOnline || Client.Instance.clientConnected)
             {
@@ -1337,3 +1342,8 @@ namespace FirstSemesterExamProject
 }
 
 
+
+        /// <summary>
+        /// Returns True if the game is online
+        /// </summary>
+        /// <returns></returns>

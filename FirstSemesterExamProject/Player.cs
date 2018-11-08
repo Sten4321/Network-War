@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -269,20 +266,36 @@ namespace FirstSemesterExamProject
             {
                 if (canMove == true)
                 {
-                    if (selectedUnit == null)
+                    if ((!Window.OnlineGame())
+                        || ((Server.Instance.isOnline && Server.Instance.turn)
+                        || (Client.Instance.clientConnected && Client.Instance.turn)))
                     {
-                        NotSelected();
-                    }
-                    else if (selectedUnit != null)
-                    {
-                        Selected();
+                        if (selectedUnit == null)
+                        {
+                            NotSelected();
+                        }
+                        else if (selectedUnit != null)
+                        {
+                            Selected();
+                        }
                     }
 
                     canMove = false;
                 }
-
             }
+        }
 
+        /// <summary>
+        /// Selects and moves for the Online game recived data
+        /// </summary>
+        public void Select(int x, int y)
+        {
+            if (Window.OnlineGame())
+            {
+                NotSelected(x, y);
+
+                Selected(x, y);
+            }
         }
 
         /// <summary>
@@ -297,13 +310,13 @@ namespace FirstSemesterExamProject
         }
 
         /// <summary>
-        /// moves/attacks with sellected unit
+        /// moves/attacks with selected unit
         /// </summary>
-        private void Selected()
+        private void Selected()// TODO: add hook for sending to clients/Server
         {
             if (selectedUnit.Move > 0 && playerMove > 0 || (selectedUnit is Scout && selectedUnit.Move > 0))
             {
-                Healing();
+                Healing((int)coordinates.X, (int)coordinates.Y);
                 RangedAttack();
                 //test if the tile is in range and a tile to which you can move
                 if (InRange((int)coordinates.X, (int)coordinates.Y) && NotSolid((int)Coordinates.X, (int)Coordinates.Y))
@@ -318,7 +331,7 @@ namespace FirstSemesterExamProject
                             && ((selectedUnitX < coordinates.X - 1) || (selectedUnitX > coordinates.X + 1)
                             || (selectedUnitY < coordinates.Y - 1) || (selectedUnitY > coordinates.Y + 1)))
                             {
-                                AttackMove(unit);
+                                AttackMove(unit, (int)coordinates.X, (int)coordinates.Y);
                             }
                             //attacks from melee range if the unit on the tile is an enemy
                             else if ((unit.Team != selectedUnit.Team)
@@ -336,8 +349,55 @@ namespace FirstSemesterExamProject
                     //moves to empty tile
                     else if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] == null)
                     {
-                        MoveHere();
+                        MoveHere((int)coordinates.X, (int)coordinates.Y);
                     }
+                }
+            }
+            //deselects unit
+            selectedUnit = null;
+            selectedUnitX = 0;
+            selectedUnitY = 0;
+        }
+
+        /// <summary>
+        /// moves/attacks with selected unit data recieved Online
+        /// </summary>
+        private void Selected(int dx, int dy)
+        {
+            Healing(dx, dy);
+            RangedAttack();
+            //test if the tile is in range and a tile to which you can move
+            if (InRange(dx, dy) && NotSolid(dx, dy))
+            {
+                //tests if there is an enemy
+                if (GameBoard.UnitMap[dx, dy] is Unit unit && !(selectedUnit is IRanged))
+                {
+                    if (selectedUnit is Scout && playerMove > 0 || !(selectedUnit is Scout))
+                    {
+                        //moves to melee range and attacks if the unit on the tile is an enemy
+                        if ((unit.Team != selectedUnit.Team)
+                        && ((selectedUnitX < dx - 1) || (selectedUnitX > dx + 1)
+                        || (selectedUnitY < dy - 1) || (selectedUnitY > dy + 1)))
+                        {
+                            AttackMove(unit, dx, dy);
+                        }
+                        //attacks from melee range if the unit on the tile is an enemy
+                        else if ((unit.Team != selectedUnit.Team)
+                            && ((selectedUnitX < dx)
+                            || (selectedUnitX > dx)
+                            || (selectedUnitY < dy)
+                            || (selectedUnitY > dy)))
+                        {
+
+                            selectedUnit.Attack(unit);
+                            playerMove--;
+                        }
+                    }
+                }
+                //moves to empty tile
+                else if (GameBoard.UnitMap[dx, dy] == null)
+                {
+                    MoveHere(dx, dy);
                 }
             }
             //deselects unit
@@ -374,7 +434,7 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// Handles what happens when the unit is a healer
         /// </summary>
-        private void Healing()
+        private void Healing(int x, int y)
         {
             //test if the unit is a healer
             if (selectedUnit is IHeal healer)
@@ -405,7 +465,7 @@ namespace FirstSemesterExamProject
                                 {
                                     if ((unit.Team == selectedUnit.Team && ((selectedUnitX < coordinates.X - 1) || (selectedUnitX > coordinates.X + 1) || (selectedUnitY < coordinates.Y - 1) || (selectedUnitY > coordinates.Y + 1))))
                                     {
-                                        AttackMove(unit);
+                                        AttackMove(unit, x, y);
                                     }
                                     //heals from melee range if the unit on the tile is a teammember
                                     else if ((unit.Team == selectedUnit.Team)
@@ -431,16 +491,16 @@ namespace FirstSemesterExamProject
         /// moves melle units next to the unit they are attacking
         /// </summary>
         /// <param name="unit"></param>
-        private void AttackMove(Unit unit)
+        private void AttackMove(Unit unit, int x, int y)
         {
             if ((unit.Coordinates.X - selectedUnitX > 1)
             && !(GameBoard.GroundMap[(int)unit.Coordinates.X - 1, (int)unit.Coordinates.Y].hasCollision)
             && !(GameBoard.UnitMap[(int)unit.Coordinates.X - 1, (int)unit.Coordinates.Y] != null))
             {
                 //moves the unit to new coordinates
-                selectedUnit.Coordinates = new PointF(coordinates.X - 1, coordinates.Y);
+                selectedUnit.Coordinates = new PointF(x - 1, y);
                 //subtracts the amount of moves a unit can have
-                selectedUnit.Move -= (Math.Abs((int)coordinates.X - selectedUnitX) + Math.Abs((int)coordinates.Y - selectedUnitY) - 1);
+                selectedUnit.Move -= (Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY) - 1);
                 //a units move must not be less than 0
                 if (selectedUnit.Move < 0)
                 {
@@ -458,8 +518,8 @@ namespace FirstSemesterExamProject
                 && !(GameBoard.UnitMap[(int)unit.Coordinates.X + 1, (int)unit.Coordinates.Y] != null))
             {
                 //moves unit to new coordinates
-                selectedUnit.Coordinates = new PointF(coordinates.X + 1, coordinates.Y);
-                selectedUnit.Move -= (Math.Abs((int)coordinates.X - selectedUnitX) + Math.Abs((int)coordinates.Y - selectedUnitY) - 1);
+                selectedUnit.Coordinates = new PointF(x + 1, coordinates.Y);
+                selectedUnit.Move -= (Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY) - 1);
                 //a units move must not be less than 0
                 if (selectedUnit.Move < 0)
                 {
@@ -475,8 +535,8 @@ namespace FirstSemesterExamProject
                 && !(GameBoard.GroundMap[(int)unit.Coordinates.X, (int)unit.Coordinates.Y - 1].hasCollision)
                 && !(GameBoard.UnitMap[(int)unit.Coordinates.X, (int)unit.Coordinates.Y - 1] != null))
             {
-                selectedUnit.Coordinates = new PointF(coordinates.X, coordinates.Y - 1);
-                selectedUnit.Move -= (Math.Abs((int)coordinates.X - selectedUnitX) + Math.Abs((int)coordinates.Y - selectedUnitY) - 1);
+                selectedUnit.Coordinates = new PointF(x, y - 1);
+                selectedUnit.Move -= (Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY) - 1);
                 //a units move must not be less than 0
                 if (selectedUnit.Move < 0)
                 {
@@ -492,8 +552,8 @@ namespace FirstSemesterExamProject
                 && !(GameBoard.GroundMap[(int)unit.Coordinates.X, (int)unit.Coordinates.Y + 1].hasCollision)
                 && !(GameBoard.UnitMap[(int)unit.Coordinates.X, (int)unit.Coordinates.Y + 1] != null))
             {
-                selectedUnit.Coordinates = new PointF(coordinates.X, coordinates.Y + 1);
-                selectedUnit.Move -= (Math.Abs((int)coordinates.X - selectedUnitX) + Math.Abs((int)coordinates.Y - selectedUnitY) - 1);
+                selectedUnit.Coordinates = new PointF(x, y + 1);
+                selectedUnit.Move -= (Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY) - 1);
                 //a units move must not be less than 0
                 if (selectedUnit.Move < 0)
                 {
@@ -510,7 +570,7 @@ namespace FirstSemesterExamProject
                 if (!(selectedUnit is Scout))
                 {
                     //subtracts the number of moves done from the player moves
-                    playerMove -= Math.Abs((int)coordinates.X - selectedUnitX) + Math.Abs((int)coordinates.Y - selectedUnitY);
+                    playerMove -= Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY);
                 }
                 else
                 {
@@ -555,14 +615,28 @@ namespace FirstSemesterExamProject
         }
 
         /// <summary>
+        /// selects unit online
+        /// </summary>
+        private void NotSelected(int x, int y)
+        {
+            SoundEngine.PlaySound(Constant.playerMoveUnit);
+            if (GameBoard.UnitMap[x, y] is Unit unit)
+            {
+                selectedUnit = unit;
+                selectedUnitX = (int)coordinates.X;
+                selectedUnitY = (int)coordinates.Y;
+            }
+        }
+
+        /// <summary>
         /// Moves The unit to selected Coordinates
         /// </summary>
-        private void MoveHere()
+        private void MoveHere(int x, int y)
         {
             //gives unit the new coordinates
-            selectedUnit.Coordinates = new PointF(coordinates.X, coordinates.Y);
+            selectedUnit.Coordinates = new PointF(x, y);
             //calculates how far of a move was done
-            selectedUnit.Move -= Math.Abs((int)coordinates.X - selectedUnitX) + Math.Abs((int)coordinates.Y - selectedUnitY);
+            selectedUnit.Move -= Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY);
             if (selectedUnit.Move < 0)
             {
                 selectedUnit.Move = 0;
@@ -570,7 +644,7 @@ namespace FirstSemesterExamProject
             //limits how many times you can move a unit a turn
             if (!(selectedUnit is Scout))
             {
-                playerMove -= Math.Abs((int)coordinates.X - selectedUnitX) + Math.Abs((int)coordinates.Y - selectedUnitY);
+                playerMove -= Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY);
                 if (PlayerMove < 0)
                 {
                     PlayerMove = 0;

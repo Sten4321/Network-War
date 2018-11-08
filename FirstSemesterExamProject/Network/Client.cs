@@ -18,7 +18,9 @@ namespace FirstSemesterExamProject
         StreamReader sReader;
         private bool validIp = false;
         private IPAddress iP;
+        public int PlayerNumber { get; set; }
         public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
+        public bool turn = false;//is it this clients turn
 
         public bool clientConnected = false;
 
@@ -109,8 +111,6 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReaderThread()
         {
-
-
             string sData;
             clientConnected = true;
             while (clientConnected)
@@ -125,7 +125,6 @@ namespace FirstSemesterExamProject
                     Thread.Sleep(sleepDelay);
                 }
             }
-
         }
 
         /// < summary >
@@ -141,7 +140,8 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReceiveTeamInt(object callback)
         {
-            Team = (PlayerTeam)Convert.ToInt32(ReceiveFromHost());
+            PlayerNumber = Convert.ToInt32(ReceiveFromHost());
+            Team = (PlayerTeam)Convert.ToInt32(PlayerNumber);
             //Then host will be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
 
             System.Diagnostics.Debug.WriteLine(Team.ToString());
@@ -151,7 +151,7 @@ namespace FirstSemesterExamProject
         /// Write to Host
         /// </summary>
         /// <param name="message"></param>
-        private void SendToHost(string message)
+        public void SendToHost(string message)
         {
             sWriter.WriteLine(message);
             sWriter.Flush();
@@ -175,21 +175,7 @@ namespace FirstSemesterExamProject
         private void UseServerData(string sData)
         {
             // TODO: Insert message translater:
-        }
-
-        /// <summary>
-        /// Sets the clients map to be equal to the recived map number
-        /// </summary>
-        /// <param name="sData"></param>
-        private void SetMap(string sData)
-        {
-            // TODO: sData to a GameBord...
-            GameBoard gameBoard = new GameBoard(int.Parse(sData), int.Parse(sData));
-
-            if (Window.GameState is BattleGameState)
-            {
-                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
-            }
+            DataConverter.ApplyDataToself(sData);
         }
 
         /// <summary>
