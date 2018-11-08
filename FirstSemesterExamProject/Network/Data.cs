@@ -13,7 +13,7 @@ namespace FirstSemesterExamProject
     public struct Data
     {
         public ClientStruct clientStruct;
-
+        
         public string information;
 
         /// <summary>

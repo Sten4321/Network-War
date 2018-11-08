@@ -16,7 +16,7 @@ namespace FirstSemesterExamProject
         public int port = 13000;
         public bool isOnline = false;
         private readonly byte clientsMaxAmount = 3;
-        public TcpListener tcpListener;
+        private static TcpListener tcpListener;
 
         //Collections
         private List<ClientStruct> clientStructs = new List<ClientStruct>(); //Client Structs contain the clients TcpClient and Team (could add ip ect.)
@@ -71,10 +71,14 @@ namespace FirstSemesterExamProject
             serverIp = FindLocalIp();
 
             // starts the actual server
-            tcpListener = new TcpListener(IPAddress.Any, port);
-            tcpListener.Start();
-            //
-            
+            if (tcpListener == null)
+            {
+                tcpListener = new TcpListener(IPAddress.Any, port);
+                tcpListener.Start();
+                //
+            }
+
+
             isOnline = true;
 
             StartServerThreads();
@@ -324,7 +328,9 @@ namespace FirstSemesterExamProject
 
 
                     }
+
                 }
+                System.Diagnostics.Debug.WriteLine("Forwarded Client Message: " + data.information);
             }
 
         }
@@ -344,7 +350,10 @@ namespace FirstSemesterExamProject
 
                     //Clears buffer
                     sWriter.Flush();
+
                 }
+                System.Diagnostics.Debug.WriteLine("ServerMessage Sent: " + message);
+
             }
         }
         /// <summary>
@@ -357,7 +366,8 @@ namespace FirstSemesterExamProject
                 thread.Abort();
             }
 
-            instance = null; // Resets all variables and connections
+
+            instance = null;
 
             System.Diagnostics.Debug.WriteLine("Server has been shut down");
         }

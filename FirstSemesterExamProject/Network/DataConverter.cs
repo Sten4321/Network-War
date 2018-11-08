@@ -17,7 +17,7 @@ namespace FirstSemesterExamProject
         /// <param name="dataInformation">data.Information</param>
         public static void ApplyDataToself(string dataInformation)
         {
-            if (dataInformation.Contains(';'))
+            if (dataInformation.Contains(';')) 
             {
                 string[] splitStrings = dataInformation.Split(';');
 
@@ -35,9 +35,7 @@ namespace FirstSemesterExamProject
                 {
 
                     case "UnitStack":
-
-                        Enum.TryParse(splitStrings[0], out PlayerTeam _team); //Converts first information to a team (YELLOW,archer,knight,mage)                                                
-                        AddUnitsToTeamStack(_team, splitStrings);
+                        AddUnitsToTeamStack(splitStrings);
                         break;
 
                     case "Map":
@@ -57,8 +55,9 @@ namespace FirstSemesterExamProject
         /// </summary>
         /// <param name="team"></param>
         /// <param name="unitStrings"></param>
-        public static void AddUnitsToTeamStack(PlayerTeam team, string[] unitStrings)
+        public static void AddUnitsToTeamStack( string[] unitStrings)
         {
+
             Stack<Enum> tmpStack = new Stack<Enum>();
 
             // i = 1 because the first string is Team colour
@@ -70,7 +69,9 @@ namespace FirstSemesterExamProject
             }
 
             //applies local stack to the designated team's stack
-            switch (team)
+            Enum.TryParse(unitStrings[0], out PlayerTeam _team); //Converts first information to a team (YELLOW,archer,knight,mage)                                                
+
+            switch (_team)
             {
 
                 case PlayerTeam.RedTeam:
