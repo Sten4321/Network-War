@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirstSemesterExamProject", "FirstSemesterExamProject\FirstSemesterExamProject.csproj", "{99CB1C76-C75D-47A1-9D1D-F0BF92BE15D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{D71EE063-CDBE-457B-9BB6-7869900561C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,14 @@ Global
 		{99CB1C76-C75D-47A1-9D1D-F0BF92BE15D6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{99CB1C76-C75D-47A1-9D1D-F0BF92BE15D6}.Release|x64.ActiveCfg = Release|x64
 		{99CB1C76-C75D-47A1-9D1D-F0BF92BE15D6}.Release|x64.Build.0 = Release|x64
+		{D71EE063-CDBE-457B-9BB6-7869900561C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D71EE063-CDBE-457B-9BB6-7869900561C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D71EE063-CDBE-457B-9BB6-7869900561C0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D71EE063-CDBE-457B-9BB6-7869900561C0}.Debug|x64.Build.0 = Debug|Any CPU
+		{D71EE063-CDBE-457B-9BB6-7869900561C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D71EE063-CDBE-457B-9BB6-7869900561C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D71EE063-CDBE-457B-9BB6-7869900561C0}.Release|x64.ActiveCfg = Release|Any CPU
+		{D71EE063-CDBE-457B-9BB6-7869900561C0}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
