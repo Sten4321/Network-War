@@ -23,7 +23,7 @@ namespace FirstSemesterExamProject
         private Queue<Data> receivedDataQueue = new Queue<Data>(); // Datas contains messages and the clients who sent them 
 
         //Threading
-        private readonly object clientsListKey = new object();
+        private readonly object clientsListKey = new object(); //Two keys for threads to make sure only one can get in at a time
         private readonly object receivedDataKey = new object();
         List<Thread> serverThreads = new List<Thread>();
 
@@ -356,7 +356,7 @@ namespace FirstSemesterExamProject
             {
                 thread.Abort();
             }
-
+            tcpListener.Stop();
             instance = null; // Resets all variables and connections
 
             System.Diagnostics.Debug.WriteLine("Server has been shut down");

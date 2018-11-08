@@ -468,6 +468,7 @@ namespace FirstSemesterExamProject
             this.Ready.TabIndex = 43;
             this.Ready.Text = "Ready\r\n";
             this.Ready.UseVisualStyleBackColor = true;
+            this.Ready.Visible = false;
             this.Ready.Click += new System.EventHandler(this.Ready_Click);
             // 
             // Window
