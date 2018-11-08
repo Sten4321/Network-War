@@ -52,6 +52,11 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary>
+        /// Adds units to the stacks
+        /// </summary>
+        /// <param name="team"></param>
+        /// <param name="unitStrings"></param>
         public static void AddUnitsToTeamStack(PlayerTeam team, string[] unitStrings)
         {
             Stack<Enum> tmpStack = new Stack<Enum>();
@@ -71,15 +76,15 @@ namespace FirstSemesterExamProject
                 case PlayerTeam.RedTeam:
                     Window.RedTeamStack = tmpStack;
                     break;
+
                 case PlayerTeam.BlueTeam:
-
                     Window.BlueTeamStack = tmpStack;
-
                     break;
+
                 case PlayerTeam.GreenTeam:
                     Window.GreenTeamStack = tmpStack;
-
                     break;
+
                 case PlayerTeam.YellowTeam:
                     Window.YellowTeamStack = tmpStack;
                     break;
@@ -96,13 +101,22 @@ namespace FirstSemesterExamProject
         /// <param name="sData"></param>
         public static void SetMap(string sData)
         {
-            // TODO: sData to a GameBord...
             GameBoard gameBoard = new GameBoard(int.Parse(sData), 1);
 
             if (Window.GameState is BattleGameState)
             {
                 ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
             }
+        }
+
+        /// <summary>
+        /// Moves a unit
+        /// </summary>
+        /// <param name="sData"></param>
+        public static void MoveUnit(string sData)
+        {
+            // TODO: Move unit according to data
+            
         }
     }
 }

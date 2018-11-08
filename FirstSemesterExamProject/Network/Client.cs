@@ -18,7 +18,9 @@ namespace FirstSemesterExamProject
         StreamReader sReader;
         private bool validIp = false;
         private IPAddress iP;
+        public int PlayerNumber { get; set; }
         public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
+        public bool turn = false;//is it this clients turn
 
         public bool clientConnected = false;
 
@@ -138,7 +140,8 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReceiveTeamInt(object callback)
         {
-            Team = (PlayerTeam)Convert.ToInt32(ReceiveFromHost());
+            PlayerNumber = Convert.ToInt32(ReceiveFromHost());
+            Team = (PlayerTeam)Convert.ToInt32(PlayerNumber);
             //Then host will be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
 
             System.Diagnostics.Debug.WriteLine(Team.ToString());
