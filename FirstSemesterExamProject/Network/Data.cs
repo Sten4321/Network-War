@@ -10,7 +10,7 @@ namespace FirstSemesterExamProject
     /// <summary>
     /// Struct that contains information and the client who sent it.
     /// </summary>
-    struct Data
+    public struct Data
     {
         public ClientStruct clientStruct;
 
@@ -26,5 +26,6 @@ namespace FirstSemesterExamProject
             clientStruct = _sender;
             information = _data;
         }
+       
     }
 }

@@ -60,7 +60,7 @@ namespace FirstSemesterExamProject
         /// </summary>
         private Server()
         {
-           
+
         }
 
         /// <summary>
@@ -78,6 +78,16 @@ namespace FirstSemesterExamProject
 
             isOnline = true;
 
+            StartServerThreads();
+
+
+            //Prints Status and info to debug output
+            System.Diagnostics.Debug.WriteLine("Server online status: " + isOnline);
+            System.Diagnostics.Debug.WriteLine("IP: " + serverIp + "     Port:" + port);
+        }
+
+        private void StartServerThreads()
+        {
             //a thread to handle server logic
             Thread serverUpdateThread = new Thread(ServerUpdate)
             {
@@ -93,22 +103,9 @@ namespace FirstSemesterExamProject
             };
             searchForClientsThread.Start();
             serverThreads.Add(searchForClientsThread);
-
-
-            System.Diagnostics.Debug.WriteLine("Server online status: " + isOnline);
-            System.Diagnostics.Debug.WriteLine("IP: " + serverIp + "     Port:" + port);
         }
-
-        public static string FindLocalIp()
+        private static string FindLocalIp()
         {
-            //string hostName = Dns.GetHostName(); // Retrive the Name of HOST  
-
-            //// Get the IP
-            //IPHostEntry host = Dns.GetHostEntry(hostName);
-
-
-            //return host.AddressList[1].ToString(); //IP
-
 
             string output = "";
 
@@ -116,7 +113,8 @@ namespace FirstSemesterExamProject
             foreach (NetworkInterface networkInterface in NetworkInterface.GetAllNetworkInterfaces())
             {
                 //If Wifi or Ethernet and is online
-                if ((networkInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || networkInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                if ((networkInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ||
+                    networkInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
                     && networkInterface.OperationalStatus == OperationalStatus.Up)
                 {
 
@@ -128,7 +126,7 @@ namespace FirstSemesterExamProject
                             output = ip.Address.ToString();
 
                             //Writes whether what kind of internet connection you have
-                            System.Diagnostics.Debug.WriteLine("Internet type: "+networkInterface.NetworkInterfaceType.ToString());
+                            System.Diagnostics.Debug.WriteLine("Internet type: " + networkInterface.NetworkInterfaceType.ToString());
                         }
                     }
                 }
@@ -136,7 +134,7 @@ namespace FirstSemesterExamProject
 
             if (output == "")
             {
-                System.Diagnostics.Debug.WriteLine("IP Error! OR NO INTERNET ACCESS");
+                output = "No connection found";
             }
             return output;
         }
@@ -164,29 +162,11 @@ namespace FirstSemesterExamProject
             {
                 lock (receivedDataKey)
                 {
-                    Data data = receivedDataQueue.Dequeue(); // Queue -> chronologically 
+                    Data _data = receivedDataQueue.Dequeue(); // Queue -> chronologically 
 
-                    lock (clientsListKey)
-                    {
-                        for (int i = 0; i < clientStructs.Count; i++)
-                        {
-                            if (clientStructs[i].client != data.clientStruct.client) //if the client is not the sender of the data
-                            {
-                                //Writes to the specefic client
-                                StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
-
-
-                                //sends data
-                                sWriter.WriteLine(data.information);
-
-                                //Clears buffer
-                                sWriter.Flush();
-
-
-                            }
-                        }
-                    }
+                    SendDataToAllOtherClients(_data);
                 }
+
             }
         }
 
@@ -313,22 +293,51 @@ namespace FirstSemesterExamProject
             {
                 receivedDataQueue.Enqueue(data);
             }
+
+            //Applies data to own game
+            DataConverter.ApplyDataToself(data.information);
         }
 
 
+
+
         /// <summary>
-        /// For testing purposes
+        /// Sends data to all other clients but the one who sent it
         /// </summary>
         /// <param name="message"></param>
-        public void WriteToAllClients(string message)
+        private void SendDataToAllOtherClients(Data data)
         {
             lock (clientsListKey)
             {
-                foreach (ClientStruct _clientStruct in clientStructs)
+                for (int i = 0; i < clientStructs.Count; i++)
+                {
+                    if (clientStructs[i].client != data.clientStruct.client) //if the client is not the sender of the data
+                    {
+                        //Writes to the specefic client
+                        StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
+
+
+                        //sends data
+                        sWriter.WriteLine(data.information);
+
+                        //Clears buffer
+                        sWriter.Flush();
+
+
+                    }
+                }
+            }
+
+        }
+        public void WriteServerMessage(string message)
+        {
+            lock (clientsListKey)
+            {
+                for (int i = 0; i < clientStructs.Count; i++)
                 {
 
                     //Writes to the specefic client
-                    StreamWriter sWriter = new StreamWriter(_clientStruct.client.GetStream(), Encoding.ASCII);
+                    StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
 
 
                     //sends data
@@ -339,17 +348,22 @@ namespace FirstSemesterExamProject
                 }
             }
         }
-
+        /// <summary>
+        /// Turns off server
+        /// </summary>
         public void ShutDownServer()
         {
             foreach (Thread thread in serverThreads)
             {
                 thread.Abort();
             }
-            
-            instance = null;
 
+            instance = null; // Resets all variables and connections
+
+            System.Diagnostics.Debug.WriteLine("Server has been shut down");
         }
+
+
     }
 }
 
