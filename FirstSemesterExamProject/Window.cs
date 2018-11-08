@@ -1186,7 +1186,7 @@ namespace FirstSemesterExamProject
             Online.Visible = false;
             Host.Visible = false;
             HostIPAdress.Visible = true;
-            Ready.Visible = true; 
+            Ready.Visible = true;
 
             if (Server.Instance.isOnline == false)
             {
@@ -1237,7 +1237,7 @@ namespace FirstSemesterExamProject
                 clientThread.IsBackground = true;
                 UpdateIpLabelText();
             }
-            
+
         }
 
 
@@ -1248,7 +1248,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void EnterIP_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
         /// <summary>
         /// Shall contain the IP adress of the host
@@ -1266,11 +1266,11 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Ready_Click(object sender, EventArgs e)
         {
-            if (onlineUnitStack!= null && onlineUnitStack.Count>0)
+            if (onlineUnitStack != null && onlineUnitStack.Count > 0)
             {
 
-            ServerReadyClick();
-            ClientReadyClick();
+                ServerReadyClick();
+                ClientReadyClick();
             }
             else
             {
@@ -1368,7 +1368,7 @@ namespace FirstSemesterExamProject
                 Client.Instance.ValidIp = false;
                 //is not valid ip
             }
-            
+
         }
 
         /// <summary>
