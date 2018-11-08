@@ -49,7 +49,6 @@ namespace FirstSemesterExamProject
             {
                 if (instance != null)
                 {
-
                     return instance;
                 }
                 else
@@ -125,6 +124,7 @@ namespace FirstSemesterExamProject
                     Thread.Sleep(sleepDelay);
                 }
             }
+        }
 
         }
 
@@ -202,3 +202,21 @@ namespace FirstSemesterExamProject
         }
     }
 }
+
+        public int PlayerNumber { get; set; }
+        public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
+        public bool turn = false;//is it this clients turn
+
+        private void ReceiveTeamInt(object callback)
+        {
+            PlayerNumber = Convert.ToInt32(ReceiveFromHost());
+            Team = (PlayerTeam)Convert.ToInt32(PlayerNumber);
+            //Then host will be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
+
+            System.Diagnostics.Debug.WriteLine(Team.ToString());
+        }
+
+        private void UseServerData(string sData)
+        {
+            DataConverter.ApplyDataToself(sData);
+        }

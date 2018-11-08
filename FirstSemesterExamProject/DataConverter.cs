@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FirstSemesterExamProject
 {
@@ -39,9 +37,15 @@ namespace FirstSemesterExamProject
                     case "UnitStack":
 
                         Enum.TryParse(splitStrings[0], out PlayerTeam _team); //Converts first information to a team (YELLOW,archer,knight,mage)                                                
-
                         AddUnitsToTeamStack(_team, splitStrings);
+                        break;
 
+                    case "Map":
+                        SetMap(information);
+                        break;
+
+                    case "Move":
+                        MoveUnit(splitStrings);
                         break;
 
 
@@ -49,10 +53,14 @@ namespace FirstSemesterExamProject
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
                         break;
                 }
-
             }
-
         }
+
+        /// <summary>
+        /// Adds units to the stacks
+        /// </summary>
+        /// <param name="team"></param>
+        /// <param name="unitStrings"></param>
         public static void AddUnitsToTeamStack(PlayerTeam team, string[] unitStrings)
         {
             Stack<Enum> tmpStack = new Stack<Enum>();
@@ -72,15 +80,15 @@ namespace FirstSemesterExamProject
                 case PlayerTeam.RedTeam:
                     Window.RedTeamStack = tmpStack;
                     break;
+
                 case PlayerTeam.BlueTeam:
-
                     Window.BlueTeamStack = tmpStack;
-
                     break;
+
                 case PlayerTeam.GreenTeam:
                     Window.GreenTeamStack = tmpStack;
-
                     break;
+
                 case PlayerTeam.YellowTeam:
                     Window.YellowTeamStack = tmpStack;
                     break;
@@ -88,6 +96,40 @@ namespace FirstSemesterExamProject
                 default:
                     System.Diagnostics.Debug.WriteLine("DataConverter could not add units to stack.. AddUnitsToTeamStack() ");
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Sets the clients map to be equal to the recived map number
+        /// </summary>
+        /// <param name="sData"></param>
+        public static void SetMap(string sData)
+        {
+            GameBoard gameBoard = new GameBoard(int.Parse(sData), 1);
+
+            if (Window.GameState is BattleGameState)
+            {
+                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
+            }
+        }
+
+        /// <summary>
+        /// Moves a unit
+        /// </summary>
+        /// <param name="sData"></param>
+        public static void MoveUnit(string[] sData)
+        {
+            int x = Int32.Parse(sData[0]);
+            int y = Int32.Parse(sData[0]);
+            int dx = Int32.Parse(sData[0]);
+            int dy = Int32.Parse(sData[0]);
+            //Player.Select(int x, int y, int dx, int dy) get player from 
+            if (Window.GameState is BattleGameState)
+            {
+                if (BattleGameState.Players.Count != 0)
+                {
+                    BattleGameState.Players[0].Select(x, y, dx, dy);
+                }
             }
         }
     }

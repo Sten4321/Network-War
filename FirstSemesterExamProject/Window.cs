@@ -385,7 +385,7 @@ namespace FirstSemesterExamProject
         {
             if (gs is BattleGameState bs)
             {
-                bs.ChangeTurn();
+                bs.ChangeTurn();// TODO: update endturn funktionality for keypress
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
@@ -696,7 +696,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Archer);
+                        onlineUnitStack.Push(Units.Archer);
                     }
                 }
                 else
@@ -743,7 +743,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Knight);
+                        onlineUnitStack.Push(Units.Knight);
                     }
                 }
                 else
@@ -787,7 +787,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Mage);
+                        onlineUnitStack.Push(Units.Mage);
                     }
                 }
                 else
@@ -832,7 +832,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Cleric);
+                        onlineUnitStack.Push(Units.Cleric);
                     }
                 }
                 else
@@ -876,7 +876,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Artifact);
+                        onlineUnitStack.Push(Units.Artifact);
                     }
                 }
                 else
@@ -1311,15 +1311,19 @@ namespace FirstSemesterExamProject
         {
             if (gs is BattleGameState bs)
             {
-                bs.ChangeTurn();
+                bs.ChangeTurn();// TODO: update ChangeTurn Funktionality for mouseClick
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
-        private static bool OnlineGame()
+
+        /// <summary>
+        /// Returns True if the game is online
+        /// </summary>
+        /// <returns></returns>
+        public static bool OnlineGame()
         {
             if (Server.Instance.isOnline || Client.Instance.clientConnected)
             {
-
                 return true;
             }
             else
@@ -1330,5 +1334,3 @@ namespace FirstSemesterExamProject
         }
     }
 }
-
-
