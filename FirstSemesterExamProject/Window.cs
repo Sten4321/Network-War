@@ -592,7 +592,7 @@ namespace FirstSemesterExamProject
             Host.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = false;
-            Ready.Visible = false;
+            ReadyCheck.Visible = false;
             Server.Instance.isOnline = false;
             // TODO: Make the server host stop
 
@@ -1174,6 +1174,7 @@ namespace FirstSemesterExamProject
             EnterIP.Visible = true;
             Client.Instance.ValidIp = false;
             Online.Visible = false;
+            StartOnlineGame.Visible = false;
         }
 
         /// <summary>
@@ -1184,9 +1185,8 @@ namespace FirstSemesterExamProject
         private void Host_Click(object sender, EventArgs e)
         {
             Online.Visible = false;
-            Host.Visible = false;
             HostIPAdress.Visible = true;
-            Ready.Visible = true; 
+            ReadyCheck.Visible = true; 
 
             if (Server.Instance.isOnline == false)
             {
@@ -1210,7 +1210,8 @@ namespace FirstSemesterExamProject
             AddMage.Visible = true;
             RemoveUnit.Visible = true;
             Label.Visible = true;
-
+            Host.Visible = false;
+            StartOnlineGame.Visible = false;
             HostIPAdress.Text = Server.Instance.serverIp;
             //portLabel.Text = Server.Instance.port;
             /*
@@ -1264,12 +1265,21 @@ namespace FirstSemesterExamProject
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Ready_Click(object sender, EventArgs e)
+        private void StartOnlineGame_Click(object sender, EventArgs e)
         {
             ServerReadyClick();
             ClientReadyClick();
+            //Set visible her når alle er klar
         }
-
+        /// <summary>
+        /// Checkbox for all to check to see if you are ready!!!!
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ReadyCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            //TODO: Check to see if everyone has clicked it!!!
+        }
         private void ClientReadyClick()
         {
             if (!(Server.Instance.isOnline) && Client.Instance.clientConnected)
@@ -1338,6 +1348,8 @@ namespace FirstSemesterExamProject
 
             }
         }
+
+
         #endregion
 
         /// <summary>
@@ -1409,5 +1421,9 @@ namespace FirstSemesterExamProject
                 return false;
             }
         }
+
     }
 }
+            
+
+        
