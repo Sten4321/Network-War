@@ -109,8 +109,6 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReaderThread()
         {
-
-
             string sData;
             clientConnected = true;
             while (clientConnected)
@@ -125,7 +123,6 @@ namespace FirstSemesterExamProject
                     Thread.Sleep(sleepDelay);
                 }
             }
-
         }
 
         /// < summary >
@@ -151,7 +148,7 @@ namespace FirstSemesterExamProject
         /// Write to Host
         /// </summary>
         /// <param name="message"></param>
-        private void SendToHost(string message)
+        public void SendToHost(string message)
         {
             sWriter.WriteLine(message);
             sWriter.Flush();
@@ -175,21 +172,7 @@ namespace FirstSemesterExamProject
         private void UseServerData(string sData)
         {
             // TODO: Insert message translater:
-        }
-
-        /// <summary>
-        /// Sets the clients map to be equal to the recived map number
-        /// </summary>
-        /// <param name="sData"></param>
-        private void SetMap(string sData)
-        {
-            // TODO: sData to a GameBord...
-            GameBoard gameBoard = new GameBoard(int.Parse(sData), int.Parse(sData));
-
-            if (Window.GameState is BattleGameState)
-            {
-                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
-            }
+            DataConverter.ApplyDataToself(sData);
         }
 
         /// <summary>

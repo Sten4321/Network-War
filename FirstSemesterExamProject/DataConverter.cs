@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FirstSemesterExamProject
 {
@@ -39,9 +37,11 @@ namespace FirstSemesterExamProject
                     case "UnitStack":
 
                         Enum.TryParse(splitStrings[0], out PlayerTeam _team); //Converts first information to a team (YELLOW,archer,knight,mage)                                                
-
                         AddUnitsToTeamStack(_team, splitStrings);
+                        break;
 
+                    case "Map":
+                        SetMap(information);
                         break;
 
 
@@ -49,10 +49,9 @@ namespace FirstSemesterExamProject
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
                         break;
                 }
-
             }
-
         }
+
         public static void AddUnitsToTeamStack(PlayerTeam team, string[] unitStrings)
         {
             Stack<Enum> tmpStack = new Stack<Enum>();
@@ -88,6 +87,21 @@ namespace FirstSemesterExamProject
                 default:
                     System.Diagnostics.Debug.WriteLine("DataConverter could not add units to stack.. AddUnitsToTeamStack() ");
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Sets the clients map to be equal to the recived map number
+        /// </summary>
+        /// <param name="sData"></param>
+        public static void SetMap(string sData)
+        {
+            // TODO: sData to a GameBord...
+            GameBoard gameBoard = new GameBoard(int.Parse(sData), 1);
+
+            if (Window.GameState is BattleGameState)
+            {
+                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
             }
         }
     }
