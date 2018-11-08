@@ -592,7 +592,7 @@ namespace FirstSemesterExamProject
             Host.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = false;
-            Ready.Visible = false;
+            ReadyCheck.Visible = false;
             Server.Instance.isOnline = false;
             // TODO: Make the server host stop
 
@@ -1174,6 +1174,7 @@ namespace FirstSemesterExamProject
             EnterIP.Visible = true;
             Client.Instance.ValidIp = false;
             Online.Visible = false;
+            StartOnlineGame.Visible = false;
         }
 
         /// <summary>
@@ -1184,9 +1185,8 @@ namespace FirstSemesterExamProject
         private void Host_Click(object sender, EventArgs e)
         {
             Online.Visible = false;
-            Host.Visible = false;
             HostIPAdress.Visible = true;
-            Ready.Visible = true;
+            Ready.Visible = true; 
 
             if (Server.Instance.isOnline == false)
             {
@@ -1210,7 +1210,9 @@ namespace FirstSemesterExamProject
             AddMage.Visible = true;
             RemoveUnit.Visible = true;
             Label.Visible = true;
-
+            Host.Visible = false;
+            StartOnlineGame.Visible = false;
+            ReadyCheck.Visible = true;
             HostIPAdress.Text = Server.Instance.serverIp;
             //portLabel.Text = Server.Instance.port;
             /*
@@ -1266,19 +1268,25 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Ready_Click(object sender, EventArgs e)
         {
+            ServerReadyClick();
+            ClientReadyClick();
+        }
+        /// <summary>
+        /// Checkbox for all to check to see if you are ready!!!!
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>        
+        private void ReadyCheck_Click(object sender, EventArgs e)
+        {
             if (onlineUnitStack != null && onlineUnitStack.Count > 0)
             {
-
                 ServerReadyClick();
                 ClientReadyClick();
             }
             else
             {
-                MessageBox.Show("Select at least one Unit", "Oops", MessageBoxButtons.OK);
-
+                MessageBox.Show("Select atleast one unit", "Oops", MessageBoxButtons.OK);
             }
-
-
         }
 
         private void ClientReadyClick()
@@ -1349,6 +1357,8 @@ namespace FirstSemesterExamProject
 
             }
         }
+
+
         #endregion
 
         /// <summary>
@@ -1420,5 +1430,10 @@ namespace FirstSemesterExamProject
                 return false;
             }
         }
+
+
     }
 }
+            
+
+        

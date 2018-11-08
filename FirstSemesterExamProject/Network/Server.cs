@@ -16,7 +16,7 @@ namespace FirstSemesterExamProject
         public int port = 13000;
         public bool isOnline = false;
         private readonly byte clientsMaxAmount = 3;
-        private static TcpListener tcpListener;
+        public TcpListener tcpListener;
 
         //Collections
         private List<ClientStruct> clientStructs = new List<ClientStruct>(); //Client Structs contain the clients TcpClient and Team (could add ip ect.)
@@ -29,6 +29,7 @@ namespace FirstSemesterExamProject
 
         //Turn Handeling
         public bool turn = false;
+
 
         //Singleton Instance
         private static Server instance;
@@ -72,14 +73,10 @@ namespace FirstSemesterExamProject
             serverIp = FindLocalIp();
 
             // starts the actual server
-            if (tcpListener == null)
-            {
-                tcpListener = new TcpListener(IPAddress.Any, port);
-                tcpListener.Start();
-                //
-            }
-
-
+            tcpListener = new TcpListener(IPAddress.Any, port);
+            tcpListener.Start();
+            //
+            
             isOnline = true;
 
             StartServerThreads();
@@ -306,17 +303,8 @@ namespace FirstSemesterExamProject
             }
 
         }
-        private bool MessageDirectlyToServer(Data data)
-        {
 
-            if (data.information == "Ready;")
-            {
-                ReadyMessageHandler(data);
-                return true;
-            }
 
-            return false;
-        }
 
         private void ReadyMessageHandler(Data data)
         {
@@ -382,28 +370,27 @@ namespace FirstSemesterExamProject
         /// Sends data to all other clients but the one who sent it
         /// </summary>
         /// <param name="message"></param>
-        private void SendDataToAllOtherClients(Data _data)
+        private void SendDataToAllOtherClients(Data data)
         {
             lock (clientsListKey)
             {
                 for (int i = 0; i < clientStructs.Count; i++)
                 {
-                    if (clientStructs[i].client != _data.clientStruct.client) //if the client is not the sender of the data
+                    if (clientStructs[i].client != data.clientStruct.client) //if the client is not the sender of the data
                     {
                         //Writes to the specefic client
                         StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
 
 
                         //sends data
-                        sWriter.WriteLine(_data.information);
+                        sWriter.WriteLine(data.information);
 
                         //Clears buffer
                         sWriter.Flush();
 
-                    }
 
+                    }
                 }
-                System.Diagnostics.Debug.WriteLine("Forwarded Client Message From " + _data.clientStruct.Team.ToString() + ": " + _data.information);
             }
 
         }
@@ -423,10 +410,7 @@ namespace FirstSemesterExamProject
 
                     //Clears buffer
                     sWriter.Flush();
-
                 }
-                System.Diagnostics.Debug.WriteLine("ServerMessage Sent: " + message);
-
             }
         }
         /// <summary>
@@ -438,9 +422,8 @@ namespace FirstSemesterExamProject
             {
                 thread.Abort();
             }
-
-
-            instance = null;
+            tcpListener.Stop();
+            instance = null; // Resets all variables and connections
 
             System.Diagnostics.Debug.WriteLine("Server has been shut down");
         }
