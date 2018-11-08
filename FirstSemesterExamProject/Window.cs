@@ -1190,6 +1190,20 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = true;
+            Back.Visible = true;
+            PointsLabel.Visible = true;
+            ListBox1.Visible = true;
+            AddArcher.Visible = true;
+            AddCleric.Visible = true;
+            AddKnight.Visible = true;
+            AddScout.Visible = true;
+            AddArtifact.Visible = true;
+            AddMage.Visible = true;
+            RemoveUnit.Visible = true;
+            Label.Visible = true;
+
+            HostIPAdress.Text = Server.Instance.serverIp;
+            //portLabel.Text = Server.Instance.port;
             /*
              * ipLabel.Visible = true;
              * portLabel.Visible = true;
@@ -1306,31 +1320,7 @@ namespace FirstSemesterExamProject
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
-
-    }
-}
-
-
-
-
-
-
-
-            Back.Visible = true;
-            PointsLabel.Visible = true;
-            ListBox1.Visible = true;
-            AddArcher.Visible = true;
-            AddCleric.Visible = true;
-            AddKnight.Visible = true;
-            AddScout.Visible = true;
-            AddArtifact.Visible = true;
-            AddMage.Visible = true;
-            RemoveUnit.Visible = true;
-            Label.Visible = true;
-
-            HostIPAdress.Text = Server.Instance.serverIp;
-            //portLabel.Text = Server.Instance.port;
-        private bool OnlineGame()
+        private static bool OnlineGame()
         {
             if (Server.Instance.isOnline || Client.Instance.clientConnected)
             {
@@ -1343,3 +1333,7 @@ namespace FirstSemesterExamProject
                 return false;
             }
         }
+    }
+}
+
+
