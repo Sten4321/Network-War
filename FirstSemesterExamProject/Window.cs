@@ -1269,15 +1269,42 @@ namespace FirstSemesterExamProject
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Ready_Click(object sender, EventArgs e)
-        {///test
-            ServerReadyClick();
+        {
             ClientReadyClick();
+            ServerReadyClick();
         }
 
+
+        /// <summary>
+        /// Makes RedTeam = OnlineUnit stack and sends its team composition out to the other clients
+        /// </summary>
+        private void ServerReadyClick()
+        {
+            if (Server.Instance.isOnline && Client.Instance.clientConnected == false)
+            {
+                redteam = onlineUnitStack;
+
+                string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
+
+                int amount = onlineUnitStack.Count;
+
+                for (int i = 0; i < amount; i++)
+                {
+
+                    message = message + "," + onlineUnitStack.Pop().ToString();
+                }
+
+
+                // UnitStack;TeamColor,unit1,unit2,unit3 ect
+                Server.Instance.WriteServerMessage(message);
+
+            }
+        }
         private void ClientReadyClick()
         {
             if (!(Server.Instance.isOnline) && Client.Instance.clientConnected)
             {
+
                 switch (Client.Instance.Team)
                 {
                     case PlayerTeam.RedTeam:
@@ -1300,6 +1327,7 @@ namespace FirstSemesterExamProject
                         System.Diagnostics.Debug.WriteLine("error: could not find team assignment ClientReadyClick");
                         break;
 
+
                 }
 
                 string message = "UnitStack;" + Client.Instance.Team.ToString();
@@ -1314,31 +1342,6 @@ namespace FirstSemesterExamProject
 
                 // UnitStack;TeamColor,unit1,unit2,unit3 ect
                 Client.Instance.SendToHost(message);
-
-            }
-        }
-
-        /// <summary>
-        /// Makes RedTeam = OnlineUnit stack and sends its team composition out to the other clients
-        /// </summary>
-        private void ServerReadyClick()
-        {
-            if (Server.Instance.isOnline && Client.Instance.clientConnected == false)
-            {
-                redteam = onlineUnitStack;
-
-                string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
-
-                int amount = onlineUnitStack.Count;
-
-                for (int i = 0; i < amount; i++)
-                {
-
-                    message = message + "," + onlineUnitStack.Pop().ToString();
-                }
-
-                // UnitStack;TeamColor,unit1,unit2,unit3 ect
-                Server.Instance.WriteServerMessage(message);
 
             }
         }
