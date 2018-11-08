@@ -385,7 +385,7 @@ namespace FirstSemesterExamProject
         {
             if (gs is BattleGameState bs)
             {
-                bs.ChangeTurn();
+                bs.ChangeTurn();// TODO: update endturn funktionality for keypress
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
@@ -567,6 +567,11 @@ namespace FirstSemesterExamProject
             Online.Visible = true;
             JoinGame.Visible = false;
             Host.Visible = false;
+            EnterIP.Visible = false;
+            HostIPAdress.Visible = false;
+            Server.Instance.isOnline = false;
+            // TODO: Make the server host stop
+
             if (RedTeam.Visible == true)
             {
                 RedTeam.Visible = false;
@@ -689,7 +694,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Archer);
+                        onlineUnitStack.Push(Units.Archer);
                     }
                 }
                 else
@@ -736,7 +741,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Knight);
+                        onlineUnitStack.Push(Units.Knight);
                     }
                 }
                 else
@@ -780,7 +785,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Mage);
+                        onlineUnitStack.Push(Units.Mage);
                     }
                 }
                 else
@@ -825,7 +830,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Cleric);
+                        onlineUnitStack.Push(Units.Cleric);
                     }
                 }
                 else
@@ -869,7 +874,7 @@ namespace FirstSemesterExamProject
                     if (onlineUnitStack != null)
                     {
 
-                    onlineUnitStack.Push(Units.Artifact);
+                        onlineUnitStack.Push(Units.Artifact);
                     }
                 }
                 else
@@ -1117,7 +1122,7 @@ namespace FirstSemesterExamProject
         }
 
         /// <summary>
-        /// a label that displays the amount of points that a player has used out of how many kan be used
+        /// a label that displays the amount of points that a player has used out of how many can be used
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1155,9 +1160,12 @@ namespace FirstSemesterExamProject
             AddMage.Visible = false;
             RemoveUnit.Visible = false;
             muteButton.Visible = true;
+            Host.Visible = true;
+            JoinGame.Visible = true;
             EnterIP.Visible = true;
             Client.Instance.ValidIp = false;
             // TODO: Online Buttom
+            Online.Visible = false;
         }
 
         /// <summary>
@@ -1167,6 +1175,10 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Host_Click(object sender, EventArgs e)
         {
+            Online.Visible = false;
+            Host.Visible = false;
+            HostIPAdress.Visible = true;
+
             if (Server.Instance.isOnline == false)
             {
                 Server.Instance.StartServer();
@@ -1178,12 +1190,27 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = true;
-
-            //portLabel.Visible = true;
+            Back.Visible = true;
+            PointsLabel.Visible = true;
+            ListBox1.Visible = true;
+            AddArcher.Visible = true;
+            AddCleric.Visible = true;
+            AddKnight.Visible = true;
+            AddScout.Visible = true;
+            AddArtifact.Visible = true;
+            AddMage.Visible = true;
+            RemoveUnit.Visible = true;
+            Label.Visible = true;
 
             HostIPAdress.Text = Server.Instance.serverIp;
             //portLabel.Text = Server.Instance.port;
-
+            /*
+             * ipLabel.Visible = true;
+             * portLabel.Visible = true;
+             *
+            ipLabel.Text = Server.Instance.serverIp;
+            portLabel.Text = Server.Instance.port;
+            */
         }
         /// <summary>
         /// Make it possible to join a host through their IP-adress
@@ -1199,6 +1226,7 @@ namespace FirstSemesterExamProject
                 clientThread = new Thread(Client.Instance.ConnectClient);
                 clientThread.Start();
                 clientThread.IsBackground = true;
+                UpdateIpLabelText();
             }
             // TODO: JoinGame Buttom
         }
@@ -1226,6 +1254,15 @@ namespace FirstSemesterExamProject
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void HostIPAdress_Click(object sender, EventArgs e)
+        {
+
+        }
+        /// <summary>
+        /// Button to click when everyone is ready to play
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ready_Click(object sender, EventArgs e)
         {
 
         }
@@ -1279,16 +1316,19 @@ namespace FirstSemesterExamProject
         {
             if (gs is BattleGameState bs)
             {
-                bs.ChangeTurn();
+                bs.ChangeTurn();// TODO: update ChangeTurn Funktionality for mouseClick
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
 
-        private bool OnlineGame()
+        /// <summary>
+        /// Returns True if the game is online
+        /// </summary>
+        /// <returns></returns>
+        public static bool OnlineGame()
         {
             if (Server.Instance.isOnline || Client.Instance.clientConnected)
             {
-
                 return true;
             }
             else
@@ -1297,12 +1337,5 @@ namespace FirstSemesterExamProject
                 return false;
             }
         }
-
     }
 }
-
-
-
-
-
-

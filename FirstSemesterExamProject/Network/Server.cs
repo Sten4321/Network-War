@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace FirstSemesterExamProject
 {
     class Server
     {
-
-
         //Server Settings / info
         public string serverIp;
         public int port = 13000;
@@ -30,6 +26,9 @@ namespace FirstSemesterExamProject
         private readonly object clientsListKey = new object();
         private readonly object receivedDataKey = new object();
         List<Thread> serverThreads = new List<Thread>();
+
+        //Turn Handeling
+        public bool turn = false;
 
 
         //Singleton Instance
@@ -75,7 +74,7 @@ namespace FirstSemesterExamProject
             tcpListener = new TcpListener(IPAddress.Any, port);
             tcpListener.Start();
             //
-
+            
             isOnline = true;
 
             StartServerThreads();

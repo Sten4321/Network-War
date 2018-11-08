@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 
 namespace FirstSemesterExamProject
@@ -103,18 +99,21 @@ namespace FirstSemesterExamProject
         /// </summary>
         public void AddObjects()
         {
-            for (int X = 0; X < GroundMap.GetLength(0); X++)
+            if (GroundMap != null)
             {
-                for (int Y = 0; Y < GroundMap.GetLength(1); Y++)
+                for (int X = 0; X < GroundMap.GetLength(0); X++)
                 {
-                    if (addObjects != null)
+                    for (int Y = 0; Y < GroundMap.GetLength(1); Y++)
                     {
-                        if (unitMap[X, Y] == null)
+                        if (addObjects != null)
                         {
-                            unitMap[X, Y] = addObjects[X, Y];
+                            if (unitMap[X, Y] == null)
+                            {
+                                unitMap[X, Y] = addObjects[X, Y];
+                            }
                         }
+                        addObjects[X, Y] = null;
                     }
-                    addObjects[X, Y] = null;
                 }
             }
         }
@@ -124,18 +123,21 @@ namespace FirstSemesterExamProject
         /// </summary>
         public void RemoveObjects()
         {
-            for (int X = 0; X < GroundMap.GetLength(0); X++)
+            if (GroundMap != null)
             {
-                for (int Y = 0; Y < GroundMap.GetLength(1); Y++)
+                for (int X = 0; X < GroundMap.GetLength(0); X++)
                 {
-                    if (removeObjects != null)
+                    for (int Y = 0; Y < GroundMap.GetLength(1); Y++)
                     {
-                        if (unitMap[X, Y] == removeObjects[X, Y])
+                        if (removeObjects != null)
                         {
-                            unitMap[X, Y] = null;
+                            if (unitMap[X, Y] == removeObjects[X, Y])
+                            {
+                                unitMap[X, Y] = null;
+                            }
                         }
+                        removeObjects[X, Y] = null;
                     }
-                    removeObjects[X, Y] = null;
                 }
             }
         }
