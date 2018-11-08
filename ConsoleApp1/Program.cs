@@ -13,44 +13,39 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            SetAllEventData();
-            GetAllEventData();
-            Console.ReadLine();
+            
         }
 
         //Get
-        static string urlGet = "http://localhost:52788/api/Highscore";
-        //Set
-        static string urlSet = "http://localhost:52788/api/Highscore";
-        static string myParameters = "Test";
+        static string url = "http://localhost:59787/api/Highscore";
 
-        public static void Testc()
-        {
-            string insertLine = "http://localhost:52788//api/Highscore";
-            var client = new HttpClient();
-            var result = client.GetStringAsync(insertLine);
-            Console.WriteLine(result);
-        }
+        private static List<string> resultList;
 
-        public static void GetAllEventData() //Get All Events Records  
+        public static List<string> ResultList { get => resultList; set => resultList = value; }
+
+        public static List<string> GetAllEventData() //Get All Events Records  
         {
+            ResultList = new List<string>();
             using (var client = new System.Net.WebClient()) //WebClient  
             {
                 client.Headers[System.Net.HttpRequestHeader.ContentType] ="application/json"; //Content-Type  
-                var result = client.DownloadString(urlGet);  
-                Console.WriteLine(Environment.NewLine + result);
+                var result = client.DownloadString(url);
+                foreach (string s in result.Split(','))
+                {
+                    ResultList.Add(s);
+                }
             }
+            return ResultList;
         }
 
-        public static void SetAllEventData() //Get All Events Records  
+        public static void SetAllEventData(string myParameters) //Get All Events Records  
         {
             using (var client = new System.Net.WebClient()) //WebClient  
             {
                 client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json";
                 var serialize = JsonConvert.SerializeObject(myParameters);
-                string response = client.UploadString(urlSet, serialize);
+                string response = client.UploadString(url, serialize);
                 var result = JsonConvert.DeserializeObject(response);
-                Console.WriteLine(result);
             }
         }
     }
