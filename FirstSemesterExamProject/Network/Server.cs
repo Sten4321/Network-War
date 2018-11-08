@@ -19,7 +19,7 @@ namespace FirstSemesterExamProject
         private static TcpListener tcpListener;
 
         //Collections
-        private List<ClientStruct> clientStructs = new List<ClientStruct>(); //Client Structs contain the clients TcpClient and Team (could add ip ect.)
+        public List<ClientObject> clientObjects = new List<ClientObject>(); //Client Structs contain the clients TcpClient and Team (could add ip ect.)
         private Queue<Data> receivedDataQueue = new Queue<Data>(); // Datas contains messages and the clients who sent them 
 
         //Threading
@@ -36,7 +36,7 @@ namespace FirstSemesterExamProject
         public PlayerTeam serverTeam = PlayerTeam.RedTeam;
         public bool isReady = false;
         public bool turn = false;
-
+        public byte mapNum;
 
         /// <summary>
         /// server Singleton Property
@@ -186,7 +186,7 @@ namespace FirstSemesterExamProject
             {
                 SearchAndAddClient();
 
-                System.Diagnostics.Debug.WriteLine("Clients found: " + clientStructs.Count);
+                System.Diagnostics.Debug.WriteLine("Clients found: " + clientObjects.Count);
 
             }
         }
@@ -199,11 +199,11 @@ namespace FirstSemesterExamProject
             TcpClient newClient = tcpListener.AcceptTcpClient();
             // client found.
 
-            ClientStruct _clientStruct = new ClientStruct(newClient);
+            ClientObject _clientStruct = new ClientObject(newClient);
 
             //add to collection
-            _clientStruct.Team = (PlayerTeam)clientStructs.Count + 1;
-            clientStructs.Add(_clientStruct);
+            _clientStruct.Team = (PlayerTeam)clientObjects.Count + 1;
+            clientObjects.Add(_clientStruct);
 
             //Tells the client what team it's assigned to
             AssignNewClientToTeam(_clientStruct);
@@ -217,12 +217,12 @@ namespace FirstSemesterExamProject
         /// Writes a team assignment message to the client
         /// </summary>
         /// <param name="_clientStruct">client to assign</param>
-        private void AssignNewClientToTeam(ClientStruct _clientStruct)
+        private void AssignNewClientToTeam(ClientObject _clientStruct)
         {
-            StreamWriter sWriter = new StreamWriter(_clientStruct.client.GetStream(), Encoding.ASCII);
+            StreamWriter sWriter = new StreamWriter(_clientStruct.tcpClient.GetStream(), Encoding.ASCII);
 
             //sends data
-            sWriter.WriteLine(clientStructs.Count);
+            sWriter.WriteLine(clientObjects.Count);
 
             //Clears buffer
             sWriter.Flush();
@@ -240,23 +240,23 @@ namespace FirstSemesterExamProject
         /// <returns></returns>
         private bool LessThanMaxClients()
         {
-            return clientStructs.Count < clientsMaxAmount;
+            return clientObjects.Count < clientsMaxAmount;
 
         }
 
         public void ClientUpdate(object obj)
         {
             // retrieve client from parameter passed to thread
-            ClientStruct _clientStruct = (ClientStruct)obj;
+            ClientObject _clientStruct = (ClientObject)obj;
 
             // sets two streams
-            StreamReader sReader = new StreamReader(_clientStruct.client.GetStream(), Encoding.ASCII);
+            StreamReader sReader = new StreamReader(_clientStruct.tcpClient.GetStream(), Encoding.ASCII);
 
             bool isConnected = true;
             string sData = null;
 
-            IPEndPoint endPoint = (IPEndPoint)_clientStruct.client.Client.RemoteEndPoint;
-            IPEndPoint localPoint = (IPEndPoint)_clientStruct.client.Client.LocalEndPoint;
+            IPEndPoint endPoint = (IPEndPoint)_clientStruct.tcpClient.Client.RemoteEndPoint;
+            IPEndPoint localPoint = (IPEndPoint)_clientStruct.tcpClient.Client.LocalEndPoint;
 
             while (isConnected)
             {
@@ -273,7 +273,7 @@ namespace FirstSemesterExamProject
                     System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
                     lock (clientsListKey)
                     {
-                        clientStructs.Remove(_clientStruct);
+                        clientObjects.Remove(_clientStruct);
                     }
                     Thread.CurrentThread.Abort();
                 }
@@ -292,7 +292,7 @@ namespace FirstSemesterExamProject
         /// </summary>
         /// <param name="sData">the data received</param>
         /// <param name="client">the client who sent it</param>
-        private void EvaluateData(string sData, ClientStruct client)
+        private void EvaluateData(string sData, ClientObject client)
         {
             Data data = new Data(sData, client);
 
@@ -325,27 +325,24 @@ namespace FirstSemesterExamProject
         {
             //This client is ready
 
-            foreach (ClientStruct _client in clientStructs)
+            foreach (ClientObject _client in clientObjects)
             {
-                if (_client.client == data.clientStruct.client)
+                if (_client.tcpClient == data.clientStruct.tcpClient)
                 {
-                    _client.SetReady();
-
+                    _client.SetReady();  
+                    System.Diagnostics.Debug.WriteLine(_client.Team + " is ready?: " + _client.ready);
                 }
             }
+            CheckIfCanStart();
 
-            if (AllIsReady())
-            {
 
-                // TODO: StartGameButton.IsVisible = true; => StartGame();
-            }
         }
         private bool AllIsReady()
         {
             int readyCount = 0;
 
             //Check if all clients are ready
-            foreach (ClientStruct client in clientStructs)
+            foreach (ClientObject client in clientObjects)
             {
                 if (client.ready)
                 {
@@ -356,9 +353,9 @@ namespace FirstSemesterExamProject
                     break;
                 }
             }
-            if (readyCount == clientStructs.Count && /*host*/ isReady)
+            if (readyCount == clientObjects.Count && /*host*/ isReady)
             {
-                System.Diagnostics.Debug.WriteLine("All is ready!");
+                System.Diagnostics.Debug.WriteLine("All players are ready!");
 
                 return true;
             }
@@ -366,19 +363,37 @@ namespace FirstSemesterExamProject
             return false;
         }
 
-        private void StartGame()
+        public void CheckIfCanStart()
+        {
+            if (AllIsReady())
+            {
+                SendMapInfo();
+                Window.allPlayersReady = true;
+                
+            }
+        }
+
+        private void SendMapInfo()
         {
             Random rnd = new Random();
-            int mapNum = rnd.Next(1, 7 + 1);
+            mapNum = (byte)rnd.Next(1, 7 + 1);
 
             WriteServerMessage("Map;" + mapNum.ToString());
+           
+        }
 
-
-
-
-
-
+        public void StartGame()
+        {
             // TODO: Start Game based on map, ClientStructs.Count
+
+            WriteServerMessage("Start;");
+
+            GameBoard gameBoard = new GameBoard(mapNum, 1);
+            
+            if (Window.GameState is BattleGameState)
+            {
+                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
+            }
         }
 
 
@@ -390,12 +405,12 @@ namespace FirstSemesterExamProject
         {
             lock (clientsListKey)
             {
-                for (int i = 0; i < clientStructs.Count; i++)
+                for (int i = 0; i < clientObjects.Count; i++)
                 {
-                    if (clientStructs[i].client != _data.clientStruct.client) //if the client is not the sender of the data
+                    if (clientObjects[i].tcpClient != _data.clientStruct.tcpClient) //if the client is not the sender of the data
                     {
                         //Writes to the specefic client
-                        StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
+                        StreamWriter sWriter = new StreamWriter(clientObjects[i].tcpClient.GetStream(), Encoding.ASCII);
 
 
                         //sends data
@@ -415,11 +430,11 @@ namespace FirstSemesterExamProject
         {
             lock (clientsListKey)
             {
-                for (int i = 0; i < clientStructs.Count; i++)
+                for (int i = 0; i < clientObjects.Count; i++)
                 {
 
                     //Writes to the specefic client
-                    StreamWriter sWriter = new StreamWriter(clientStructs[i].client.GetStream(), Encoding.ASCII);
+                    StreamWriter sWriter = new StreamWriter(clientObjects[i].tcpClient.GetStream(), Encoding.ASCII);
 
 
                     //sends data

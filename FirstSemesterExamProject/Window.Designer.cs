@@ -532,12 +532,9 @@ namespace FirstSemesterExamProject
 
         }
 
-        private void StartOnlineGame_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
+        private void StartOnlineGame_Click(object sender, EventArgs e)        {           
 
-            // TODO: Server.Instance.StartGame(); 
-
+             Server.Instance.StartGame(); // TODO: (Andreas) - this is where you left off twat
         }
 
         #endregion

@@ -35,9 +35,11 @@ namespace FirstSemesterExamProject
         public static bool canRestart;
         public static bool canMute;
         public static bool musicOn = true;
-        public static bool menuMusicOn = true;
-        //Server
+        public static bool menuMusicOn = false;
+
+        //Online
         private Thread clientThread;
+        public static bool allPlayersReady = false;
 
         /// <summary>
         /// propety gamestate
@@ -86,7 +88,7 @@ namespace FirstSemesterExamProject
         public Window()
         {
             InitializeComponent();
-            SoundEngine.PlayMenuBackgroundMusic();
+           // SoundEngine.PlayMenuBackgroundMusic();
             this.DoubleBuffered = true;
         }
 
@@ -148,6 +150,8 @@ namespace FirstSemesterExamProject
             CheckEndTurn();
             CheckRestart();
             MuteMusic();
+
+            ToggleStartOnlineGameButton();
         }
         /// <summary>
         /// Shows the list of units depending on what team is choosing
@@ -500,6 +504,8 @@ namespace FirstSemesterExamProject
                 Online.Visible = false;
                 EnterIP.Visible = false;
                 EndTurn.Visible = true;
+              
+
                 //Starts the game
                 gs = new BattleGameState(this, number, dc);
                 SoundEngine.StopSound();
@@ -1186,7 +1192,7 @@ namespace FirstSemesterExamProject
         {
             Online.Visible = false;
             HostIPAdress.Visible = true;
-            ReadyCheck.Visible = true; 
+            ReadyCheck.Visible = true;
 
             if (Server.Instance.isOnline == false)
             {
@@ -1261,7 +1267,7 @@ namespace FirstSemesterExamProject
         {
 
         }
-     
+
         /// <summary>
         /// Checkbox for all to check to see if you are ready!!!!
         /// </summary>
@@ -1320,6 +1326,8 @@ namespace FirstSemesterExamProject
 
                 // UnitStack;TeamColor,unit1,unit2,unit3 ect
                 Client.Instance.SendToHost(message);
+                Client.Instance.SendToHost("Ready;");
+
 
             }
         }
@@ -1331,6 +1339,10 @@ namespace FirstSemesterExamProject
         {
             if (Server.Instance.isOnline && Client.Instance.clientConnected == false)
             {
+                if (Server.Instance.clientObjects.Count>0)
+                {
+
+                Server.Instance.isReady = true;
                 redteam = onlineUnitStack;
 
                 string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
@@ -1344,8 +1356,16 @@ namespace FirstSemesterExamProject
                 }
 
                 // UnitStack;TeamColor,unit1,unit2,unit3 ect
-                Server.Instance.WriteServerMessage(message); // TODO: Andreas -> client crashes
+                Server.Instance.WriteServerMessage(message);
 
+                //If all clients are ready it sends map details
+                Server.Instance.CheckIfCanStart();
+                }
+                else
+                {
+
+                    MessageBox.Show("You should wait for at least one other player before starting a Multiplayer Game...", "Hol' up mate!", MessageBoxButtons.OK);
+                }
 
             }
         }
@@ -1423,9 +1443,23 @@ namespace FirstSemesterExamProject
             }
         }
 
+        //Toggles startonlinegame button (Shows it to host when all players are ready)
+        public void ToggleStartOnlineGameButton()
+        {
+            if (allPlayersReady)
+            {
+                if (gs is UnitChoiceGameState && OnlineGame())
+                {
+
+                    StartOnlineGame.Visible = !StartOnlineGame.Visible;
+
+                    allPlayersReady = false;
+                }
+            }
+        }
+
 
     }
 }
-            
 
-        
+
