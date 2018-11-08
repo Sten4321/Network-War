@@ -153,7 +153,7 @@ namespace FirstSemesterExamProject
         /// Write to Host
         /// </summary>
         /// <param name="message"></param>
-        private void SendToHost(string message)
+        public void SendToHost(string message)
         {
             sWriter.WriteLine(message);
             sWriter.Flush();

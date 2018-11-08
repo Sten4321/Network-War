@@ -65,7 +65,7 @@ namespace FirstSemesterExamProject
         {
             if (Client.Instance.clientConnected)
             {
-                players.Add(new Player((PlayerTeam)Client.Instance.Team, Client.Instance.PlayerNumber));// TODO: Check if correct!!!
+                players.Add(new Player((PlayerTeam)Client.Instance.Team, Client.Instance.PlayerNumber));// TODO: Check if correct!!! -> Not sure but it looks right!
             }
             else
             {

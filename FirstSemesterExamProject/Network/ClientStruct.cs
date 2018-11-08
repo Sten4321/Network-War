@@ -15,6 +15,11 @@ namespace FirstSemesterExamProject
     {
         public TcpClient client; // client to write to
 
+        //is client ready to start a game?
+        public bool ready;
+
+        public bool clientsTurn;
+
         //What team are they on?
         public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
 
@@ -22,6 +27,8 @@ namespace FirstSemesterExamProject
         {
             Team = null;
             client = _client;
+            ready = false;
+            clientsTurn = false;
         }
     }
 }
