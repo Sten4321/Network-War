@@ -1266,7 +1266,52 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Ready_Click(object sender, EventArgs e)
         {
+            ServerReadyClick();
+            ClientReadyClick();
+        }
 
+        private void ClientReadyClick()
+        {
+            if (!(Server.Instance.isOnline) && Client.Instance.clientConnected)
+            {
+                switch (Client.Instance.Team)
+                {
+                    case PlayerTeam.RedTeam:
+                        System.Diagnostics.Debug.WriteLine("Client Tried to be Red Team (Client ClientReadyClick()))");
+                        break;
+
+                    case PlayerTeam.BlueTeam:
+                        blueteam = onlineUnitStack;
+                        break;
+
+                    case PlayerTeam.GreenTeam:
+                        greenteam = onlineUnitStack;
+                        break;
+
+                    case PlayerTeam.YellowTeam:
+                        yellowteam = onlineUnitStack;
+                        break;
+
+                    default:
+                        System.Diagnostics.Debug.WriteLine("error: could not find team assignment ClientReadyClick");
+                        break;
+
+                }
+
+                string message = "UnitStack;" + Client.Instance.Team.ToString();
+
+                int amount = onlineUnitStack.Count;
+
+                for (int i = 0; i < amount; i++)
+                {
+
+                    message = message + "," + onlineUnitStack.Pop().ToString();
+                }
+
+                // UnitStack;TeamColor,unit1,unit2,unit3 ect
+                Client.Instance.SendToHost(message);
+
+            }
         }
 
         /// <summary>
