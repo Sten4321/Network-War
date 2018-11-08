@@ -1096,6 +1096,15 @@ namespace FirstSemesterExamProject
         {
 
         }
+        /// <summary>
+        /// Button to click when everyone is ready to play
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ready_Click(object sender, EventArgs e)
+        {
+
+        }
         #endregion
 
         /// <summary>
@@ -1150,6 +1159,7 @@ namespace FirstSemesterExamProject
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
+
 
     }
 }
