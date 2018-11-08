@@ -116,7 +116,18 @@ namespace FirstSemesterExamProject
         public static void MoveUnit(string sData)
         {
             // TODO: Move unit according to data
-            
+            int x = 0;
+            int y = 0;
+            int dx = 0;
+            int dy = 0;
+            //Player.Select(int x, int y, int dx, int dy) get player from 
+            if (Window.GameState is BattleGameState)
+            {
+                if (BattleGameState.Players.Any())
+                {
+                    BattleGameState.Players[0].Select(x, y, dx, dy);
+                }
+            }
         }
     }
 }
