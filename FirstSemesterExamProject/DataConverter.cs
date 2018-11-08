@@ -42,7 +42,9 @@ namespace FirstSemesterExamProject
                         SetMap(information);
                         break;
 
-                    
+                    case "Move":
+                        MoveUnit(splitStrings);
+                        break;
 
 
                     default:
@@ -116,17 +118,16 @@ namespace FirstSemesterExamProject
         /// Moves a unit
         /// </summary>
         /// <param name="sData"></param>
-        public static void MoveUnit(string sData)
+        public static void MoveUnit(string[] sData)
         {
-            // TODO: Move unit according to data
-            int x = 0;
-            int y = 0;
-            int dx = 0;
-            int dy = 0;
+            int x = Int32.Parse(sData[0]);
+            int y = Int32.Parse(sData[0]);
+            int dx = Int32.Parse(sData[0]);
+            int dy = Int32.Parse(sData[0]);
             //Player.Select(int x, int y, int dx, int dy) get player from 
             if (Window.GameState is BattleGameState)
             {
-                if (BattleGameState.Players.Any())
+                if (BattleGameState.Players.Count != 0)
                 {
                     BattleGameState.Players[0].Select(x, y, dx, dy);
                 }

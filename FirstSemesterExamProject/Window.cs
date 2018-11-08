@@ -521,6 +521,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Back_Click(object sender, EventArgs e)
         {
+
             OnlineBackClick();
 
             SoundEngine.PlaySound(Constant.menuBackSound);
@@ -591,7 +592,9 @@ namespace FirstSemesterExamProject
             Host.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = false;
+            Ready.Visible = false;
             Server.Instance.isOnline = false;
+            // TODO: Make the server host stop
 
             if (RedTeam.Visible == true)
             {
@@ -1170,7 +1173,6 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = true;
             EnterIP.Visible = true;
             Client.Instance.ValidIp = false;
-            // TODO: Online Buttom
             Online.Visible = false;
         }
 
@@ -1184,6 +1186,7 @@ namespace FirstSemesterExamProject
             Online.Visible = false;
             Host.Visible = false;
             HostIPAdress.Visible = true;
+            Ready.Visible = true; 
 
             if (Server.Instance.isOnline == false)
             {
@@ -1234,16 +1237,9 @@ namespace FirstSemesterExamProject
                 clientThread.IsBackground = true;
                 UpdateIpLabelText();
             }
-            // TODO: JoinGame Buttom
+            
         }
 
-        /// <summary>
-        /// Handles what happens after a successfull join
-        /// </summary>
-        public void ApplyJoined()
-        {
-            // TODO: ApplyJoined
-        }
 
         /// <summary>
         /// To enter IP adress given from the host
@@ -1252,7 +1248,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void EnterIP_TextChanged(object sender, EventArgs e)
         {
-            // TODO: Change ip field
+            
         }
         /// <summary>
         /// Shall contain the IP adress of the host
@@ -1270,41 +1266,14 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Ready_Click(object sender, EventArgs e)
         {
-            ClientReadyClick();
             ServerReadyClick();
+            ClientReadyClick();
         }
 
-
-        /// <summary>
-        /// Makes RedTeam = OnlineUnit stack and sends its team composition out to the other clients
-        /// </summary>
-        private void ServerReadyClick()
-        {
-            if (Server.Instance.isOnline && Client.Instance.clientConnected == false)
-            {
-                redteam = onlineUnitStack;
-
-                string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
-
-                int amount = onlineUnitStack.Count;
-
-                for (int i = 0; i < amount; i++)
-                {
-
-                    message = message + "," + onlineUnitStack.Pop().ToString();
-                }
-
-
-                // UnitStack;TeamColor,unit1,unit2,unit3 ect
-                Server.Instance.WriteServerMessage(message);
-
-            }
-        }
         private void ClientReadyClick()
         {
             if (!(Server.Instance.isOnline) && Client.Instance.clientConnected)
             {
-
                 switch (Client.Instance.Team)
                 {
                     case PlayerTeam.RedTeam:
@@ -1327,7 +1296,6 @@ namespace FirstSemesterExamProject
                         System.Diagnostics.Debug.WriteLine("error: could not find team assignment ClientReadyClick");
                         break;
 
-
                 }
 
                 string message = "UnitStack;" + Client.Instance.Team.ToString();
@@ -1342,6 +1310,31 @@ namespace FirstSemesterExamProject
 
                 // UnitStack;TeamColor,unit1,unit2,unit3 ect
                 Client.Instance.SendToHost(message);
+
+            }
+        }
+
+        /// <summary>
+        /// Makes RedTeam = OnlineUnit stack and sends its team composition out to the other clients
+        /// </summary>
+        private void ServerReadyClick()
+        {
+            if (Server.Instance.isOnline && Client.Instance.clientConnected == false)
+            {
+                redteam = onlineUnitStack;
+
+                string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
+
+                int amount = onlineUnitStack.Count;
+
+                for (int i = 0; i < amount; i++)
+                {
+
+                    message = message + "," + onlineUnitStack.Pop().ToString();
+                }
+
+                // UnitStack;TeamColor,unit1,unit2,unit3 ect
+                Server.Instance.WriteServerMessage(message);
 
             }
         }
@@ -1364,7 +1357,7 @@ namespace FirstSemesterExamProject
                 Client.Instance.ValidIp = false;
                 //is not valid ip
             }
-            // TODO: Check valid ip
+            
         }
 
         /// <summary>

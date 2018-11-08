@@ -51,7 +51,6 @@ namespace FirstSemesterExamProject
             {
                 if (instance != null)
                 {
-
                     return instance;
                 }
                 else
@@ -111,6 +110,8 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReaderThread()
         {
+
+
             string sData;
             clientConnected = true;
             while (clientConnected)
@@ -126,6 +127,7 @@ namespace FirstSemesterExamProject
                 }
             }
         }
+
 
         /// < summary >
         /// Receive an immediate respons from Server, assigning client to a team
@@ -174,8 +176,22 @@ namespace FirstSemesterExamProject
         /// <param name="Data"></param>
         private void UseServerData(string sData)
         {
-            // TODO: Insert message translater:
             DataConverter.ApplyDataToself(sData);
+        }
+
+        /// <summary>
+        /// Sets the clients map to be equal to the recived map number
+        /// </summary>
+        /// <param name="sData"></param>
+        private void SetMap(string sData)
+        {
+            // TODO: sData to a GameBord...
+            GameBoard gameBoard = new GameBoard(int.Parse(sData), int.Parse(sData));
+
+            if (Window.GameState is BattleGameState)
+            {
+                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
+            }
         }
 
         /// <summary>
@@ -188,3 +204,9 @@ namespace FirstSemesterExamProject
         }
     }
 }
+
+
+
+
+
+
