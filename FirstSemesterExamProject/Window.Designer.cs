@@ -60,6 +60,7 @@ namespace FirstSemesterExamProject
             this.JoinGame = new System.Windows.Forms.Button();
             this.EnterIP = new System.Windows.Forms.TextBox();
             this.HostIPAdress = new System.Windows.Forms.Label();
+            this.Ready = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Tick
@@ -419,47 +420,62 @@ namespace FirstSemesterExamProject
             // 
             // Host
             // 
-            this.Host.Location = new System.Drawing.Point(944, 392);
+            this.Host.Location = new System.Drawing.Point(587, 422);
             this.Host.Name = "Host";
             this.Host.Size = new System.Drawing.Size(75, 23);
             this.Host.TabIndex = 39;
             this.Host.Text = "Host";
             this.Host.UseVisualStyleBackColor = true;
+            this.Host.Visible = false;
             this.Host.Click += new System.EventHandler(this.Host_Click);
             // 
             // JoinGame
             // 
-            this.JoinGame.Location = new System.Drawing.Point(944, 425);
+            this.JoinGame.Location = new System.Drawing.Point(748, 596);
             this.JoinGame.Name = "JoinGame";
             this.JoinGame.Size = new System.Drawing.Size(75, 23);
             this.JoinGame.TabIndex = 40;
             this.JoinGame.Text = "Join Game";
             this.JoinGame.UseVisualStyleBackColor = true;
+            this.JoinGame.Visible = false;
             this.JoinGame.Click += new System.EventHandler(this.JoinGame_Click);
             // 
             // EnterIP
             // 
-            this.EnterIP.Location = new System.Drawing.Point(727, 560);
+            this.EnterIP.Location = new System.Drawing.Point(522, 598);
             this.EnterIP.Name = "EnterIP";
-            this.EnterIP.Size = new System.Drawing.Size(100, 19);
+            this.EnterIP.Size = new System.Drawing.Size(220, 19);
             this.EnterIP.TabIndex = 41;
+            this.EnterIP.Visible = false;
             this.EnterIP.TextChanged += new System.EventHandler(this.EnterIP_TextChanged);
             // 
             // HostIPAdress
             // 
             this.HostIPAdress.AutoSize = true;
-            this.HostIPAdress.Location = new System.Drawing.Point(897, 545);
+            this.HostIPAdress.Location = new System.Drawing.Point(605, 601);
             this.HostIPAdress.Name = "HostIPAdress";
             this.HostIPAdress.Size = new System.Drawing.Size(37, 13);
             this.HostIPAdress.TabIndex = 42;
             this.HostIPAdress.Text = "00000";
+            this.HostIPAdress.Visible = false;
             this.HostIPAdress.Click += new System.EventHandler(this.HostIPAdress_Click);
+            // 
+            // Ready
+            // 
+            this.Ready.Location = new System.Drawing.Point(1070, 560);
+            this.Ready.Name = "Ready";
+            this.Ready.Size = new System.Drawing.Size(167, 57);
+            this.Ready.TabIndex = 43;
+            this.Ready.Text = "Ready\r\n";
+            this.Ready.UseVisualStyleBackColor = true;
+            this.Ready.Click += new System.EventHandler(this.Ready_Click);
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1265, 639);
+            this.Controls.Add(this.Ready);
             this.Controls.Add(this.HostIPAdress);
             this.Controls.Add(this.EnterIP);
             this.Controls.Add(this.JoinGame);
@@ -531,5 +547,6 @@ namespace FirstSemesterExamProject
         private System.Windows.Forms.Button JoinGame;
         private System.Windows.Forms.TextBox EnterIP;
         private System.Windows.Forms.Label HostIPAdress;
+        private System.Windows.Forms.Button Ready;
     }
 }

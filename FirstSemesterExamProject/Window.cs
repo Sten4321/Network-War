@@ -567,6 +567,11 @@ namespace FirstSemesterExamProject
             Online.Visible = true;
             JoinGame.Visible = false;
             Host.Visible = false;
+            EnterIP.Visible = false;
+            HostIPAdress.Visible = false;
+            Server.Instance.isOnline = false;
+            // TODO: Make the server host stop
+
             if (RedTeam.Visible == true)
             {
                 RedTeam.Visible = false;
@@ -1117,7 +1122,7 @@ namespace FirstSemesterExamProject
         }
 
         /// <summary>
-        /// a label that displays the amount of points that a player has used out of how many kan be used
+        /// a label that displays the amount of points that a player has used out of how many can be used
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1155,9 +1160,12 @@ namespace FirstSemesterExamProject
             AddMage.Visible = false;
             RemoveUnit.Visible = false;
             muteButton.Visible = true;
+            Host.Visible = true;
+            JoinGame.Visible = true;
             EnterIP.Visible = true;
             Client.Instance.ValidIp = false;
             // TODO: Online Buttom
+            Online.Visible = false;
         }
 
         /// <summary>
@@ -1167,6 +1175,10 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Host_Click(object sender, EventArgs e)
         {
+            Online.Visible = false;
+            Host.Visible = false;
+            HostIPAdress.Visible = true;
+
             if (Server.Instance.isOnline == false)
             {
                 Server.Instance.StartServer();
@@ -1178,12 +1190,13 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = true;
-
-            //portLabel.Visible = true;
-
-            HostIPAdress.Text = Server.Instance.serverIp;
-            //portLabel.Text = Server.Instance.port;
-
+            /*
+             * ipLabel.Visible = true;
+             * portLabel.Visible = true;
+             *
+            ipLabel.Text = Server.Instance.serverIp;
+            portLabel.Text = Server.Instance.port;
+            */
         }
         /// <summary>
         /// Make it possible to join a host through their IP-adress
@@ -1199,6 +1212,7 @@ namespace FirstSemesterExamProject
                 clientThread = new Thread(Client.Instance.ConnectClient);
                 clientThread.Start();
                 clientThread.IsBackground = true;
+                UpdateIpLabelText();
             }
             // TODO: JoinGame Buttom
         }
@@ -1226,6 +1240,15 @@ namespace FirstSemesterExamProject
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void HostIPAdress_Click(object sender, EventArgs e)
+        {
+
+        }
+        /// <summary>
+        /// Button to click when everyone is ready to play
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Ready_Click(object sender, EventArgs e)
         {
 
         }
@@ -1284,6 +1307,29 @@ namespace FirstSemesterExamProject
             }
         }
 
+    }
+}
+
+
+
+
+
+
+
+            Back.Visible = true;
+            PointsLabel.Visible = true;
+            ListBox1.Visible = true;
+            AddArcher.Visible = true;
+            AddCleric.Visible = true;
+            AddKnight.Visible = true;
+            AddScout.Visible = true;
+            AddArtifact.Visible = true;
+            AddMage.Visible = true;
+            RemoveUnit.Visible = true;
+            Label.Visible = true;
+
+            HostIPAdress.Text = Server.Instance.serverIp;
+            //portLabel.Text = Server.Instance.port;
         private bool OnlineGame()
         {
             if (Server.Instance.isOnline || Client.Instance.clientConnected)
@@ -1297,12 +1343,3 @@ namespace FirstSemesterExamProject
                 return false;
             }
         }
-
-    }
-}
-
-
-
-
-
-
