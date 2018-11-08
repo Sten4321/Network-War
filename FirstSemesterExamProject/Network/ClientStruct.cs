@@ -11,7 +11,7 @@ namespace FirstSemesterExamProject
     /// <summary>
     /// Contains the necessary information required for each client
     /// </summary>
-    struct ClientStruct
+    public struct ClientStruct
     {
         public TcpClient client; // client to write to
 

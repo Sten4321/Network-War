@@ -279,9 +279,13 @@ namespace FirstSemesterExamProject
 
             if (OnlineGame())
             {
-                foreach (Enum unit in onlineUnitStack)
+                if (onlineUnitStack != null)
                 {
-                    PointAdd(unit);
+
+                    foreach (Enum unit in onlineUnitStack)
+                    {
+                        PointAdd(unit);
+                    }
                 }
             }
             else
@@ -682,7 +686,11 @@ namespace FirstSemesterExamProject
             {
                 if (OnlineGame())
                 {
+                    if (onlineUnitStack != null)
+                    {
+
                     onlineUnitStack.Push(Units.Archer);
+                    }
                 }
                 else
                 {
@@ -725,7 +733,11 @@ namespace FirstSemesterExamProject
             {
                 if (OnlineGame())
                 {
+                    if (onlineUnitStack != null)
+                    {
+
                     onlineUnitStack.Push(Units.Knight);
+                    }
                 }
                 else
                 {
@@ -765,7 +777,11 @@ namespace FirstSemesterExamProject
             {
                 if (OnlineGame())
                 {
+                    if (onlineUnitStack != null)
+                    {
+
                     onlineUnitStack.Push(Units.Mage);
+                    }
                 }
                 else
                 {
@@ -806,7 +822,11 @@ namespace FirstSemesterExamProject
             {
                 if (OnlineGame())
                 {
+                    if (onlineUnitStack != null)
+                    {
+
                     onlineUnitStack.Push(Units.Cleric);
+                    }
                 }
                 else
                 {
@@ -846,7 +866,11 @@ namespace FirstSemesterExamProject
             {
                 if (OnlineGame())
                 {
+                    if (onlineUnitStack != null)
+                    {
+
                     onlineUnitStack.Push(Units.Artifact);
+                    }
                 }
                 else
                 {
@@ -887,7 +911,11 @@ namespace FirstSemesterExamProject
             {
                 if (OnlineGame())
                 {
-                    onlineUnitStack.Push(Units.Scout);
+                    if (onlineUnitStack != null)
+                    {
+
+                        onlineUnitStack.Push(Units.Scout);
+                    }
                 }
                 else
                 {
@@ -932,10 +960,14 @@ namespace FirstSemesterExamProject
 
             if (OnlineGame())
             {
-                if (!(onlineUnitStack.Count <= 0))
+                if (onlineUnitStack != null)
                 {
 
-                    removed = onlineUnitStack.Pop();
+                    if (!(onlineUnitStack.Count <= 0))
+                    {
+
+                        removed = onlineUnitStack.Pop();
+                    }
                 }
             }
             else
@@ -1102,7 +1134,6 @@ namespace FirstSemesterExamProject
         private void Online_Click(object sender, EventArgs e)
         {
             onlineUnitStack = new Stack<Enum>();
-
 
             RedTeam.Visible = false;
             BlueTeam.Visible = false;
