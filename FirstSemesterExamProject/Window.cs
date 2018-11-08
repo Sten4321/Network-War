@@ -572,7 +572,7 @@ namespace FirstSemesterExamProject
             HostIPAdress.Visible = false;
             Ready.Visible = false;
             Server.Instance.isOnline = false;
-            // TODO: Make the server host stop
+            
 
             if (RedTeam.Visible == true)
             {
@@ -1166,7 +1166,6 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = true;
             EnterIP.Visible = true;
             Client.Instance.ValidIp = false;
-            // TODO: Online Buttom
             Online.Visible = false;
         }
 
@@ -1231,16 +1230,9 @@ namespace FirstSemesterExamProject
                 clientThread.IsBackground = true;
                 UpdateIpLabelText();
             }
-            // TODO: JoinGame Buttom
+            
         }
 
-        /// <summary>
-        /// Handles what happens after a successfull join
-        /// </summary>
-        public void ApplyJoined()
-        {
-            // TODO: ApplyJoined
-        }
 
         /// <summary>
         /// To enter IP adress given from the host
@@ -1249,7 +1241,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void EnterIP_TextChanged(object sender, EventArgs e)
         {
-            // TODO: Change ip field
+            
         }
         /// <summary>
         /// Shall contain the IP adress of the host
@@ -1288,7 +1280,7 @@ namespace FirstSemesterExamProject
                 Client.Instance.ValidIp = false;
                 //is not valid ip
             }
-            // TODO: Check valid ip
+            
         }
 
         /// <summary>
