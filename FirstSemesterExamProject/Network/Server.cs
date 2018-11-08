@@ -33,6 +33,7 @@ namespace FirstSemesterExamProject
         //Singleton Instance
         private static Server instance;
         public PlayerTeam serverTeam = PlayerTeam.RedTeam;
+        public bool isReady = false;
 
         /// <summary>
         /// server Singleton Property
@@ -299,7 +300,7 @@ namespace FirstSemesterExamProject
 
             //Applies data to own game - if it's not a message to the server (Ready, EndTurn ect)
 
-            if (!MessageDirectlyToServer(data))
+            if (MessageDirectlyToServer(data) == false)
             {
                 DataConverter.ApplyDataToself(data.information);
             }
@@ -320,8 +321,23 @@ namespace FirstSemesterExamProject
         private void ReadyMessageHandler(Data data)
         {
             //This client is ready
-            data.clientStruct.ready = true;
+          
+            foreach (ClientStruct _client in clientStructs)
+            {
+                if (_client.client == data.clientStruct.client)
+                {
+                    _client.SetReady();
 
+                }
+            }
+
+            if (AllIsReady())
+            {
+                StartGame(); //StartGameButton.IsVisible = true;
+            }
+        }
+        private bool AllIsReady()
+        {
             int readyCount = 0;
 
             //Check if all clients are ready
@@ -331,13 +347,19 @@ namespace FirstSemesterExamProject
                 {
                     readyCount++;
                 }
+                else
+                {
+                    break;
+                }
             }
-            if (readyCount == clientStructs.Count)
+            if (readyCount == clientStructs.Count && /*host*/ isReady)
             {
-                
-                StartGame();
+                System.Diagnostics.Debug.WriteLine("All is ready!");
+
+                return true;
             }
 
+            return false;
         }
 
         private void StartGame()

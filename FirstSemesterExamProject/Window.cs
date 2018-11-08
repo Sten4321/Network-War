@@ -1266,8 +1266,19 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Ready_Click(object sender, EventArgs e)
         {
+            if (onlineUnitStack!= null && onlineUnitStack.Count>0)
+            {
+
             ServerReadyClick();
             ClientReadyClick();
+            }
+            else
+            {
+                MessageBox.Show("Select at least one Unit", "Oops", MessageBoxButtons.OK);
+
+            }
+
+
         }
 
         private void ClientReadyClick()
