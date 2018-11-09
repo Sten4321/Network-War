@@ -125,6 +125,5 @@ namespace HighScore
             command.ExecuteNonQuery();
             sqlite2.Close();
         }
-
     }
 }
