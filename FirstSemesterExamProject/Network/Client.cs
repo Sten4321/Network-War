@@ -9,6 +9,7 @@ namespace FirstSemesterExamProject
 {
     class Client
     {
+        Window window;
         private static Client instance;
         TcpClient client;
         public static readonly object key = new object();
@@ -61,6 +62,8 @@ namespace FirstSemesterExamProject
             }
         }
 
+        public void SetWindowRefrence(Window window) { this.window = window; }
+
         public bool ValidIp1 { get => validIp; set => validIp = value; }
 
         private Client() { }
@@ -86,6 +89,7 @@ namespace FirstSemesterExamProject
 
             if (error != true)
             {
+                window.UpdateIpLabelText(); //UpdateIpLabelText();
                 ClientHandler();
             }
         }
