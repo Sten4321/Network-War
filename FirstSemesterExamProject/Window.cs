@@ -421,7 +421,7 @@ namespace FirstSemesterExamProject
                 HostIPAdress.Visible = false;
 
                 //Starts the game
-                gs = new BattleGameState(this, Server.Instance.clientObjects.Count+1, dc);
+                gs = new BattleGameState(this, Server.Instance.clientObjects.Count + 1, dc);
                 SoundEngine.StopSound();
                 SoundEngine.PlaySound(Constant.menuButtonSound);
                 SoundEngine.PlayBackgroundMusic();
@@ -1404,21 +1404,8 @@ namespace FirstSemesterExamProject
                 if (Server.Instance.clientObjects.Count > 0)
                 {
 
-                Server.Instance.isReady = true;
-                redteam = onlineUnitStack;
-
-                string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
-
-                int amount = onlineUnitStack.Count;
-
-                for (int i = 0; i < amount; i++)
-                {
-
-                    message = message + "," + onlineUnitStack.Pop().ToString();
-                }
-
-                // UnitStack;TeamColor,unit1,unit2,unit3 ect
-                Server.Instance.WriteServerMessage(message);
+                    Server.Instance.isReady = true;
+                    redteam = new Stack<Enum>(onlineUnitStack);
 
                     string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
 
@@ -1438,7 +1425,6 @@ namespace FirstSemesterExamProject
                 }
                 else
                 {
-
                     MessageBox.Show("You should wait for at least one other player before starting a Multiplayer Game...", "Hol' up mate!", MessageBoxButtons.OK);
                 }
 
@@ -1532,13 +1518,5 @@ namespace FirstSemesterExamProject
                 }
             }
         }
-
-
-
     }
 }
-
-
-
-                    Server.Instance.isReady = true;
-                    redteam = new Stack<Enum>(onlineUnitStack);
