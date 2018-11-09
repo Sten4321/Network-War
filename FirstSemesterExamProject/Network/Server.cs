@@ -367,13 +367,12 @@ namespace FirstSemesterExamProject
         {
             if (AllIsReady())
             {
-                SendMapInfo();
                 Window.allPlayersReady = true;
-                
+
             }
         }
 
-        private void SendMapInfo()
+        public void SendMapInfo()
         {
             Random rnd = new Random();
             mapNum = (byte)rnd.Next(1, 7 + 1);
@@ -388,12 +387,7 @@ namespace FirstSemesterExamProject
 
             WriteServerMessage("Start;");
 
-            GameBoard gameBoard = new GameBoard(mapNum, 1);
-            
-            if (Window.GameState is BattleGameState)
-            {
-                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
-            }
+          
         }
 
 
