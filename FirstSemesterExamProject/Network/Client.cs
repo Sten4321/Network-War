@@ -9,7 +9,7 @@ namespace FirstSemesterExamProject
 {
     class Client
     {
-        Window window;
+        Window windowRef;
         private static Client instance;
         TcpClient client;
         public static readonly object key = new object();
@@ -62,7 +62,7 @@ namespace FirstSemesterExamProject
             }
         }
 
-        public void SetWindowRefrence(Window window) { this.window = window; }
+        public void SetWindowRefrence(Window window) { windowRef = window; }
 
         public bool ValidIp1 { get => validIp; set => validIp = value; }
 
@@ -89,7 +89,7 @@ namespace FirstSemesterExamProject
 
             if (error != true)
             {
-                window.UpdateIpLabelText(); //UpdateIpLabelText();
+                windowRef.UpdateIpLabelText(); //UpdateIpLabelText();
                 ClientHandler();
             }
         }
@@ -212,11 +212,17 @@ namespace FirstSemesterExamProject
         {
             //TODO: Insert Code/Hook for moving unit
         }
+
+        /// <summary>
+        /// Starts the game for the clients
+        /// </summary>
+        public void Start()
+        {
+            //Starts the game
+            Window.GameState = new BattleGameState(windowRef, Server.Instance.clientObjects.Count + 1, windowRef.Dc);
+            SoundEngine.StopSound();
+            SoundEngine.PlaySound(Constant.menuButtonSound);
+            SoundEngine.PlayBackgroundMusic();
+        }
     }
 }
-
-
-
-
-
-

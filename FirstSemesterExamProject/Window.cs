@@ -41,6 +41,10 @@ namespace FirstSemesterExamProject
         private Thread clientThread;
         public static bool allPlayersReady = false;
 
+        public Graphics Dc
+        {
+            get { return dc; }
+        }
         /// <summary>
         /// propety gamestate
         /// </summary>
