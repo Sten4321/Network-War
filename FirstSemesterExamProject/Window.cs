@@ -35,9 +35,11 @@ namespace FirstSemesterExamProject
         public static bool canRestart;
         public static bool canMute;
         public static bool musicOn = true;
-        public static bool menuMusicOn = true;
-        //Server
+        public static bool menuMusicOn = false;
+
+        //Online
         private Thread clientThread;
+        public static bool allPlayersReady = false;
 
         /// <summary>
         /// propety gamestate
@@ -86,7 +88,7 @@ namespace FirstSemesterExamProject
         public Window()
         {
             InitializeComponent();
-            SoundEngine.PlayMenuBackgroundMusic();
+           // SoundEngine.PlayMenuBackgroundMusic();
             this.DoubleBuffered = true;
         }
 
@@ -148,60 +150,64 @@ namespace FirstSemesterExamProject
             CheckEndTurn();
             CheckRestart();
             MuteMusic();
+
+            ToggleStartOnlineGameButton();
         }
         /// <summary>
         /// Shows the list of units depending on what team is choosing
         /// </summary>
         private void ListUpdate()
         {
-            if (redteam != null)
+            if (redteam != null || onlineUnitStack != null)
             {
                 //empties the list
                 showList.Clear();
+
                 if (OnlineGame())
                 {
-                    if (onlineUnitStack != null)
+                    foreach (Enum unit in onlineUnitStack)
                     {
-                        foreach (Enum unit in onlineUnitStack)
-                        {
-                            showList.Add(unit);
-                        }
+                        showList.Add(unit);
                     }
                 }
+
                 else
                 {
-
-                    switch (teamSelect)
+                    if (redteam != null)
                     {
-                        //makes the listbox contain the chosen units depending on the team chosen
-                        case PlayerTeam.RedTeam:
-                            foreach (Enum unit in redteam)
-                            {
-                                showList.Add(unit);
-                            }
-                            break;
 
-                        case PlayerTeam.BlueTeam:
-                            foreach (Enum unit in blueteam)
-                            {
-                                showList.Add(unit);
-                            }
-                            break;
+                        switch (teamSelect)
+                        {
+                            //makes the listbox contain the chosen units depending on the team chosen
+                            case PlayerTeam.RedTeam:
+                                foreach (Enum unit in redteam)
+                                {
+                                    showList.Add(unit);
+                                }
+                                break;
 
-                        case PlayerTeam.GreenTeam:
-                            foreach (Enum unit in greenteam)
-                            {
-                                showList.Add(unit);
-                            }
-                            break;
+                            case PlayerTeam.BlueTeam:
+                                foreach (Enum unit in blueteam)
+                                {
+                                    showList.Add(unit);
+                                }
+                                break;
 
-                        case PlayerTeam.YellowTeam:
-                            foreach (Enum unit in yellowteam)
-                            {
-                                showList.Add(unit);
-                            }
-                            break;
+                            case PlayerTeam.GreenTeam:
+                                foreach (Enum unit in greenteam)
+                                {
+                                    showList.Add(unit);
+                                }
+                                break;
 
+                            case PlayerTeam.YellowTeam:
+                                foreach (Enum unit in yellowteam)
+                                {
+                                    showList.Add(unit);
+                                }
+                                break;
+
+                        }
                     }
                 }
 
@@ -498,6 +504,8 @@ namespace FirstSemesterExamProject
                 Online.Visible = false;
                 EnterIP.Visible = false;
                 EndTurn.Visible = true;
+              
+
                 //Starts the game
                 gs = new BattleGameState(this, number, dc);
                 SoundEngine.StopSound();
@@ -519,9 +527,30 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void Back_Click(object sender, EventArgs e)
         {
+
             OnlineBackClick();
 
             SoundEngine.PlaySound(Constant.menuBackSound);
+
+            //Resets the stacks
+            if (redteam != null)
+            {
+                redteam = null;
+            }
+            if (blueteam != null)
+            {
+                blueteam = null;
+            }
+            if (greenteam != null)
+            {
+                greenteam = null;
+            }
+            if (yellowteam != null)
+            {
+                yellowteam = null;
+            }
+
+            ListUpdate();
 
             BackClickUIHandler();
         }
@@ -543,7 +572,7 @@ namespace FirstSemesterExamProject
             }
             if (Client.Instance.clientConnected)
             {
-                //TO DO: disconnect client
+                //TODO: disconnect client
             }
         }
         private void BackClickUIHandler()
@@ -569,6 +598,7 @@ namespace FirstSemesterExamProject
             Host.Visible = false;
             EnterIP.Visible = false;
             HostIPAdress.Visible = false;
+            ReadyCheck.Visible = false;
             Server.Instance.isOnline = false;
             // TODO: Make the server host stop
 
@@ -588,23 +618,7 @@ namespace FirstSemesterExamProject
             {
                 YellowTeam.Visible = false;
             }
-            //Resets the stacks
-            if (redteam != null)
-            {
-                redteam = null;
-            }
-            if (blueteam != null)
-            {
-                blueteam = null;
-            }
-            if (greenteam != null)
-            {
-                greenteam = null;
-            }
-            if (yellowteam != null)
-            {
-                yellowteam = null;
-            }
+
         }
 
 
@@ -1139,6 +1153,7 @@ namespace FirstSemesterExamProject
         private void Online_Click(object sender, EventArgs e)
         {
             onlineUnitStack = new Stack<Enum>();
+            ListUpdate();
 
             RedTeam.Visible = false;
             BlueTeam.Visible = false;
@@ -1164,8 +1179,8 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = true;
             EnterIP.Visible = true;
             Client.Instance.ValidIp = false;
-            // TODO: Online Buttom
             Online.Visible = false;
+            StartOnlineGame.Visible = false;
         }
 
         /// <summary>
@@ -1176,8 +1191,8 @@ namespace FirstSemesterExamProject
         private void Host_Click(object sender, EventArgs e)
         {
             Online.Visible = false;
-            Host.Visible = false;
             HostIPAdress.Visible = true;
+            ReadyCheck.Visible = true;
 
             if (Server.Instance.isOnline == false)
             {
@@ -1201,7 +1216,9 @@ namespace FirstSemesterExamProject
             AddMage.Visible = true;
             RemoveUnit.Visible = true;
             Label.Visible = true;
-
+            Host.Visible = false;
+            StartOnlineGame.Visible = false;
+            ReadyCheck.Visible = true;
             HostIPAdress.Text = Server.Instance.serverIp;
             //portLabel.Text = Server.Instance.port;
             /*
@@ -1228,16 +1245,9 @@ namespace FirstSemesterExamProject
                 clientThread.IsBackground = true;
                 UpdateIpLabelText();
             }
-            // TODO: JoinGame Buttom
+
         }
 
-        /// <summary>
-        /// Handles what happens after a successfull join
-        /// </summary>
-        public void ApplyJoined()
-        {
-            // TODO: ApplyJoined
-        }
 
         /// <summary>
         /// To enter IP adress given from the host
@@ -1246,7 +1256,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void EnterIP_TextChanged(object sender, EventArgs e)
         {
-            // TODO: Change ip field
+
         }
         /// <summary>
         /// Shall contain the IP adress of the host
@@ -1257,15 +1267,110 @@ namespace FirstSemesterExamProject
         {
 
         }
+
         /// <summary>
-        /// Button to click when everyone is ready to play
+        /// Checkbox for all to check to see if you are ready!!!!
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Ready_Click(object sender, EventArgs e)
+        /// <param name="e"></param>        
+        private void ReadyCheck_Click(object sender, EventArgs e)
         {
-
+            if (onlineUnitStack != null && onlineUnitStack.Count > 0)
+            {
+                ServerReadyClick();
+                ClientReadyClick();
+            }
+            else
+            {
+                MessageBox.Show("Select atleast one unit", "Oops", MessageBoxButtons.OK);
+            }
         }
+
+        private void ClientReadyClick()
+        {
+            if (!(Server.Instance.isOnline) && Client.Instance.clientConnected)
+            {
+                switch (Client.Instance.Team)
+                {
+                    case PlayerTeam.RedTeam:
+                        System.Diagnostics.Debug.WriteLine("Client Tried to be Red Team (ClientReadyClick()))");
+                        break;
+
+                    case PlayerTeam.BlueTeam:
+                        blueteam = onlineUnitStack;
+                        break;
+
+                    case PlayerTeam.GreenTeam:
+                        greenteam = onlineUnitStack;
+                        break;
+
+                    case PlayerTeam.YellowTeam:
+                        yellowteam = onlineUnitStack;
+                        break;
+
+                    default:
+                        System.Diagnostics.Debug.WriteLine("error: could not find team assignment ClientReadyClick");
+                        break;
+
+                }
+
+                string message = "UnitStack;" + Client.Instance.Team.ToString();
+
+                int amount = onlineUnitStack.Count;
+
+                for (int i = 0; i < amount; i++)
+                {
+
+                    message = message + "," + onlineUnitStack.Pop().ToString();
+                }
+
+                // UnitStack;TeamColor,unit1,unit2,unit3 ect
+                Client.Instance.SendToHost(message);
+                Client.Instance.SendToHost("Ready;");
+
+
+            }
+        }
+
+        /// <summary>
+        /// Makes RedTeam = OnlineUnit stack and sends its team composition out to the other clients
+        /// </summary>
+        private void ServerReadyClick()
+        {
+            if (Server.Instance.isOnline && Client.Instance.clientConnected == false)
+            {
+                if (Server.Instance.clientObjects.Count>0)
+                {
+
+                Server.Instance.isReady = true;
+                redteam = onlineUnitStack;
+
+                string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
+
+                int amount = onlineUnitStack.Count;
+
+                for (int i = 0; i < amount; i++)
+                {
+
+                    message = message + "," + onlineUnitStack.Pop().ToString();
+                }
+
+                // UnitStack;TeamColor,unit1,unit2,unit3 ect
+                Server.Instance.WriteServerMessage(message);
+
+                //If all clients are ready it sends map details
+                Server.Instance.CheckIfCanStart();
+                }
+                else
+                {
+
+                    MessageBox.Show("You should wait for at least one other player before starting a Multiplayer Game...", "Hol' up mate!", MessageBoxButtons.OK);
+                }
+
+            }
+        }
+
+
         #endregion
 
         /// <summary>
@@ -1285,7 +1390,7 @@ namespace FirstSemesterExamProject
                 Client.Instance.ValidIp = false;
                 //is not valid ip
             }
-            // TODO: Check valid ip
+
         }
 
         /// <summary>
@@ -1337,5 +1442,24 @@ namespace FirstSemesterExamProject
                 return false;
             }
         }
+
+        //Toggles startonlinegame button (Shows it to host when all players are ready)
+        public void ToggleStartOnlineGameButton()
+        {
+            if (allPlayersReady)
+            {
+                if (gs is UnitChoiceGameState && OnlineGame())
+                {
+
+                    StartOnlineGame.Visible = !StartOnlineGame.Visible;
+
+                    allPlayersReady = false;
+                }
+            }
+        }
+
+
     }
 }
+
+

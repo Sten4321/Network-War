@@ -11,17 +11,29 @@ namespace FirstSemesterExamProject
     /// <summary>
     /// Contains the necessary information required for each client
     /// </summary>
-    public struct ClientStruct
+    public class ClientObject
     {
-        public TcpClient client; // client to write to
+        public TcpClient tcpClient; // client to write to
+
+        //is client ready to start a game?
+        public bool ready;
+
 
         //What team are they on?
         public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
+        public bool clientsTurn;
 
-        public ClientStruct(TcpClient _client)
+        public ClientObject(TcpClient _client)
         {
             Team = null;
-            client = _client;
+            tcpClient = _client;
+            ready = false;
+            clientsTurn = false;
+        }
+
+        public void SetReady()
+        {
+            ready = true;
         }
     }
 }

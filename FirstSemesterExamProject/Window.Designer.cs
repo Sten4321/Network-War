@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace FirstSemesterExamProject
 {
@@ -60,7 +61,8 @@ namespace FirstSemesterExamProject
             this.JoinGame = new System.Windows.Forms.Button();
             this.EnterIP = new System.Windows.Forms.TextBox();
             this.HostIPAdress = new System.Windows.Forms.Label();
-            this.Ready = new System.Windows.Forms.Button();
+            this.StartOnlineGame = new System.Windows.Forms.Button();
+            this.ReadyCheck = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Tick
@@ -460,22 +462,35 @@ namespace FirstSemesterExamProject
             this.HostIPAdress.Visible = false;
             this.HostIPAdress.Click += new System.EventHandler(this.HostIPAdress_Click);
             // 
-            // Ready
+            // StartOnlineGame
             // 
-            this.Ready.Location = new System.Drawing.Point(1070, 560);
-            this.Ready.Name = "Ready";
-            this.Ready.Size = new System.Drawing.Size(167, 57);
-            this.Ready.TabIndex = 43;
-            this.Ready.Text = "Ready\r\n";
-            this.Ready.UseVisualStyleBackColor = true;
-            this.Ready.Click += new System.EventHandler(this.Ready_Click);
+            this.StartOnlineGame.Location = new System.Drawing.Point(1070, 560);
+            this.StartOnlineGame.Name = "StartOnlineGame";
+            this.StartOnlineGame.Size = new System.Drawing.Size(167, 57);
+            this.StartOnlineGame.TabIndex = 45;
+            this.StartOnlineGame.Text = "Start";
+            this.StartOnlineGame.UseVisualStyleBackColor = true;
+            this.StartOnlineGame.Visible = false;
+            this.StartOnlineGame.Click += new System.EventHandler(this.StartOnlineGame_Click);
+            // 
+            // ReadyCheck
+            // 
+            this.ReadyCheck.Location = new System.Drawing.Point(1070, 491);
+            this.ReadyCheck.Name = "ReadyCheck";
+            this.ReadyCheck.Size = new System.Drawing.Size(167, 57);
+            this.ReadyCheck.TabIndex = 46;
+            this.ReadyCheck.Text = "Ready";
+            this.ReadyCheck.UseVisualStyleBackColor = true;
+            this.ReadyCheck.Visible = false;
+            this.ReadyCheck.Click += new System.EventHandler(this.ReadyCheck_Click);
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1265, 639);
-            this.Controls.Add(this.Ready);
+            this.Controls.Add(this.ReadyCheck);
+            this.Controls.Add(this.StartOnlineGame);
             this.Controls.Add(this.HostIPAdress);
             this.Controls.Add(this.EnterIP);
             this.Controls.Add(this.JoinGame);
@@ -517,6 +532,11 @@ namespace FirstSemesterExamProject
 
         }
 
+        private void StartOnlineGame_Click(object sender, EventArgs e)        {           
+
+             Server.Instance.StartGame(); // TODO: (Andreas) - this is where you left off twat
+        }
+
         #endregion
 
         private System.Windows.Forms.Timer Tick;
@@ -547,6 +567,7 @@ namespace FirstSemesterExamProject
         private System.Windows.Forms.Button JoinGame;
         private System.Windows.Forms.TextBox EnterIP;
         private System.Windows.Forms.Label HostIPAdress;
-        private System.Windows.Forms.Button Ready;
+        private System.Windows.Forms.Button StartOnlineGame;
+        private System.Windows.Forms.Button ReadyCheck;
     }
 }
