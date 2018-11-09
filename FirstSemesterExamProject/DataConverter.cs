@@ -17,7 +17,7 @@ namespace FirstSemesterExamProject
         /// <param name="dataInformation">data.Information</param>
         public static void ApplyDataToself(string dataInformation)
         {
-            if (dataInformation.Contains(';')) 
+            if (dataInformation.Contains(';'))
             {
                 string[] splitStrings = dataInformation.Split(';');
 
@@ -48,6 +48,10 @@ namespace FirstSemesterExamProject
                         MoveUnit(splitStrings);
                         break;
 
+                    case "Start":
+                        Client.Instance.Start();
+                        break;
+
 
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
@@ -56,12 +60,12 @@ namespace FirstSemesterExamProject
             }
         }
 
-        /// <summary>
+                /// <summary>
         /// Adds units to the stacks
         /// </summary>
         /// <param name="team"></param>
         /// <param name="unitStrings"></param>
-        public static void AddUnitsToTeamStack( string[] unitStrings)
+        public static void AddUnitsToTeamStack(string[] unitStrings)
         {
 
             Stack<Enum> tmpStack = new Stack<Enum>();
