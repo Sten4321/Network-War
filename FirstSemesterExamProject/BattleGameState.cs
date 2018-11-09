@@ -171,7 +171,7 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// Changes player turn.
         /// </summary>
-        public void ChangeTurn()// Update ChangeTurn
+        public void ChangeTurn()// TODO: Update ChangeTurn
         {
             System.Diagnostics.Debug.WriteLine("ChangeBattleTurn initialized");
             //Fix for unitRevival Bug :)

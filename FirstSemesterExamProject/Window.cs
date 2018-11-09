@@ -421,7 +421,7 @@ namespace FirstSemesterExamProject
                 HostIPAdress.Visible = false;
 
                 //Starts the game
-                gs = new BattleGameState(this, Server.Instance.clientObjects.Count+1, dc);
+                gs = new BattleGameState(this, Server.Instance.clientObjects.Count + 1, dc);
                 SoundEngine.StopSound();
                 SoundEngine.PlaySound(Constant.menuButtonSound);
                 SoundEngine.PlayBackgroundMusic();
@@ -443,7 +443,7 @@ namespace FirstSemesterExamProject
         {
             if (gs is BattleGameState bs)
             {
-                bs.ChangeTurn();// TODO: update endturn funktionality for keypress
+                bs.ChangeTurn();
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
@@ -1252,34 +1252,45 @@ namespace FirstSemesterExamProject
                 UpdateIpLabelText();
             }
         }
-        private void UpdateIpLabelText()
+
+        public void UpdateIpLabelText()
         {
-            JoinGame.Visible = false;
-            EnterIP.Visible = false;
-            HostIPAdress.Visible = true;
-            Back.Visible = true;
-            PointsLabel.Visible = true;
-            ListBox1.Visible = true;
-            AddArcher.Visible = true;
-            AddCleric.Visible = true;
-            AddKnight.Visible = true;
-            AddScout.Visible = true;
-            AddArtifact.Visible = true;
-            AddMage.Visible = true;
-            RemoveUnit.Visible = true;
-            Label.Visible = true;
-            Host.Visible = false;
-            StartOnlineGame.Visible = false;
-            ReadyCheck.Visible = true;
-            HostIPAdress.Text = Server.Instance.serverIp;
-            //portLabel.Text = Server.Instance.port;
-            /*
-             * ipLabel.Visible = true;
-             * portLabel.Visible = true;
-             *
-            ipLabel.Text = Server.Instance.serverIp;
-            portLabel.Text = Server.Instance.port;
-            */
+            if (InvokeRequired)
+            {
+                // Dispatch to correct thread, use BeginInvoke if you don't need
+                // caller thread until operation completes
+                Invoke(new MethodInvoker(UpdateIpLabelText));
+            }
+            else
+            {
+                // Do things
+                JoinGame.Visible = false;
+                EnterIP.Visible = false;
+                HostIPAdress.Visible = true;
+                Back.Visible = true;
+                PointsLabel.Visible = true;
+                ListBox1.Visible = true;
+                AddArcher.Visible = true;
+                AddCleric.Visible = true;
+                AddKnight.Visible = true;
+                AddScout.Visible = true;
+                AddArtifact.Visible = true;
+                AddMage.Visible = true;
+                RemoveUnit.Visible = true;
+                Label.Visible = true;
+                Host.Visible = false;
+                StartOnlineGame.Visible = false;
+                ReadyCheck.Visible = true;
+                HostIPAdress.Text = Server.Instance.serverIp;
+                //portLabel.Text = Server.Instance.port;
+                /*
+                 * ipLabel.Visible = true;
+                 * portLabel.Visible = true;
+                 *
+                ipLabel.Text = Server.Instance.serverIp;
+                portLabel.Text = Server.Instance.port;
+                */
+            }
         }
         /// <summary>
         /// Make it possible to join a host through their IP-adress
@@ -1292,14 +1303,13 @@ namespace FirstSemesterExamProject
 
             if (Client.Instance.ValidIp == true)
             {
+                Client.Instance.SetWindowRefrence(this);
                 clientThread = new Thread(Client.Instance.ConnectClient);
                 clientThread.Start();
                 clientThread.IsBackground = true;
-                UpdateIpLabelText();
+                //UpdateIpLabelText();
             }
-
         }
-
 
         /// <summary>
         /// To enter IP adress given from the host
@@ -1415,7 +1425,6 @@ namespace FirstSemesterExamProject
                 }
                 else
                 {
-
                     MessageBox.Show("You should wait for at least one other player before starting a Multiplayer Game...", "Hol' up mate!", MessageBoxButtons.OK);
                 }
 
@@ -1473,7 +1482,7 @@ namespace FirstSemesterExamProject
         {
             if (gs is BattleGameState bs)
             {
-                bs.ChangeTurn();// TODO: update ChangeTurn Funktionality for mouseClick
+                bs.ChangeTurn();
                 SoundEngine.PlaySound(Constant.endTurnSound);
             }
         }
@@ -1509,10 +1518,5 @@ namespace FirstSemesterExamProject
                 }
             }
         }
-
-
-
     }
 }
-
-
