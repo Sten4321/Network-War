@@ -532,10 +532,7 @@ namespace FirstSemesterExamProject
 
         }
 
-        private void StartOnlineGame_Click(object sender, EventArgs e)        {           
-
-             Server.Instance.StartGame(); // TODO: (Andreas) - this is where you left off twat
-        }
+       
 
         #endregion
 

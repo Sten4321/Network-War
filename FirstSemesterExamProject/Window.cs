@@ -88,7 +88,7 @@ namespace FirstSemesterExamProject
         public Window()
         {
             InitializeComponent();
-           // SoundEngine.PlayMenuBackgroundMusic();
+            // SoundEngine.PlayMenuBackgroundMusic();
             this.DoubleBuffered = true;
         }
 
@@ -383,7 +383,58 @@ namespace FirstSemesterExamProject
             EndTurnKeyPress();
 
         }
+        private void StartOnlineGame_Click(object sender, EventArgs e)
+        {
+            if (((redteam != null && redteam.Count > 0) || (redteam == null))
+                && ((blueteam != null && blueteam.Count > 0) || (blueteam == null))
+                && ((greenteam != null && greenteam.Count > 0) || (greenteam == null))
+                && ((yellowteam != null && yellowteam.Count > 0) || (yellowteam == null)))
+            {
+                RedTeam.Visible = false;
+                BlueTeam.Visible = false;
+                GreenTeam.Visible = false;
+                YellowTeam.Visible = false;
+                TwoPlayer.Visible = false;
+                ThreePlayer.Visible = false;
+                FourPlayer.Visible = false;
+                Back.Visible = false;
+                Label.Visible = false;
+                Start.Visible = false;
+                PointsLabel.Visible = false;
+                ListBox1.Visible = false;
+                AddArcher.Visible = false;
+                AddCleric.Visible = false;
+                AddKnight.Visible = false;
+                AddScout.Visible = false;
+                AddArtifact.Visible = false;
+                AddMage.Visible = false;
+                RemoveUnit.Visible = false;
+                muteButton.Visible = false;
+                Host.Visible = false;
+                JoinGame.Visible = false;
+                Online.Visible = false;
+                EnterIP.Visible = false;
+                EndTurn.Visible = true;
 
+                StartOnlineGame.Visible = false;
+                ReadyCheck.Visible = false;
+                HostIPAdress.Visible = false;
+
+                //Starts the game
+                gs = new BattleGameState(this, Server.Instance.clientObjects.Count, dc);
+                SoundEngine.StopSound();
+                SoundEngine.PlaySound(Constant.menuButtonSound);
+                SoundEngine.PlayBackgroundMusic();
+
+                // TODO: do same for Clients with Stefano's windows ref technology
+            }
+            else
+            {
+                SoundEngine.PlaySound(Constant.menuBackSound);
+                MessageBox.Show("something went wrong in Start online game..", "Oops", MessageBoxButtons.OK);
+            }
+            //Server.Instance.StartGame(); // TODO: (Andreas) - this is where you left off twat
+        }
         /// <summary>
         /// ends the players turn
         /// </summary>
@@ -504,7 +555,7 @@ namespace FirstSemesterExamProject
                 Online.Visible = false;
                 EnterIP.Visible = false;
                 EndTurn.Visible = true;
-              
+
 
                 //Starts the game
                 gs = new BattleGameState(this, number, dc);
@@ -1339,27 +1390,27 @@ namespace FirstSemesterExamProject
         {
             if (Server.Instance.isOnline && Client.Instance.clientConnected == false)
             {
-                if (Server.Instance.clientObjects.Count>0)
+                if (Server.Instance.clientObjects.Count > 0)
                 {
 
-                Server.Instance.isReady = true;
-                redteam = onlineUnitStack;
+                    Server.Instance.isReady = true;
+                    redteam = new Stack<Enum>(onlineUnitStack);
 
-                string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
+                    string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
 
-                int amount = onlineUnitStack.Count;
+                    int amount = onlineUnitStack.Count;
 
-                for (int i = 0; i < amount; i++)
-                {
+                    for (int i = 0; i < amount; i++)
+                    {
 
-                    message = message + "," + onlineUnitStack.Pop().ToString();
-                }
+                        message = message + "," + onlineUnitStack.Pop().ToString();
+                    }
 
-                // UnitStack;TeamColor,unit1,unit2,unit3 ect
-                Server.Instance.WriteServerMessage(message);
+                    // UnitStack;TeamColor,unit1,unit2,unit3 ect
+                    Server.Instance.WriteServerMessage(message);
 
-                //If all clients are ready it sends map details
-                Server.Instance.CheckIfCanStart();
+                    //If all clients are ready it sends map details
+                    Server.Instance.CheckIfCanStart();
                 }
                 else
                 {
@@ -1457,6 +1508,7 @@ namespace FirstSemesterExamProject
                 }
             }
         }
+
 
 
     }
