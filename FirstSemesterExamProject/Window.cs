@@ -421,11 +421,12 @@ namespace FirstSemesterExamProject
                 HostIPAdress.Visible = false;
 
                 //Starts the game
-                gs = new BattleGameState(this, Server.Instance.clientObjects.Count, dc);
+                gs = new BattleGameState(this, Server.Instance.clientObjects.Count+1, dc);
                 SoundEngine.StopSound();
                 SoundEngine.PlaySound(Constant.menuButtonSound);
                 SoundEngine.PlayBackgroundMusic();
 
+                Server.Instance.StartGame();
                 // TODO: do same for Clients with Stefano's windows ref technology
             }
             else

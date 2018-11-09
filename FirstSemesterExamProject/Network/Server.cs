@@ -387,12 +387,7 @@ namespace FirstSemesterExamProject
 
             WriteServerMessage("Start;");
 
-            GameBoard gameBoard = new GameBoard(mapNum, 1);
-            
-            if (Window.GameState is BattleGameState)
-            {
-                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
-            }
+          
         }
 
 
