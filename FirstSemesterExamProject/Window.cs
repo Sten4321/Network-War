@@ -1407,15 +1407,15 @@ namespace FirstSemesterExamProject
                         break;
 
                     case PlayerTeam.BlueTeam:
-                        blueteam = new Stack<Enum>( onlineUnitStack);
+                        blueteam = new Stack<Enum>(DataConverter.ReverseStack(onlineUnitStack));
                         break;
 
                     case PlayerTeam.GreenTeam:
-                        greenteam = new Stack<Enum>(onlineUnitStack);
+                        greenteam = new Stack<Enum>(DataConverter.ReverseStack(onlineUnitStack));
                         break;
 
                     case PlayerTeam.YellowTeam:
-                        yellowteam = new Stack<Enum>(onlineUnitStack);
+                        yellowteam = new Stack<Enum>(DataConverter.ReverseStack(onlineUnitStack));
                         break;
 
                     default:
@@ -1453,7 +1453,7 @@ namespace FirstSemesterExamProject
                 {
 
                     Server.Instance.isReady = true;
-                    redteam = new Stack<Enum>(onlineUnitStack);
+                    redteam = new Stack<Enum>(DataConverter.ReverseStack( onlineUnitStack));
 
 
 
