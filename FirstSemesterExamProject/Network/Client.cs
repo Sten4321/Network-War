@@ -216,10 +216,12 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// Starts the game for the clients
         /// </summary>
-        public void Start()
+        public void Start(string playerAmountString)
         {
+            int amount = Convert.ToInt32(playerAmountString);
+
             //Starts the game
-            Window.GameState = new BattleGameState(windowRef, Server.Instance.clientObjects.Count + 1, windowRef.Dc);
+            Window.GameState = new BattleGameState(windowRef, amount, windowRef.Dc);
             SoundEngine.StopSound();
             SoundEngine.PlaySound(Constant.menuButtonSound);
             SoundEngine.PlayBackgroundMusic();

@@ -386,7 +386,7 @@ namespace FirstSemesterExamProject
         {
             // TODO: Start Game based on map, ClientStructs.Count
 
-            WriteServerMessage("Start;");
+            WriteServerMessage("Start;"+(clientObjects.Count+1));
 
           
         }

@@ -50,7 +50,7 @@ namespace FirstSemesterExamProject
                         break;
 
                     case "Start":
-                        Client.Instance.Start();
+                        Client.Instance.Start(information);
                         break;
 
 
