@@ -181,18 +181,14 @@ namespace FirstSemesterExamProject
 
                 if (Client.Instance.clientConnected)
                 {
-                    if (!(GameState is BattleGameState))
-                    {
+                                       
+                    HideUiForOnlineGame();
 
+                    SoundEngine.StopSound();
+                    SoundEngine.PlaySound(Constant.menuButtonSound);
+                    SoundEngine.PlayBackgroundMusic();
 
-                        HideUiForOnlineGame();
-
-                        GameState = new BattleGameState(this, playerAmount, dc);
-
-                        SoundEngine.StopSound();
-                        SoundEngine.PlaySound(Constant.menuButtonSound);
-                        SoundEngine.PlayBackgroundMusic();
-                    }
+                    clientShouldStart = false;
                 }
             }
         }
@@ -1411,15 +1407,15 @@ namespace FirstSemesterExamProject
                         break;
 
                     case PlayerTeam.BlueTeam:
-                        blueteam = onlineUnitStack;
+                        blueteam = new Stack<Enum>( onlineUnitStack);
                         break;
 
                     case PlayerTeam.GreenTeam:
-                        greenteam = onlineUnitStack;
+                        greenteam = new Stack<Enum>(onlineUnitStack);
                         break;
 
                     case PlayerTeam.YellowTeam:
-                        yellowteam = onlineUnitStack;
+                        yellowteam = new Stack<Enum>(onlineUnitStack);
                         break;
 
                     default:
@@ -1458,6 +1454,9 @@ namespace FirstSemesterExamProject
 
                     Server.Instance.isReady = true;
                     redteam = new Stack<Enum>(onlineUnitStack);
+
+                    onlineUnitStack=DataConverter.ReverseStack(onlineUnitStack);
+
 
                     string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
 

@@ -51,8 +51,7 @@ namespace FirstSemesterExamProject
             if (Client.Instance.clientConnected)
             {
                 // TODO: implement code for gameBord: -> look at client
-
-                gameBoard = new GameBoard(playerNumber, 101);
+                             
               
             }
             else

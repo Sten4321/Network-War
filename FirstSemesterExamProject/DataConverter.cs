@@ -118,6 +118,8 @@ namespace FirstSemesterExamProject
         public static void SetMap(string sData)
         {
             GameBoard gameBoard = new GameBoard(int.Parse(sData), 1);
+            /////
+            Client.Instance.SetBattleGameState();
 
             if (Window.GameState is BattleGameState)
             {

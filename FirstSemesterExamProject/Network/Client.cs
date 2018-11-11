@@ -213,6 +213,11 @@ namespace FirstSemesterExamProject
             //TODO: Insert Code/Hook for moving unit
         }
 
+        public void SetBattleGameState()
+        {
+            Window.GameState = new BattleGameState(windowRef, Window.playerAmount, windowRef.Dc);
+        }
+
         /// <summary>
         /// Starts the game for the clients
         /// </summary>
@@ -227,12 +232,6 @@ namespace FirstSemesterExamProject
           //  Window.GameState = new BattleGameState(windowRef, amount, windowRef.Dc);
 
             
-
-
-
-
-
-
         }
     }
 }
