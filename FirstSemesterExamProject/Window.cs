@@ -159,6 +159,8 @@ namespace FirstSemesterExamProject
             CheckRestart();
             MuteMusic();
 
+
+            OnlineUpdate();
         }
 
 
