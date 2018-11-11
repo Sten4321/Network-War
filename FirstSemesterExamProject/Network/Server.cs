@@ -111,6 +111,7 @@ namespace FirstSemesterExamProject
             searchForClientsThread.Start();
             serverThreads.Add(searchForClientsThread);
         }
+
         private static string FindLocalIp()
         {
 
@@ -385,7 +386,7 @@ namespace FirstSemesterExamProject
         {
             // TODO: Start Game based on map, ClientStructs.Count
 
-            WriteServerMessage("Start;");
+            WriteServerMessage("Start;"+(clientObjects.Count+1));
 
           
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,7 +50,7 @@ namespace FirstSemesterExamProject
                         break;
 
                     case "Start":
-                        Client.Instance.Start();
+                        Client.Instance.Start(information);
                         break;
 
 
@@ -77,6 +78,8 @@ namespace FirstSemesterExamProject
 
                 tmpStack.Push(unit);
             }
+
+           // tmpStack = ReverseStack(tmpStack);
 
             //applies local stack to the designated team's stack
             Enum.TryParse(unitStrings[0], out PlayerTeam _team); //Converts first information to a team (YELLOW,archer,knight,mage)                                                
@@ -116,6 +119,8 @@ namespace FirstSemesterExamProject
         public static void SetMap(string sData)
         {
             GameBoard gameBoard = new GameBoard(int.Parse(sData), 1);
+            /////
+            Client.Instance.SetBattleGameState();
 
             if (Window.GameState is BattleGameState)
             {
@@ -141,6 +146,19 @@ namespace FirstSemesterExamProject
                     BattleGameState.Players[0].Select(x, y, dx, dy);
                 }
             }
+        }
+
+        
+        public static Stack<Enum> ReverseStack(Stack<Enum> stack)
+        {
+            //Declare another stack to store the values from the passed stack
+            Stack<Enum> reversedStack = new Stack<Enum>();
+
+            //While the passed stack isn't empty, pop elements from the passed stack onto the temp stack
+            while (stack.Count != 0)
+                reversedStack.Push(stack.Pop());
+
+            return reversedStack;
         }
     }
 }
