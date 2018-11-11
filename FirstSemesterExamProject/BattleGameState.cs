@@ -130,7 +130,7 @@ namespace FirstSemesterExamProject
                     }
                 }
             }
-          /////  players[playerTurn - 1].ObjectRender(graphics);
+           players[playerTurn - 1].ObjectRender(graphics); 
 
             if (Window.OnlineGame() != true)//only if not online
             {

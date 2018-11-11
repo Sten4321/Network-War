@@ -438,14 +438,12 @@ namespace FirstSemesterExamProject
                 SoundEngine.PlayBackgroundMusic();
 
                 Server.Instance.StartGame();
-                // TODO: do same for Clients with Stefano's windows ref technology
             }
             else
             {
                 SoundEngine.PlaySound(Constant.menuBackSound);
                 MessageBox.Show("something went wrong in Start online game..", "Oops", MessageBoxButtons.OK);
             }
-            //Server.Instance.StartGame(); // TODO: (Andreas) - this is where you left off twat
         }
 
         private void HideUiForOnlineGame()
