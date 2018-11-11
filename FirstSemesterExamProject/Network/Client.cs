@@ -220,11 +220,19 @@ namespace FirstSemesterExamProject
         {
             int amount = Convert.ToInt32(playerAmountString);
 
+            Window.clientShouldStart = true;
+            Window.playerAmount = amount;
+
             //Starts the game
-            Window.GameState = new BattleGameState(windowRef, amount, windowRef.Dc);
-            SoundEngine.StopSound();
-            SoundEngine.PlaySound(Constant.menuButtonSound);
-            SoundEngine.PlayBackgroundMusic();
+          //  Window.GameState = new BattleGameState(windowRef, amount, windowRef.Dc);
+
+            
+
+
+
+
+
+
         }
     }
 }

@@ -51,6 +51,9 @@ namespace FirstSemesterExamProject
             if (Client.Instance.clientConnected)
             {
                 // TODO: implement code for gameBord: -> look at client
+
+                gameBoard = new GameBoard(playerNumber, 101);
+              
             }
             else
             {
@@ -128,7 +131,7 @@ namespace FirstSemesterExamProject
                     }
                 }
             }
-            players[playerTurn - 1].ObjectRender(graphics);
+          /////  players[playerTurn - 1].ObjectRender(graphics);
 
             if (Window.OnlineGame() != true)//only if not online
             {

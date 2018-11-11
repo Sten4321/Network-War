@@ -10,6 +10,8 @@ namespace FirstSemesterExamProject
 {
     public partial class Window : Form
     {
+
+
         private Graphics dc;
         private static GameState gs;
         //Time Keeping
@@ -18,7 +20,7 @@ namespace FirstSemesterExamProject
         public static float deltaTime;
         private BufferedGraphics backbuffer;
         //team setup
-        private int number;
+        public static int playerAmount;
         private static Stack<Enum> blueteam; //List for each team to contain every unit they choose
         private static Stack<Enum> redteam;
         private static Stack<Enum> greenteam;
@@ -40,6 +42,8 @@ namespace FirstSemesterExamProject
         //Online
         private Thread clientThread;
         public static bool allPlayersReady = false;
+        public static bool clientShouldStart = false;
+
 
         public Graphics Dc
         {
@@ -155,7 +159,40 @@ namespace FirstSemesterExamProject
             CheckRestart();
             MuteMusic();
 
-            ToggleStartOnlineGameButton();
+        }
+
+
+        private void OnlineUpdate()
+        {
+            if (OnlineGame())
+            {
+                ToggleStartOnlineGameButton();
+
+                StartClientOnlineGame();
+            }
+        }
+
+        private void StartClientOnlineGame()
+        {
+            if (clientShouldStart)
+            {
+
+                if (Client.Instance.clientConnected)
+                {
+                    if (!(GameState is BattleGameState))
+                    {
+
+
+                        HideUiForOnlineGame();
+
+                        GameState = new BattleGameState(this, playerAmount, dc);
+
+                        SoundEngine.StopSound();
+                        SoundEngine.PlaySound(Constant.menuButtonSound);
+                        SoundEngine.PlayBackgroundMusic();
+                    }
+                }
+            }
         }
         /// <summary>
         /// Shows the list of units depending on what team is choosing
@@ -394,35 +431,7 @@ namespace FirstSemesterExamProject
                 && ((greenteam != null && greenteam.Count > 0) || (greenteam == null))
                 && ((yellowteam != null && yellowteam.Count > 0) || (yellowteam == null)))
             {
-                RedTeam.Visible = false;
-                BlueTeam.Visible = false;
-                GreenTeam.Visible = false;
-                YellowTeam.Visible = false;
-                TwoPlayer.Visible = false;
-                ThreePlayer.Visible = false;
-                FourPlayer.Visible = false;
-                Back.Visible = false;
-                Label.Visible = false;
-                Start.Visible = false;
-                PointsLabel.Visible = false;
-                ListBox1.Visible = false;
-                AddArcher.Visible = false;
-                AddCleric.Visible = false;
-                AddKnight.Visible = false;
-                AddScout.Visible = false;
-                AddArtifact.Visible = false;
-                AddMage.Visible = false;
-                RemoveUnit.Visible = false;
-                muteButton.Visible = false;
-                Host.Visible = false;
-                JoinGame.Visible = false;
-                Online.Visible = false;
-                EnterIP.Visible = false;
-                EndTurn.Visible = true;
-
-                StartOnlineGame.Visible = false;
-                ReadyCheck.Visible = false;
-                HostIPAdress.Visible = false;
+                HideUiForOnlineGame();
 
                 //Starts the game
                 gs = new BattleGameState(this, Server.Instance.clientObjects.Count + 1, dc);
@@ -439,6 +448,39 @@ namespace FirstSemesterExamProject
                 MessageBox.Show("something went wrong in Start online game..", "Oops", MessageBoxButtons.OK);
             }
             //Server.Instance.StartGame(); // TODO: (Andreas) - this is where you left off twat
+        }
+
+        private void HideUiForOnlineGame()
+        {
+            RedTeam.Visible = false;
+            BlueTeam.Visible = false;
+            GreenTeam.Visible = false;
+            YellowTeam.Visible = false;
+            TwoPlayer.Visible = false;
+            ThreePlayer.Visible = false;
+            FourPlayer.Visible = false;
+            Back.Visible = false;
+            Label.Visible = false;
+            Start.Visible = false;
+            PointsLabel.Visible = false;
+            ListBox1.Visible = false;
+            AddArcher.Visible = false;
+            AddCleric.Visible = false;
+            AddKnight.Visible = false;
+            AddScout.Visible = false;
+            AddArtifact.Visible = false;
+            AddMage.Visible = false;
+            RemoveUnit.Visible = false;
+            muteButton.Visible = false;
+            Host.Visible = false;
+            JoinGame.Visible = false;
+            Online.Visible = false;
+            EnterIP.Visible = false;
+            EndTurn.Visible = true;
+
+            StartOnlineGame.Visible = false;
+            ReadyCheck.Visible = false;
+            HostIPAdress.Visible = false;
         }
         /// <summary>
         /// ends the players turn
@@ -535,35 +577,11 @@ namespace FirstSemesterExamProject
                 && ((greenteam != null && greenteam.Count > 0) || (greenteam == null))
                 && ((yellowteam != null && yellowteam.Count > 0) || (yellowteam == null)))
             {
-                RedTeam.Visible = false;
-                BlueTeam.Visible = false;
-                GreenTeam.Visible = false;
-                YellowTeam.Visible = false;
-                TwoPlayer.Visible = false;
-                ThreePlayer.Visible = false;
-                FourPlayer.Visible = false;
-                Back.Visible = false;
-                Label.Visible = false;
-                Start.Visible = false;
-                PointsLabel.Visible = false;
-                ListBox1.Visible = false;
-                AddArcher.Visible = false;
-                AddCleric.Visible = false;
-                AddKnight.Visible = false;
-                AddScout.Visible = false;
-                AddArtifact.Visible = false;
-                AddMage.Visible = false;
-                RemoveUnit.Visible = false;
-                muteButton.Visible = false;
-                Host.Visible = false;
-                JoinGame.Visible = false;
-                Online.Visible = false;
-                EnterIP.Visible = false;
-                EndTurn.Visible = true;
 
+                EnterGameHideUI();
 
                 //Starts the game
-                gs = new BattleGameState(this, number, dc);
+                gs = new BattleGameState(this, playerAmount, dc);
                 SoundEngine.StopSound();
                 SoundEngine.PlaySound(Constant.menuButtonSound);
                 SoundEngine.PlayBackgroundMusic();
@@ -574,6 +592,34 @@ namespace FirstSemesterExamProject
                 SoundEngine.PlaySound(Constant.menuBackSound);
                 MessageBox.Show("All teams must have at least one Unit!", "Oops", MessageBoxButtons.OK);
             }
+        }
+        public void EnterGameHideUI()
+        {
+            RedTeam.Visible = false;
+            BlueTeam.Visible = false;
+            GreenTeam.Visible = false;
+            YellowTeam.Visible = false;
+            TwoPlayer.Visible = false;
+            ThreePlayer.Visible = false;
+            FourPlayer.Visible = false;
+            Back.Visible = false;
+            Label.Visible = false;
+            Start.Visible = false;
+            PointsLabel.Visible = false;
+            ListBox1.Visible = false;
+            AddArcher.Visible = false;
+            AddCleric.Visible = false;
+            AddKnight.Visible = false;
+            AddScout.Visible = false;
+            AddArtifact.Visible = false;
+            AddMage.Visible = false;
+            RemoveUnit.Visible = false;
+            muteButton.Visible = false;
+            Host.Visible = false;
+            JoinGame.Visible = false;
+            Online.Visible = false;
+            EnterIP.Visible = false;
+            EndTurn.Visible = true;
         }
 
         /// <summary>
@@ -685,7 +731,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void TwoPlayer_Click(object sender, EventArgs e)
         {
-            number = 2;
+            playerAmount = 2;
             RedTeam.Visible = true;
             BlueTeam.Visible = true;
             TwoPlayer.Visible = false;
@@ -707,7 +753,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void ThreePlayer_Click(object sender, EventArgs e)
         {
-            number = 3;
+            playerAmount = 3;
             RedTeam.Visible = true;
             BlueTeam.Visible = true;
             GreenTeam.Visible = true;
@@ -731,7 +777,7 @@ namespace FirstSemesterExamProject
         /// <param name="e"></param>
         private void FourPlayer_Click(object sender, EventArgs e)
         {
-            number = 4;
+            playerAmount = 4;
             RedTeam.Visible = true;
             BlueTeam.Visible = true;
             GreenTeam.Visible = true;
@@ -1513,7 +1559,7 @@ namespace FirstSemesterExamProject
         {
             if (allPlayersReady)
             {
-                if (gs is UnitChoiceGameState && OnlineGame())
+                if (gs is UnitChoiceGameState)
                 {
 
                     StartOnlineGame.Visible = !StartOnlineGame.Visible;
