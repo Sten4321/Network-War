@@ -1424,7 +1424,6 @@ namespace FirstSemesterExamProject
 
                 }
 
-                onlineUnitStack = DataConverter.ReverseStack(onlineUnitStack);
                 string message = "UnitStack;" + Client.Instance.Team.ToString();
 
                 int amount = onlineUnitStack.Count;
@@ -1456,7 +1455,6 @@ namespace FirstSemesterExamProject
                     Server.Instance.isReady = true;
                     redteam = new Stack<Enum>(onlineUnitStack);
 
-                    onlineUnitStack=DataConverter.ReverseStack(onlineUnitStack);
 
 
                     string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
