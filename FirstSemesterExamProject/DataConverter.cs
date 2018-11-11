@@ -79,7 +79,7 @@ namespace FirstSemesterExamProject
                 tmpStack.Push(unit);
             }
 
-            tmpStack = ReverseStack(tmpStack);
+           // tmpStack = ReverseStack(tmpStack);
 
             //applies local stack to the designated team's stack
             Enum.TryParse(unitStrings[0], out PlayerTeam _team); //Converts first information to a team (YELLOW,archer,knight,mage)                                                
