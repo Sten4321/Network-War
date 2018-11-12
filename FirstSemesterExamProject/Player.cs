@@ -324,6 +324,16 @@ namespace FirstSemesterExamProject
                     //tests if there is an enemy
                     if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit && !(selectedUnit is IRanged))
                     {
+
+                        // if online and my turn 
+                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
+                        {
+                            //Send coordinates to other players 
+                            SendOnlineCoordinates(selectedUnitX, selectedUnitX, (int)Coordinates.X, (int)Coordinates.Y);
+                        }
+
+
+
                         if (selectedUnit is Scout && playerMove > 0 || !(selectedUnit is Scout))
                         {
                             //moves to melee range and attacks if the unit on the tile is an enemy
