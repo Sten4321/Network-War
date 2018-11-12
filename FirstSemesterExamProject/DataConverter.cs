@@ -76,11 +76,11 @@ namespace FirstSemesterExamProject
 
             BattleGameState.PlayerTurn = playerTurn;
 
-            if (Server.Instance.isOnline && playerTurn == 0+1)
+            if (Server.Instance.isOnline && playerTurn == 0)
             {
                 Server.Instance.turn =true;
             }
-            else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber+1)
+            else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber)
             {
                 Client.Instance.turn = true;
             }
