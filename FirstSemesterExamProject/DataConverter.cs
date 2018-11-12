@@ -53,6 +53,10 @@ namespace FirstSemesterExamProject
                         Client.Instance.Start(information);
                         break;
 
+                    case "EndTurn":
+                        ChangePlayerTurn(information);
+                        break;
+
 
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
@@ -61,7 +65,18 @@ namespace FirstSemesterExamProject
             }
         }
 
-                /// <summary>
+        private static void ChangePlayerTurn(string information)
+        {
+           int playerTurn = Convert.ToInt32(information);
+
+            playerTurn++;
+
+            BattleGameState.PlayerTurn = playerTurn;
+
+            //change player turn
+        }
+
+        /// <summary>
         /// Adds units to the stacks
         /// </summary>
         /// <param name="team"></param>

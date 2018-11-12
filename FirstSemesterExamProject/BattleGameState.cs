@@ -40,6 +40,7 @@ namespace FirstSemesterExamProject
         public static int PlayerTurn
         {
             get { return playerTurn; }
+            set { playerTurn = value; }
         }
 
         public BattleGameState(Window window, int playerNumber, Graphics graphics) : base(window)
@@ -201,15 +202,51 @@ namespace FirstSemesterExamProject
         private void OnlineChangeTurn()
         {
             // TODO: Update ChangeTurn
+            ServerChangeTurn();
+            ClientChangeTurn();
 
-            if ( Client.Instance.turn)
+
+        }
+
+        private void ServerChangeTurn()
+        {
+            if (Server.Instance.turn)
             {
-                Client.Instance.SendToHost("EndTurn;"+Client.Instance.PlayerNumber);
+                Server.Instance.WriteServerMessage("EndTurn;" + 0);
             }
-            else if (Server.Instance.turn)
+            //Fix for unitRevival Bug :)
+            Players[PlayerTurn - 1].SelectedUnit = null;
+            //changes to the next players turn
+            playerTurn++;
+            //makes sure that it is always a players turn and that the counter dosen't go off track
+            if (playerTurn > playerNumber || playerTurn < 0)
             {
-                Server.Instance.WriteServerMessage("EndTurn;"+0);
+                playerTurn = 1;
             }
+            //resets the amount of moves a player have
+            players[playerTurn - 1].PlayerMove = players[playerTurn - 1].PlayerMaxMove;
+            //resets the moves of all units
+            ResetUnitMoves();
+        }
+        private void ClientChangeTurn()
+        {
+            if (Client.Instance.turn)
+            {
+                Client.Instance.SendToHost("EndTurn;" + Client.Instance.PlayerNumber);
+            }
+            //Fix for unitRevival Bug :)
+            Players[PlayerTurn - 1].SelectedUnit = null;
+            //changes to the next players turn
+            playerTurn++;
+            //makes sure that it is always a players turn and that the counter dosen't go off track
+            if (playerTurn > playerNumber || playerTurn < 0)
+            {
+                playerTurn = 1;
+            }
+            //resets the amount of moves a player have
+            players[playerTurn - 1].PlayerMove = players[playerTurn - 1].PlayerMaxMove;
+            //resets the moves of all units
+            ResetUnitMoves();
         }
 
         /// <summary>
