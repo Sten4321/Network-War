@@ -25,6 +25,11 @@ namespace FirstSemesterExamProject
 
         public bool clientConnected = false;
 
+        public TcpClient GetClient
+        {
+            get { return client; }
+            set { client = value; }
+        }
         public bool ValidIp
         {
             get { return validIp; }
@@ -190,29 +195,8 @@ namespace FirstSemesterExamProject
         }
 
         /// <summary>
-        /// Sets the clients map to be equal to the recived map number
+        /// sets the gamestate to be a new battlegamestate
         /// </summary>
-        /// <param name="sData"></param>
-        private void SetMap(string sData)
-        {
-            // TODO: sData to a GameBord...
-            GameBoard gameBoard = new GameBoard(int.Parse(sData), int.Parse(sData));
-
-            if (Window.GameState is BattleGameState)
-            {
-                ((BattleGameState)Window.GameState).SetGameBoard(gameBoard);
-            }
-        }
-
-        /// <summary>
-        /// Translates a move for the player
-        /// </summary>
-        /// <param name="sData"></param>
-        private void MoveUnit(string sData)
-        {
-            //TODO: Insert Code/Hook for moving unit
-        }
-
         public void SetBattleGameState()
         {
             Window.GameState = new BattleGameState(windowRef, Window.playerAmount, windowRef.Dc);
@@ -229,9 +213,9 @@ namespace FirstSemesterExamProject
             Window.playerAmount = amount;
 
             //Starts the game
-          //  Window.GameState = new BattleGameState(windowRef, amount, windowRef.Dc);
+            //  Window.GameState = new BattleGameState(windowRef, amount, windowRef.Dc);
 
-            
+
         }
     }
 }
