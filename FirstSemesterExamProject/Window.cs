@@ -697,8 +697,8 @@ namespace FirstSemesterExamProject
             EnterIP.Visible = false;
             HostIPAdress.Visible = false;
             ReadyCheck.Visible = false;
-            Server.Instance.isOnline = false;
-            // TODO: Make the server host stop
+
+            Server.Instance.ShutDownServer();
 
             if (RedTeam.Visible == true)
             {

@@ -35,7 +35,7 @@ namespace FirstSemesterExamProject
         //Host info
         public PlayerTeam serverTeam = PlayerTeam.RedTeam;
         public bool isReady = false;
-        public bool turn = false;
+        public bool turn = true;
         public byte mapNum;
 
         /// <summary>
