@@ -292,6 +292,8 @@ namespace FirstSemesterExamProject
         {
             if (Window.OnlineGame())
             {
+
+
                 NotSelected(x, y);
 
                 OnlinceSelected(dx, dy);
@@ -401,6 +403,8 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void OnlinceSelected(int dx, int dy)
         {
+            // TODO: Sometimes a unit doesn't move the exact same path, and sometimes it doesn attack.
+
             Healing(dx, dy);
             RangedAttack(dx, dy);
             //test if the tile is in range and a tile to which you can move
