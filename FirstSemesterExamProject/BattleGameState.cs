@@ -226,6 +226,9 @@ namespace FirstSemesterExamProject
                 //Write the index of the next player
                 Server.Instance.WriteServerMessage("EndTurn;" + 1);
 
+                //for drawing teamturn
+                DataConverter.ChangePlayerTurnText(1);
+
                 //Server cannot do any actions
                 Server.Instance.turn = false;
 

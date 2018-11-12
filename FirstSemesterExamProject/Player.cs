@@ -97,6 +97,10 @@ namespace FirstSemesterExamProject
         /// <param name="playerTeam"></param>
         private void PlayerTeamSelect(PlayerTeam playerTeam)
         {
+            if (Window.OnlineGame())
+            {
+                OnlineTeambrushColor = new SolidBrush(Color.FromArgb(180, 0, 0));
+            }
             switch (playerTeam) //Changes the player sprite, depending on the player's team
             {
                 case PlayerTeam.RedTeam:
@@ -436,9 +440,9 @@ namespace FirstSemesterExamProject
                         {
 
                             selectedUnit.Attack(unit);
-                             playerMove--;
-                        
-                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE ATTACKED > "+unit.ToString());
+                            playerMove--;
+
+                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE ATTACKED > " + unit.ToString());
                         }
                     }
                 }
@@ -446,7 +450,7 @@ namespace FirstSemesterExamProject
                 else if (GameBoard.UnitMap[dx, dy] == null)
                 {
                     MoveHere(dx, dy);
-                    System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED TO > "+dx+","+dy);
+                    System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED TO > " + dx + "," + dy);
 
                 }
             }
@@ -478,7 +482,7 @@ namespace FirstSemesterExamProject
 
                             playerMove--;
 
-                            
+
                         }
                     }
                 }
@@ -502,11 +506,11 @@ namespace FirstSemesterExamProject
                             if (unit.Team == selectedUnit.Team && unit.Health < unit.MaxHealth)
                             {
                                 selectedUnit.Attack(unit);
-                               
-                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + "RANGE HEALED > " + unit.ToString());
+
+                                System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + "RANGE HEALED > " + unit.ToString());
 
                                 playerMove--;
-                                
+
                             }
                         }
                     }
@@ -539,7 +543,7 @@ namespace FirstSemesterExamProject
                                         System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE DISTANCE HEALED > " + unit.ToString());
 
                                         playerMove--;
-                                        
+
                                     }
                                 }
                             }
@@ -636,9 +640,9 @@ namespace FirstSemesterExamProject
                 }
                 else
                 {
-                    
-                        playerMove--;
-                    
+
+                    playerMove--;
+
                 }
             }
         }
@@ -712,7 +716,7 @@ namespace FirstSemesterExamProject
                 playerMove -= Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY);
                 if (PlayerMove < 0)
                 {
-                    
+
                     PlayerMove = 0;
                 }
             }
@@ -729,8 +733,8 @@ namespace FirstSemesterExamProject
             //gives unit the new coordinates
             selectedUnit.Coordinates = new PointF(x, y);
             //calculates how far of a move was done
-           
-           
+
+
             GameBoard.UnitMap[(int)selectedUnit.Coordinates.X, (int)selectedUnit.Coordinates.Y] = selectedUnit;
             GameBoard.UnitMap[selectedUnitX, selectedUnitY] = null;
         }
@@ -948,6 +952,14 @@ namespace FirstSemesterExamProject
             }
 
             RenderPlayerMoveCount(graphics);
+
+
+
+            if (Window.OnlineGame())
+            {
+                ShowTeamTurn(graphics);
+            }
+
         }
 
         /// <summary>
@@ -1115,12 +1127,12 @@ namespace FirstSemesterExamProject
             graphics.DrawString("Moves Left: " + playerMove, new Font("Arial", Constant.playerMovesFontSize), brushColor, new PointF(Constant.playerMovesLeftX, Constant.playerMovesLeftY));
         }
 
-       
+
         private void ShowTeamTurn(Graphics graphics)
         {
             graphics.DrawString("Turn: " + BattleGameState.playerTurnString,
                 new Font("Arial", Constant.playerMovesFontSize), OnlineTeambrushColor,
-                new PointF(Constant.selectedStatsX+80, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 4));
+                new PointF(Constant.selectedStatsX + 100, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 5));
         }
     }
 }
