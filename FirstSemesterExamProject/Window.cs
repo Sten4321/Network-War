@@ -182,8 +182,7 @@ namespace FirstSemesterExamProject
             {
 
                 if (Client.Instance.clientConnected)
-                {
-                                       
+                {                                       
                     HideUiForOnlineGame();
 
                     SoundEngine.StopSound();
@@ -673,6 +672,7 @@ namespace FirstSemesterExamProject
             if (Client.Instance.clientConnected)
             {
                 //TODO: disconnect client
+                Client.Instance.GetClient.Close();
             }
         }
         private void BackClickUIHandler()
