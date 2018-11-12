@@ -321,16 +321,17 @@ namespace FirstSemesterExamProject
                 //test if the tile is in range and a tile to which you can move
                 if (InRange((int)coordinates.X, (int)coordinates.Y) && NotSolid((int)Coordinates.X, (int)Coordinates.Y))
                 {
+                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
+                        {
+                            //Send coordinates to other players 
+                            SendOnlineCoordinates(selectedUnitX, selectedUnitX, (int)Coordinates.X, (int)Coordinates.Y);
+
+                        }
                     //tests if there is an enemy
                     if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit && !(selectedUnit is IRanged))
                     {
 
                         // if online and my turn 
-                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
-                        {
-                            //Send coordinates to other players 
-                            SendOnlineCoordinates(selectedUnitX, selectedUnitX, (int)Coordinates.X, (int)Coordinates.Y);
-                        }
 
 
 
@@ -390,6 +391,9 @@ namespace FirstSemesterExamProject
             {
                 Client.Instance.SendToHost(message);
             }
+
+            System.Diagnostics.Debug.WriteLine("Sent Coordinates: " + message);
+
         }
 
         /// <summary>
