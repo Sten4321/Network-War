@@ -168,8 +168,10 @@ namespace FirstSemesterExamProject
         {
             if (OnlineGame())
             {
+                //Automatically shows the StartGame button for host if all players including himself is ready
                 ToggleStartOnlineGameButton();
 
+                //Hides Ui and changes music 
                 StartClientOnlineGame();
             }
         }
@@ -438,14 +440,12 @@ namespace FirstSemesterExamProject
                 SoundEngine.PlayBackgroundMusic();
 
                 Server.Instance.StartGame();
-                // TODO: do same for Clients with Stefano's windows ref technology
             }
             else
             {
                 SoundEngine.PlaySound(Constant.menuBackSound);
                 MessageBox.Show("something went wrong in Start online game..", "Oops", MessageBoxButtons.OK);
             }
-            //Server.Instance.StartGame(); // TODO: (Andreas) - this is where you left off twat
         }
 
         private void HideUiForOnlineGame()
@@ -699,8 +699,8 @@ namespace FirstSemesterExamProject
             EnterIP.Visible = false;
             HostIPAdress.Visible = false;
             ReadyCheck.Visible = false;
-            Server.Instance.isOnline = false;
-            // TODO: Make the server host stop
+
+            Server.Instance.ShutDownServer();
 
             if (RedTeam.Visible == true)
             {
