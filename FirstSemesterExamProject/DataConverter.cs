@@ -118,18 +118,34 @@ namespace FirstSemesterExamProject
 
                 case PlayerTeam.RedTeam:
                     Window.RedTeamStack = tmpStack;
+                    if (Server.Instance.isOnline == true)
+                    {
+                        Window.ConvertCopyToString(PlayerTeam.RedTeam, tmpStack);
+                    }
                     break;
 
                 case PlayerTeam.BlueTeam:
                     Window.BlueTeamStack = tmpStack;
+                    if (Server.Instance.isOnline == true)
+                    {
+                        Window.ConvertCopyToString(PlayerTeam.BlueTeam, tmpStack);
+                    }
                     break;
 
                 case PlayerTeam.GreenTeam:
                     Window.GreenTeamStack = tmpStack;
+                    if (Server.Instance.isOnline == true)
+                    {
+                        Window.ConvertCopyToString(PlayerTeam.GreenTeam, tmpStack);
+                    }
                     break;
 
                 case PlayerTeam.YellowTeam:
                     Window.YellowTeamStack = tmpStack;
+                    if (Server.Instance.isOnline == true)
+                    {
+                        Window.ConvertCopyToString(PlayerTeam.YellowTeam, tmpStack);
+                    }
                     break;
 
                 default:
