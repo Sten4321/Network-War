@@ -65,13 +65,25 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary>
+        /// Tells BattleGameState whose turn it is
+        /// </summary>
+        /// <param name="information"></param>
         private static void ChangePlayerTurn(string information)
         {
-           int playerTurn = Convert.ToInt32(information);
+           int playerTurn = Convert.ToInt32(information);// 1,2,3,4
 
-            playerTurn++;
 
             BattleGameState.PlayerTurn = playerTurn;
+
+            if (Server.Instance.isOnline && playerTurn == 0+1)
+            {
+                Server.Instance.turn =true;
+            }
+            else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber+1)
+            {
+                Client.Instance.turn = true;
+            }
 
             //change player turn
         }
