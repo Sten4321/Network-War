@@ -68,5 +68,9 @@ namespace FirstSemesterExamProject
                 SoundEngine.PlaySound(Constant.clericSound);
             }
         }
+        public override string ToString()
+        {
+            return "Cleric" + base.ToString();
+        }
     }
 }

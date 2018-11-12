@@ -77,5 +77,9 @@ namespace FirstSemesterExamProject
 
             }
         }
+        public override string ToString()
+        {
+            return "Scout" + base.ToString();
+        }
     }
 }

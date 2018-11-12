@@ -16,6 +16,8 @@ namespace FirstSemesterExamProject
         private bool canMove;
         private Tile selectedTile;
         private Brush brushColor;
+        public static Brush OnlineTeambrushColor;
+
         private string imagePath;
         private bool mouseClick = false;
 
@@ -95,6 +97,10 @@ namespace FirstSemesterExamProject
         /// <param name="playerTeam"></param>
         private void PlayerTeamSelect(PlayerTeam playerTeam)
         {
+            if (Window.OnlineGame())
+            {
+                OnlineTeambrushColor = new SolidBrush(Color.FromArgb(180, 0, 0));
+            }
             switch (playerTeam) //Changes the player sprite, depending on the player's team
             {
                 case PlayerTeam.RedTeam:
@@ -421,6 +427,9 @@ namespace FirstSemesterExamProject
                         || (selectedUnitY < dy - 1) || (selectedUnitY > dy + 1)))
                         {
                             AttackMove(unit, dx, dy);
+
+                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVE ATTACKED > " + unit.ToString());
+
                         }
                         //attacks from melee range if the unit on the tile is an enemy
                         else if ((unit.Team != selectedUnit.Team)
@@ -431,7 +440,9 @@ namespace FirstSemesterExamProject
                         {
 
                             selectedUnit.Attack(unit);
-                             playerMove--;
+                            playerMove--;
+
+                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE ATTACKED > " + unit.ToString());
                         }
                     }
                 }
@@ -439,6 +450,8 @@ namespace FirstSemesterExamProject
                 else if (GameBoard.UnitMap[dx, dy] == null)
                 {
                     MoveHere(dx, dy);
+                    System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED TO > " + dx + "," + dy);
+
                 }
             }
             //deselects unit
@@ -465,10 +478,11 @@ namespace FirstSemesterExamProject
                         if (unit.Team != selectedUnit.Team)
                         {
                             selectedUnit.Attack(unit);
-                                                                                   
+                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " RANGED ATTACKED > " + unit.ToString());
+
                             playerMove--;
 
-                            
+
                         }
                     }
                 }
@@ -492,10 +506,11 @@ namespace FirstSemesterExamProject
                             if (unit.Team == selectedUnit.Team && unit.Health < unit.MaxHealth)
                             {
                                 selectedUnit.Attack(unit);
-                               
-                                
-                                    playerMove--;
-                                
+
+                                System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + "RANGE HEALED > " + unit.ToString());
+
+                                playerMove--;
+
                             }
                         }
                     }
@@ -513,6 +528,8 @@ namespace FirstSemesterExamProject
                                     if ((unit.Team == selectedUnit.Team && ((selectedUnitX < x - 1) || (selectedUnitX > y + 1) || (selectedUnitY < y - 1) || (selectedUnitY > y + 1))))
                                     {
                                         AttackMove(unit, x, y);
+                                        System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED AND HEALED > " + unit.ToString());
+
                                     }
                                     //heals from melee range if the unit on the tile is a teammember
                                     else if ((unit.Team == selectedUnit.Team)
@@ -523,9 +540,10 @@ namespace FirstSemesterExamProject
                                         && unit.Health < unit.MaxHealth)
                                     {
                                         selectedUnit.Attack(unit);
+                                        System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE DISTANCE HEALED > " + unit.ToString());
 
-                                            playerMove--;
-                                        
+                                        playerMove--;
+
                                     }
                                 }
                             }
@@ -622,9 +640,9 @@ namespace FirstSemesterExamProject
                 }
                 else
                 {
-                    
-                        playerMove--;
-                    
+
+                    playerMove--;
+
                 }
             }
         }
@@ -698,7 +716,7 @@ namespace FirstSemesterExamProject
                 playerMove -= Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY);
                 if (PlayerMove < 0)
                 {
-                    
+
                     PlayerMove = 0;
                 }
             }
@@ -715,8 +733,8 @@ namespace FirstSemesterExamProject
             //gives unit the new coordinates
             selectedUnit.Coordinates = new PointF(x, y);
             //calculates how far of a move was done
-           
-           
+
+
             GameBoard.UnitMap[(int)selectedUnit.Coordinates.X, (int)selectedUnit.Coordinates.Y] = selectedUnit;
             GameBoard.UnitMap[selectedUnitX, selectedUnitY] = null;
         }
@@ -934,6 +952,14 @@ namespace FirstSemesterExamProject
             }
 
             RenderPlayerMoveCount(graphics);
+
+
+
+            if (Window.OnlineGame())
+            {
+                OnlineShowTeamTurn(graphics);
+            }
+
         }
 
         /// <summary>
@@ -1099,6 +1125,18 @@ namespace FirstSemesterExamProject
         private void RenderPlayerMoveCount(Graphics graphics)
         {
             graphics.DrawString("Moves Left: " + playerMove, new Font("Arial", Constant.playerMovesFontSize), brushColor, new PointF(Constant.playerMovesLeftX, Constant.playerMovesLeftY));
+        }
+
+
+        /// <summary>
+        /// Draws whose turn it is in online mdoe
+        /// </summary>
+        /// <param name="graphics"></param>
+        private void OnlineShowTeamTurn(Graphics graphics)
+        {
+            graphics.DrawString("Turn: " + BattleGameState.playerTurnString,
+                new Font("Arial", Constant.selectedFontSize), OnlineTeambrushColor,
+                new PointF(Constant.selectedStatsX + 275, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 5));
         }
     }
 }
