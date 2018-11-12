@@ -434,7 +434,7 @@ namespace FirstSemesterExamProject
                 //moves to empty tile
                 else if (GameBoard.UnitMap[dx, dy] == null)
                 {
-                    OnlineMoveHere(dx, dy, 101);
+                    MoveHere(dx, dy);
                 }
             }
             //deselects unit
