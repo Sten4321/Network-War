@@ -294,7 +294,7 @@ namespace FirstSemesterExamProject
             {
                 NotSelected(x, y);
 
-                Selected(dx, dy);
+                OnlinceSelected(dx, dy);
             }
         }
 
@@ -321,13 +321,13 @@ namespace FirstSemesterExamProject
                 //test if the tile is in range and a tile to which you can move
                 if (InRange((int)coordinates.X, (int)coordinates.Y) && NotSolid((int)Coordinates.X, (int)Coordinates.Y))
                 {
-                        // if online and my turn 
-                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
-                        {
-                            //Send coordinates to other players 
-                            SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+                    // if online and my turn 
+                    if (Window.OnlineGame() && Window.OnlineIsMyTurn())
+                    {
+                        //Send coordinates to other players 
+                        SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
 
-                        }
+                    }
 
                     //tests if there is an enemy
                     if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit && !(selectedUnit is IRanged))
@@ -399,7 +399,7 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// moves/attacks with selected unit data recieved Online
         /// </summary>
-        private void Selected(int dx, int dy)
+        private void OnlinceSelected(int dx, int dy)
         {
             Healing(dx, dy);
             RangedAttack(dx, dy);
@@ -427,7 +427,7 @@ namespace FirstSemesterExamProject
                         {
 
                             selectedUnit.Attack(unit);
-                            playerMove--;
+                            // playerMove--;
                         }
                     }
                 }
@@ -461,7 +461,14 @@ namespace FirstSemesterExamProject
                         if (unit.Team != selectedUnit.Team)
                         {
                             selectedUnit.Attack(unit);
+
+
+                            // if single player, or it is your turn in online
+                            if (Window.OnlineGame() == false || Window.OnlineGame() && (Client.Instance.turn || Server.Instance.turn))
+                            {
                             playerMove--;
+
+                            }
                         }
                     }
                 }
@@ -485,7 +492,11 @@ namespace FirstSemesterExamProject
                             if (unit.Team == selectedUnit.Team && unit.Health < unit.MaxHealth)
                             {
                                 selectedUnit.Attack(unit);
-                                playerMove--;
+                                // if single player, or it is your turn in online
+                                if (Window.OnlineGame() == false || Window.OnlineGame() && (Client.Instance.turn || Server.Instance.turn))
+                                {
+                                    playerMove--;
+                                }
                             }
                         }
                     }
@@ -513,7 +524,12 @@ namespace FirstSemesterExamProject
                                         && unit.Health < unit.MaxHealth)
                                     {
                                         selectedUnit.Attack(unit);
-                                        playerMove--;
+
+                                        // if single player, or it is your turn in online
+                                        if (Window.OnlineGame() == false || Window.OnlineGame() && (Client.Instance.turn || Server.Instance.turn))
+                                        {
+                                            playerMove--;
+                                        }
                                     }
                                 }
                             }
@@ -610,7 +626,11 @@ namespace FirstSemesterExamProject
                 }
                 else
                 {
-                    playerMove--;
+                    // if single player, or it is your turn in online
+                    if (Window.OnlineGame() == false || Window.OnlineGame() && (Client.Instance.turn || Server.Instance.turn))
+                    {
+                        playerMove--;
+                    }
                 }
             }
         }
