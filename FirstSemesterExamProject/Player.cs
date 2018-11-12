@@ -627,8 +627,8 @@ namespace FirstSemesterExamProject
                 if (unit.Team == playerTeam)
                 {
                     selectedUnit = unit;
-                    selectedUnitX = (int)coordinates.X;
-                    selectedUnitY = (int)coordinates.Y;
+                    selectedUnitX = (int)unit.Coordinates.X;
+                    selectedUnitY = (int)unit.Coordinates.Y;
 
                     switch (playerTeam) //Changes the Selected tile sprite, depending on the player's team 
                     {
@@ -659,8 +659,8 @@ namespace FirstSemesterExamProject
             if (GameBoard.UnitMap[x, y] is Unit unit)
             {
                 selectedUnit = unit;
-                selectedUnitX = (int)coordinates.X;
-                selectedUnitY = (int)coordinates.Y;
+                selectedUnitX = (int)unit.Coordinates.X;
+                selectedUnitY = (int)unit.Coordinates.Y;
             }
         }
 
@@ -888,9 +888,13 @@ namespace FirstSemesterExamProject
 
             if (selectedUnit != null)
             {
+                if (!(Window.OnlineGame()) || Window.OnlineGame() && Window.OnlineIsMyTurn())
+                {
+
                 selectedTile.RenderTile(graphics, GameBoard.TileSize, selectedUnitX, selectedUnitY);
                 selectedUnit.RenderSelectedUnitStats(graphics);
                 DrawRange(graphics);
+                }
             }
 
             graphics.DrawImage(sprite, coordinates.X * GameBoard.TileSize, coordinates.Y * GameBoard.TileSize,

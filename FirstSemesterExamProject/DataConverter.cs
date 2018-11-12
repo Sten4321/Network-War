@@ -164,9 +164,9 @@ namespace FirstSemesterExamProject
         public static void MoveUnit(string[] sData)
         {
             int x = Int32.Parse(sData[0]);
-            int y = Int32.Parse(sData[0]);
-            int dx = Int32.Parse(sData[0]);
-            int dy = Int32.Parse(sData[0]);
+            int y = Int32.Parse(sData[1]);
+            int dx = Int32.Parse(sData[2]);
+            int dy = Int32.Parse(sData[3]);
             //Player.Select(int x, int y, int dx, int dy) get player from 
             if (Window.GameState is BattleGameState)
             {
