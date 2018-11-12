@@ -74,7 +74,7 @@ namespace FirstSemesterExamProject
            int playerTurn = Convert.ToInt32(information);// 1,2,3,4
 
 
-            BattleGameState.PlayerTurn = playerTurn;
+           // BattleGameState.PlayerTurn = playerTurn;
 
             if (Server.Instance.isOnline && playerTurn == 0)
             {
