@@ -63,7 +63,6 @@ namespace FirstSemesterExamProject
             this.HostIPAdress = new System.Windows.Forms.Label();
             this.StartOnlineGame = new System.Windows.Forms.Button();
             this.ReadyCheck = new System.Windows.Forms.Button();
-            this.HighscoreList = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // Tick
@@ -485,21 +484,11 @@ namespace FirstSemesterExamProject
             this.ReadyCheck.Visible = false;
             this.ReadyCheck.Click += new System.EventHandler(this.ReadyCheck_Click);
             // 
-            // HighscoreList
-            // 
-            this.HighscoreList.FormattingEnabled = true;
-            this.HighscoreList.Location = new System.Drawing.Point(894, 319);
-            this.HighscoreList.Name = "HighscoreList";
-            this.HighscoreList.Size = new System.Drawing.Size(210, 173);
-            this.HighscoreList.TabIndex = 47;
-            this.HighscoreList.SelectedIndexChanged += new System.EventHandler(this.HighscoreList_SelectedIndexChanged);
-            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1265, 639);
-            this.Controls.Add(this.HighscoreList);
             this.Controls.Add(this.ReadyCheck);
             this.Controls.Add(this.StartOnlineGame);
             this.Controls.Add(this.HostIPAdress);
@@ -577,6 +566,5 @@ namespace FirstSemesterExamProject
         private System.Windows.Forms.Label HostIPAdress;
         private System.Windows.Forms.Button StartOnlineGame;
         private System.Windows.Forms.Button ReadyCheck;
-        private System.Windows.Forms.ListBox HighscoreList;
     }
 }

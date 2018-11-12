@@ -1518,10 +1518,7 @@ namespace FirstSemesterExamProject
 
             }
         }
-                private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
-        }
 
         #endregion
 
