@@ -16,6 +16,8 @@ namespace FirstSemesterExamProject
         private bool canMove;
         private Tile selectedTile;
         private Brush brushColor;
+        public static Brush OnlineTeambrushColor;
+
         private string imagePath;
         private bool mouseClick = false;
 
@@ -1111,6 +1113,14 @@ namespace FirstSemesterExamProject
         private void RenderPlayerMoveCount(Graphics graphics)
         {
             graphics.DrawString("Moves Left: " + playerMove, new Font("Arial", Constant.playerMovesFontSize), brushColor, new PointF(Constant.playerMovesLeftX, Constant.playerMovesLeftY));
+        }
+
+       
+        private void ShowTeamTurn(Graphics graphics)
+        {
+            graphics.DrawString("Turn: " + BattleGameState.playerTurnString,
+                new Font("Arial", Constant.playerMovesFontSize), OnlineTeambrushColor,
+                new PointF(Constant.selectedStatsX+80, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 4));
         }
     }
 }

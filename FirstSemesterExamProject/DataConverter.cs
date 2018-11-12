@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace FirstSemesterExamProject
@@ -75,6 +76,8 @@ namespace FirstSemesterExamProject
 
             Player.playerMove = Player.playerMaxMove;
 
+           
+
             if (Server.Instance.isOnline && playerTurn == 0)
             {
                 Server.Instance.turn = true;
@@ -87,7 +90,35 @@ namespace FirstSemesterExamProject
                 System.Diagnostics.Debug.WriteLine("It's your turn!");
             }
 
+            //for drawing teamturn
+            PlayerTeam team = (PlayerTeam)playerTurn;
+            BattleGameState.playerTurnString = team.ToString();
 
+            switch (team)
+            {
+                case PlayerTeam.RedTeam:
+                    Player.OnlineTeambrushColor = new SolidBrush(Color.FromArgb(180, 0, 0));
+                    break;
+                case PlayerTeam.BlueTeam:
+                    Player.OnlineTeambrushColor = Brushes.Blue;
+
+                    break;
+                case PlayerTeam.GreenTeam:
+                    Player.OnlineTeambrushColor = Brushes.LawnGreen;
+
+                    break;
+                case PlayerTeam.YellowTeam:
+                    Player.OnlineTeambrushColor = Brushes.Yellow;
+
+                    break;
+
+                    
+                default:
+                    Player.OnlineTeambrushColor = Brushes.Black;
+                    System.Diagnostics.Debug.WriteLine("Error in ChangePlayerTurn");
+                    break;
+
+            }
         }
 
         /// <summary>

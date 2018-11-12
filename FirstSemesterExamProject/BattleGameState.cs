@@ -12,7 +12,12 @@ namespace FirstSemesterExamProject
         private static List<Player> players;
         private List<int> playersUnitCount;
         private static int playerTurn = 1;
+
+
         DateTime victoryNow;
+
+        //for online ShowTeamTurn method
+        public static string playerTurnString = "RedTeam";
 
         /// <summary>
         /// Property for players list
