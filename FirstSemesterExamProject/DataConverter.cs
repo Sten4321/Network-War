@@ -196,7 +196,10 @@ namespace FirstSemesterExamProject
             return reversedStack;
         }
 
-
+        /// <summary>
+        /// Changes the text and color of whose turn it is in multiplayer mode
+        /// </summary>
+        /// <param name="playerTurnIndex"></param>
         public static void ChangePlayerTurnText (int playerTurnIndex)
         {
             //for drawing teamturn

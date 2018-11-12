@@ -1128,11 +1128,15 @@ namespace FirstSemesterExamProject
         }
 
 
+        /// <summary>
+        /// Draws whose turn it is in online mdoe
+        /// </summary>
+        /// <param name="graphics"></param>
         private void OnlineShowTeamTurn(Graphics graphics)
         {
             graphics.DrawString("Turn: " + BattleGameState.playerTurnString,
-                new Font("Arial", Constant.playerMovesFontSize), OnlineTeambrushColor,
-                new PointF(Constant.selectedStatsX + 250, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 5));
+                new Font("Arial", Constant.selectedFontSize), OnlineTeambrushColor,
+                new PointF(Constant.selectedStatsX + 275, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 5));
         }
     }
 }
