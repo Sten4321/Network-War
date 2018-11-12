@@ -660,8 +660,8 @@ namespace FirstSemesterExamProject
             if (GameBoard.UnitMap[x, y] is Unit unit)
             {
                 selectedUnit = unit;
-                selectedUnitX = (int)coordinates.X;
-                selectedUnitY = (int)coordinates.Y;
+                selectedUnitX = (int)unit.Coordinates.X;
+                selectedUnitY = (int)unit.Coordinates.Y;
             }
         }
 
