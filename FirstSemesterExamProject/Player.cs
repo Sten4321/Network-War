@@ -312,18 +312,19 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// moves/attacks with selected unit
         /// </summary>
-        private void Selected()// TODO: add hook for sending to clients/Server
+        private void Selected()
         {
             if (selectedUnit.Move > 0 && playerMove > 0 || (selectedUnit is Scout && selectedUnit.Move > 0))
             {
                 Healing((int)coordinates.X, (int)coordinates.Y);
-                RangedAttack();
+                RangedAttack((int)coordinates.X, (int)coordinates.Y);
                 //test if the tile is in range and a tile to which you can move
                 if (InRange((int)coordinates.X, (int)coordinates.Y) && NotSolid((int)Coordinates.X, (int)Coordinates.Y))
                 {
                     //tests if there is an enemy
                     if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit && !(selectedUnit is IRanged))
                     {
+                        // TODO: add hook for sending to clients/Server (Here)
                         if (selectedUnit is Scout && playerMove > 0 || !(selectedUnit is Scout))
                         {
                             //moves to melee range and attacks if the unit on the tile is an enemy
@@ -365,7 +366,7 @@ namespace FirstSemesterExamProject
         private void Selected(int dx, int dy)
         {
             Healing(dx, dy);
-            RangedAttack();
+            RangedAttack(dx, dy);
             //test if the tile is in range and a tile to which you can move
             if (InRange(dx, dy) && NotSolid(dx, dy))
             {
@@ -409,16 +410,16 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// Handles ranged attacks
         /// </summary>
-        private void RangedAttack()
+        private void RangedAttack(int x, int y)
         {
             //tests if attacking an enemy unit with a ranged unit in ranged range
             if (selectedUnit is IRanged rangedUnit)
             {
                 //tests if the coordinates is in range
-                if (InRangeRanged(rangedUnit, (int)coordinates.X, (int)Coordinates.Y))
+                if (InRangeRanged(rangedUnit, x, y))
                 {
                     //tests if there is a unit at the coordinates
-                    if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit)
+                    if (GameBoard.UnitMap[x, y] is Unit unit)
                     {
                         //tests if the unit is on your team
                         if (unit.Team != selectedUnit.Team)
@@ -441,9 +442,9 @@ namespace FirstSemesterExamProject
             {
                 if (selectedUnit is IRanged rangedHealer)
                 {
-                    if (InRangeRanged(rangedHealer, (int)coordinates.X, (int)Coordinates.Y))
+                    if (InRangeRanged(rangedHealer, x, y))
                     {
-                        if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit)
+                        if (GameBoard.UnitMap[x, y] is Unit unit)
                         {
                             if (unit.Team == selectedUnit.Team && unit.Health < unit.MaxHealth)
                             {
@@ -457,25 +458,24 @@ namespace FirstSemesterExamProject
                 {
                     if (selectedUnit.Move > 0 && playerMove > 0)
                     {
-                        if (InRange((int)coordinates.X, (int)coordinates.Y))
+                        if (InRange(x, y))
                         {
-                            if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit)
+                            if (GameBoard.UnitMap[x, y] is Unit unit)
                             {
-                                if ((unit.Team == selectedUnit.Team) && ((selectedUnitX != coordinates.X) || (selectedUnitY != coordinates.Y)) && unit.Health < unit.MaxHealth)
+                                if ((unit.Team == selectedUnit.Team) && ((selectedUnitX != x) || (selectedUnitY != y)) && unit.Health < unit.MaxHealth)
                                 {
-                                    if ((unit.Team == selectedUnit.Team && ((selectedUnitX < coordinates.X - 1) || (selectedUnitX > coordinates.X + 1) || (selectedUnitY < coordinates.Y - 1) || (selectedUnitY > coordinates.Y + 1))))
+                                    if ((unit.Team == selectedUnit.Team && ((selectedUnitX < x - 1) || (selectedUnitX > y + 1) || (selectedUnitY < y - 1) || (selectedUnitY > y + 1))))
                                     {
                                         AttackMove(unit, x, y);
                                     }
                                     //heals from melee range if the unit on the tile is a teammember
                                     else if ((unit.Team == selectedUnit.Team)
-                                        && ((selectedUnitX < coordinates.X)
-                                        || (selectedUnitX > coordinates.X)
-                                        || (selectedUnitY < coordinates.Y)
-                                        || (selectedUnitY > coordinates.Y))
+                                        && ((selectedUnitX < x)
+                                        || (selectedUnitX > x)
+                                        || (selectedUnitY < y)
+                                        || (selectedUnitY > y))
                                         && unit.Health < unit.MaxHealth)
                                     {
-
                                         selectedUnit.Attack(unit);
                                         playerMove--;
                                     }
