@@ -35,7 +35,7 @@ namespace FirstSemesterExamProject
         //Host info
         public PlayerTeam serverTeam = PlayerTeam.RedTeam;
         public bool isReady = false;
-        public bool turn = false;
+        public bool turn = true;
         public byte mapNum;
 
         /// <summary>
@@ -111,6 +111,7 @@ namespace FirstSemesterExamProject
             searchForClientsThread.Start();
             serverThreads.Add(searchForClientsThread);
         }
+
         private static string FindLocalIp()
         {
 
@@ -381,13 +382,12 @@ namespace FirstSemesterExamProject
            
         }
 
+
         public void StartGame()
         {
-            // TODO: Start Game based on map, ClientStructs.Count
-
-            WriteServerMessage("Start;");
-
-          
+            //informs clients of the amount of total players
+            WriteServerMessage("Start;"+(clientObjects.Count+1));
+                      
         }
 
 

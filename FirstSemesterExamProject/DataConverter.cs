@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,7 +50,11 @@ namespace FirstSemesterExamProject
                         break;
 
                     case "Start":
-                        Client.Instance.Start();
+                        Client.Instance.Start(information);
+                        break;
+
+                    case "EndTurn":
+                        ChangePlayerTurn(information);
                         break;
 
 
@@ -60,7 +65,32 @@ namespace FirstSemesterExamProject
             }
         }
 
-                /// <summary>
+        /// <summary>
+        /// Tells the local client / server if it's their turn
+        /// </summary>
+        /// <param name="information"></param>
+        private static void ChangePlayerTurn(string information)
+        {
+           int playerTurn = Convert.ToInt32(information);// 1,2,3,4
+
+
+            
+            if (Server.Instance.isOnline && playerTurn == 0)
+            {
+                Server.Instance.turn =true;
+                System.Diagnostics.Debug.WriteLine("It's your turn!");
+
+            }
+            else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber)
+            {
+                Client.Instance.turn = true;
+                System.Diagnostics.Debug.WriteLine("It's your turn!");
+            }
+
+            
+        }
+
+        /// <summary>
         /// Adds units to the stacks
         /// </summary>
         /// <param name="team"></param>
@@ -77,6 +107,8 @@ namespace FirstSemesterExamProject
 
                 tmpStack.Push(unit);
             }
+
+           // tmpStack = ReverseStack(tmpStack);
 
             //applies local stack to the designated team's stack
             Enum.TryParse(unitStrings[0], out PlayerTeam _team); //Converts first information to a team (YELLOW,archer,knight,mage)                                                
@@ -116,6 +148,8 @@ namespace FirstSemesterExamProject
         public static void SetMap(string sData)
         {
             GameBoard gameBoard = new GameBoard(int.Parse(sData), 1);
+         
+            Client.Instance.SetBattleGameState();
 
             if (Window.GameState is BattleGameState)
             {
@@ -141,6 +175,19 @@ namespace FirstSemesterExamProject
                     BattleGameState.Players[0].Select(x, y, dx, dy);
                 }
             }
+        }
+
+        
+        public static Stack<Enum> ReverseStack(Stack<Enum> stack)
+        {
+            //Declare another stack to store the values from the passed stack
+            Stack<Enum> reversedStack = new Stack<Enum>();
+
+            //While the passed stack isn't empty, pop elements from the passed stack onto the temp stack
+            while (stack.Count != 0)
+                reversedStack.Push(stack.Pop());
+
+            return reversedStack;
         }
     }
 }

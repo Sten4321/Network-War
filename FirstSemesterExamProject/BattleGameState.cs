@@ -40,6 +40,7 @@ namespace FirstSemesterExamProject
         public static int PlayerTurn
         {
             get { return playerTurn; }
+            set { playerTurn = value; }
         }
 
         public BattleGameState(Window window, int playerNumber, Graphics graphics) : base(window)
@@ -51,6 +52,8 @@ namespace FirstSemesterExamProject
             if (Client.Instance.clientConnected)
             {
                 // TODO: implement code for gameBord: -> look at client
+
+
             }
             else
             {
@@ -65,7 +68,7 @@ namespace FirstSemesterExamProject
         {
             if (Client.Instance.clientConnected)
             {
-                players.Add(new Player((PlayerTeam)Client.Instance.Team, Client.Instance.PlayerNumber));// TODO: Check if correct!!! -> Not sure but it looks right!
+                players.Add(new Player((PlayerTeam)Client.Instance.Team, Client.Instance.PlayerNumber));
             }
             else
             {
@@ -171,22 +174,91 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// Changes player turn.
         /// </summary>
-        public void ChangeTurn()// TODO: Update ChangeTurn
+        public void ChangeTurn()
         {
-            System.Diagnostics.Debug.WriteLine("ChangeBattleTurn initialized");
-            //Fix for unitRevival Bug :)
-            Players[PlayerTurn - 1].SelectedUnit = null;
-            //changes to the next players turn
-            playerTurn++;
-            //makes sure that it is always a players turn and that the counter dosen't go off track
-            if (playerTurn > playerNumber || playerTurn < 0)
+            if (Window.OnlineGame())
             {
-                playerTurn = 1;
+                OnlineChangeTurn();
             }
-            //resets the amount of moves a player have
-            players[playerTurn - 1].PlayerMove = players[playerTurn - 1].PlayerMaxMove;
-            //resets the moves of all units
-            ResetUnitMoves();
+            else
+            {
+                //Fix for unitRevival Bug :)
+                Players[PlayerTurn - 1].SelectedUnit = null;
+                //changes to the next players turn
+                playerTurn++;
+                //makes sure that it is always a players turn and that the counter dosen't go off track
+                if (playerTurn > playerNumber || playerTurn < 0)
+                {
+                    playerTurn = 1;
+                }
+                //resets the amount of moves a player have
+                players[playerTurn - 1].PlayerMove = players[playerTurn - 1].PlayerMaxMove;
+                //resets the moves of all units
+                ResetUnitMoves();
+            }
+        }
+
+        /// <summary>
+        /// Handles Changing turns for online mode
+        /// </summary>
+        private void OnlineChangeTurn()
+        {
+          
+            ServerChangeTurn();
+            ClientChangeTurn();
+
+
+            
+
+        }
+
+        private void ServerChangeTurn()
+        {
+
+            //if player is server
+            if (Server.Instance.turn && Server.Instance.isOnline)
+            {                               
+                //Write the index of the next player
+                Server.Instance.WriteServerMessage("EndTurn;" + 1);
+
+                //Server cannot do any actions
+                Server.Instance.turn = false;
+
+
+
+                //resets the amount of moves a player have
+                players[0].PlayerMove = players[0].PlayerMaxMove;
+                //resets the moves of all units
+                ResetUnitMoves();
+
+                
+            }
+        }
+        private void ClientChangeTurn()
+        {
+            //if client
+            if (Client.Instance.turn)
+            {
+                //Index of the next player
+                int nextPlayer = Client.Instance.PlayerNumber+1;               
+
+                //If it exceeds the amount of players = 0
+                if (nextPlayer > playerNumber || nextPlayer < 0)
+                {
+                    nextPlayer = 0;
+                }
+
+                //Writes the index of the next player
+                Client.Instance.SendToHost("EndTurn;" + nextPlayer);
+
+                //client cannot move
+                Client.Instance.turn = false;
+
+                //resets the amount of moves a player have
+                players[0].PlayerMove = players[0].PlayerMaxMove;
+                //resets the moves of all units
+                ResetUnitMoves();
+            }
         }
 
         /// <summary>
