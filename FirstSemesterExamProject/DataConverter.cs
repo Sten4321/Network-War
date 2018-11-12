@@ -73,7 +73,7 @@ namespace FirstSemesterExamProject
         {
            int playerTurn = Convert.ToInt32(information);// 1,2,3,4
 
-
+            Player.playerMove = Player.playerMaxMove;
             
             if (Server.Instance.isOnline && playerTurn == 0)
             {
