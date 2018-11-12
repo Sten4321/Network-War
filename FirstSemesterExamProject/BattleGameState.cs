@@ -243,7 +243,7 @@ namespace FirstSemesterExamProject
                 int nextPlayer = Client.Instance.PlayerNumber+1;               
 
                 //If it exceeds the amount of players = 0
-                if (nextPlayer > playerNumber || nextPlayer < 0)
+                if (nextPlayer > Window.playerAmount-1 || nextPlayer < 0)
                 {
                     nextPlayer = 0;
                 }
