@@ -68,7 +68,7 @@ namespace FirstSemesterExamProject
         {
             if (Client.Instance.clientConnected)
             {
-                players.Add(new Player((PlayerTeam)Client.Instance.Team, Client.Instance.PlayerNumber));
+                players.Add(new Player((PlayerTeam)Client.Instance.Team, Window.playerAmount)); // TODO: make sure client knows how many players
             }
             else
             {
