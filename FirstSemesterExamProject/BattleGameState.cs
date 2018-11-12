@@ -198,27 +198,35 @@ namespace FirstSemesterExamProject
             }
         }
 
-
+        /// <summary>
+        /// Handles Changing turns for online mode
+        /// </summary>
         private void OnlineChangeTurn()
         {
-            // TODO: Update ChangeTurn
+          
             ServerChangeTurn();
             ClientChangeTurn();
 
+
+            
 
         }
 
         private void ServerChangeTurn()
         {
+
+            //if player is server
             if (Server.Instance.turn && Server.Instance.isOnline)
-            {
-                
-                
-
+            {                               
+                //Write the index of the next player
                 Server.Instance.WriteServerMessage("EndTurn;" + 1);
-                Server.Instance.turn = false;
-                //resets the amount of moves a player have
 
+                //Server cannot do any actions
+                Server.Instance.turn = false;
+
+
+
+                //resets the amount of moves a player have
                 players[0].PlayerMove = players[0].PlayerMaxMove;
                 //resets the moves of all units
                 ResetUnitMoves();
@@ -228,21 +236,25 @@ namespace FirstSemesterExamProject
         }
         private void ClientChangeTurn()
         {
+            //if client
             if (Client.Instance.turn)
             {
-                int nextPlayer = Client.Instance.PlayerNumber;
+                //Index of the next player
+                int nextPlayer = Client.Instance.PlayerNumber+1;               
 
-                nextPlayer++;
-
-
+                //If it exceeds the amount of players = 0
                 if (nextPlayer > playerNumber || nextPlayer < 0)
                 {
                     nextPlayer = 0;
                 }
-                Client.Instance.SendToHost("EndTurn;" + nextPlayer);
-                Client.Instance.turn = false;
-                //resets the amount of moves a player have
 
+                //Writes the index of the next player
+                Client.Instance.SendToHost("EndTurn;" + nextPlayer);
+
+                //client cannot move
+                Client.Instance.turn = false;
+
+                //resets the amount of moves a player have
                 players[0].PlayerMove = players[0].PlayerMaxMove;
                 //resets the moves of all units
                 ResetUnitMoves();

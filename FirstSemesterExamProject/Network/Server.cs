@@ -385,6 +385,7 @@ namespace FirstSemesterExamProject
 
         public void StartGame()
         {
+            //informs clients of the amount of total players
             WriteServerMessage("Start;"+(clientObjects.Count+1));
                       
         }

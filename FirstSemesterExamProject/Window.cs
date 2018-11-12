@@ -168,8 +168,10 @@ namespace FirstSemesterExamProject
         {
             if (OnlineGame())
             {
+                //Automatically shows the StartGame button for host if all players including himself is ready
                 ToggleStartOnlineGameButton();
 
+                //Hides Ui and changes music 
                 StartClientOnlineGame();
             }
         }
