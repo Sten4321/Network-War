@@ -421,6 +421,9 @@ namespace FirstSemesterExamProject
                         || (selectedUnitY < dy - 1) || (selectedUnitY > dy + 1)))
                         {
                             AttackMove(unit, dx, dy);
+
+                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVE ATTACKED > " + unit.ToString());
+
                         }
                         //attacks from melee range if the unit on the tile is an enemy
                         else if ((unit.Team != selectedUnit.Team)
@@ -432,6 +435,8 @@ namespace FirstSemesterExamProject
 
                             selectedUnit.Attack(unit);
                              playerMove--;
+                        
+                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE ATTACKED > "+unit.ToString());
                         }
                     }
                 }
@@ -439,6 +444,8 @@ namespace FirstSemesterExamProject
                 else if (GameBoard.UnitMap[dx, dy] == null)
                 {
                     MoveHere(dx, dy);
+                    System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED TO > "+dx+","+dy);
+
                 }
             }
             //deselects unit
@@ -465,7 +472,8 @@ namespace FirstSemesterExamProject
                         if (unit.Team != selectedUnit.Team)
                         {
                             selectedUnit.Attack(unit);
-                                                                                   
+                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " RANGED ATTACKED > " + unit.ToString());
+
                             playerMove--;
 
                             
@@ -493,8 +501,9 @@ namespace FirstSemesterExamProject
                             {
                                 selectedUnit.Attack(unit);
                                
-                                
-                                    playerMove--;
+                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + "RANGE HEALED > " + unit.ToString());
+
+                                playerMove--;
                                 
                             }
                         }
@@ -513,6 +522,8 @@ namespace FirstSemesterExamProject
                                     if ((unit.Team == selectedUnit.Team && ((selectedUnitX < x - 1) || (selectedUnitX > y + 1) || (selectedUnitY < y - 1) || (selectedUnitY > y + 1))))
                                     {
                                         AttackMove(unit, x, y);
+                                        System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED AND HEALED > " + unit.ToString());
+
                                     }
                                     //heals from melee range if the unit on the tile is a teammember
                                     else if ((unit.Team == selectedUnit.Team)
@@ -523,8 +534,9 @@ namespace FirstSemesterExamProject
                                         && unit.Health < unit.MaxHealth)
                                     {
                                         selectedUnit.Attack(unit);
+                                        System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE DISTANCE HEALED > " + unit.ToString());
 
-                                            playerMove--;
+                                        playerMove--;
                                         
                                     }
                                 }

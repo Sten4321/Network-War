@@ -180,6 +180,12 @@ namespace FirstSemesterExamProject
             {
                 graphics.DrawString("Moves Left: " + move, new Font(Constant.fontType, Constant.selectedFontSize), brushColor, new PointF(Constant.selectedStatsX, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 4));
             }
+
+
+        }
+        public override string ToString()
+        {
+            return "  Team: "+team+ "  Health: " + Health; ;
         }
     }
 }
