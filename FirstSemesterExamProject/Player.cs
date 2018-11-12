@@ -321,17 +321,17 @@ namespace FirstSemesterExamProject
                 //test if the tile is in range and a tile to which you can move
                 if (InRange((int)coordinates.X, (int)coordinates.Y) && NotSolid((int)Coordinates.X, (int)Coordinates.Y))
                 {
+                        // if online and my turn 
                         if (Window.OnlineGame() && Window.OnlineIsMyTurn())
                         {
                             //Send coordinates to other players 
-                            SendOnlineCoordinates(selectedUnitX, selectedUnitX, (int)Coordinates.X, (int)Coordinates.Y);
+                            SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
 
                         }
+
                     //tests if there is an enemy
                     if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit && !(selectedUnit is IRanged))
                     {
-
-                        // if online and my turn 
 
 
 
@@ -656,11 +656,12 @@ namespace FirstSemesterExamProject
         private void NotSelected(int x, int y)
         {
             SoundEngine.PlaySound(Constant.playerMoveUnit);
+
             if (GameBoard.UnitMap[x, y] is Unit unit)
             {
                 selectedUnit = unit;
-                selectedUnitX = (int)unit.Coordinates.X;
-                selectedUnitY = (int)unit.Coordinates.Y;
+                selectedUnitX = (int)coordinates.X;
+                selectedUnitY = (int)coordinates.Y;
             }
         }
 
@@ -891,9 +892,9 @@ namespace FirstSemesterExamProject
                 if (!(Window.OnlineGame()) || Window.OnlineGame() && Window.OnlineIsMyTurn())
                 {
 
-                selectedTile.RenderTile(graphics, GameBoard.TileSize, selectedUnitX, selectedUnitY);
-                selectedUnit.RenderSelectedUnitStats(graphics);
-                DrawRange(graphics);
+                    selectedTile.RenderTile(graphics, GameBoard.TileSize, selectedUnitX, selectedUnitY);
+                    selectedUnit.RenderSelectedUnitStats(graphics);
+                    DrawRange(graphics);
                 }
             }
 
