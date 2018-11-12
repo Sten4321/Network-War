@@ -68,7 +68,7 @@ namespace FirstSemesterExamProject
         {
             if (Client.Instance.clientConnected)
             {
-                players.Add(new Player((PlayerTeam)Client.Instance.Team, Client.Instance.PlayerNumber));
+                players.Add(new Player((PlayerTeam)Client.Instance.Team, Window.playerAmount)); // TODO: make sure client knows how many players
             }
             else
             {
@@ -243,7 +243,7 @@ namespace FirstSemesterExamProject
                 int nextPlayer = Client.Instance.PlayerNumber+1;               
 
                 //If it exceeds the amount of players = 0
-                if (nextPlayer > playerNumber || nextPlayer < 0)
+                if (nextPlayer > Window.playerAmount-1 || nextPlayer < 0)
                 {
                     nextPlayer = 0;
                 }

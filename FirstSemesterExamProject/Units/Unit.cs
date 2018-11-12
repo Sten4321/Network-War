@@ -98,6 +98,8 @@ namespace FirstSemesterExamProject
         /// </summary>
         public virtual void Die()
         {
+            // TODO: Game Crashed in online when a unit died
+
             GameBoard.RemoveObject[(int)coordinates.X, (int)coordinates.Y] = this;
 
         }

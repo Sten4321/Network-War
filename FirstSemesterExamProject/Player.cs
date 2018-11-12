@@ -7,8 +7,8 @@ namespace FirstSemesterExamProject
 {
     class Player : GameObject
     {
-        private int playerMove; //The amount of moves a Player has.
-        private int playerMaxMove;
+        public static int playerMove; //The amount of moves a Player has.
+        public static int playerMaxMove;
         private PlayerTeam playerTeam;
         private Unit selectedUnit;
         private int selectedUnitX;
@@ -292,9 +292,11 @@ namespace FirstSemesterExamProject
         {
             if (Window.OnlineGame())
             {
+
+
                 NotSelected(x, y);
 
-                Selected(dx, dy);
+                OnlinceSelected(dx, dy);
             }
         }
 
@@ -321,10 +323,20 @@ namespace FirstSemesterExamProject
                 //test if the tile is in range and a tile to which you can move
                 if (InRange((int)coordinates.X, (int)coordinates.Y) && NotSolid((int)Coordinates.X, (int)Coordinates.Y))
                 {
+                    // if online and my turn 
+                    if (Window.OnlineGame() && Window.OnlineIsMyTurn())
+                    {
+                        //Send coordinates to other players 
+                        SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+                    }
+
                     //tests if there is an enemy
                     if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit && !(selectedUnit is IRanged))
                     {
-                        // TODO: add hook for sending to clients/Server (Here)
+
+
+
                         if (selectedUnit is Scout && playerMove > 0 || !(selectedUnit is Scout))
                         {
                             //moves to melee range and attacks if the unit on the tile is an enemy
@@ -360,11 +372,39 @@ namespace FirstSemesterExamProject
             selectedUnitY = 0;
         }
 
+        /// <summary> 
+        /// Sends movement coordinates to Server/Client 
+        /// </summary> 
+        /// <param name="x1"></param> 
+        /// <param name="y1"></param> 
+        /// <param name="x2"></param> 
+        /// <param name="y2"></param> 
+        private void SendOnlineCoordinates(int x1, int y1, int x2, int y2)
+        {
+
+            string message = "Move;" + x1 + "," + y1 + "," + x2 + "," + y2;
+
+            if (Server.Instance.isOnline)
+            {
+                // "Move;1,1,2,2 => "Move (1,1) to (2,2) 
+                Server.Instance.WriteServerMessage(message);
+            }
+            else if (Client.Instance.clientConnected)
+            {
+                Client.Instance.SendToHost(message);
+            }
+
+            System.Diagnostics.Debug.WriteLine("Sent Coordinates: " + message);
+
+        }
+
         /// <summary>
         /// moves/attacks with selected unit data recieved Online
         /// </summary>
-        private void Selected(int dx, int dy)
+        private void OnlinceSelected(int dx, int dy)
         {
+            // TODO: Sometimes a unit doesn't move the exact same path, and sometimes it doesn attack.
+
             Healing(dx, dy);
             RangedAttack(dx, dy);
             //test if the tile is in range and a tile to which you can move
@@ -391,7 +431,7 @@ namespace FirstSemesterExamProject
                         {
 
                             selectedUnit.Attack(unit);
-                            playerMove--;
+                             playerMove--;
                         }
                     }
                 }
@@ -425,7 +465,10 @@ namespace FirstSemesterExamProject
                         if (unit.Team != selectedUnit.Team)
                         {
                             selectedUnit.Attack(unit);
+                                                                                   
                             playerMove--;
+
+                            
                         }
                     }
                 }
@@ -449,7 +492,10 @@ namespace FirstSemesterExamProject
                             if (unit.Team == selectedUnit.Team && unit.Health < unit.MaxHealth)
                             {
                                 selectedUnit.Attack(unit);
-                                playerMove--;
+                               
+                                
+                                    playerMove--;
+                                
                             }
                         }
                     }
@@ -477,7 +523,9 @@ namespace FirstSemesterExamProject
                                         && unit.Health < unit.MaxHealth)
                                     {
                                         selectedUnit.Attack(unit);
-                                        playerMove--;
+
+                                            playerMove--;
+                                        
                                     }
                                 }
                             }
@@ -574,7 +622,9 @@ namespace FirstSemesterExamProject
                 }
                 else
                 {
-                    playerMove--;
+                    
+                        playerMove--;
+                    
                 }
             }
         }
@@ -591,8 +641,8 @@ namespace FirstSemesterExamProject
                 if (unit.Team == playerTeam)
                 {
                     selectedUnit = unit;
-                    selectedUnitX = (int)coordinates.X;
-                    selectedUnitY = (int)coordinates.Y;
+                    selectedUnitX = (int)unit.Coordinates.X;
+                    selectedUnitY = (int)unit.Coordinates.Y;
 
                     switch (playerTeam) //Changes the Selected tile sprite, depending on the player's team 
                     {
@@ -620,11 +670,12 @@ namespace FirstSemesterExamProject
         private void NotSelected(int x, int y)
         {
             SoundEngine.PlaySound(Constant.playerMoveUnit);
+
             if (GameBoard.UnitMap[x, y] is Unit unit)
             {
                 selectedUnit = unit;
-                selectedUnitX = (int)coordinates.X;
-                selectedUnitY = (int)coordinates.Y;
+                selectedUnitX = (int)unit.Coordinates.X;
+                selectedUnitY = (int)unit.Coordinates.Y;
             }
         }
 
@@ -647,6 +698,7 @@ namespace FirstSemesterExamProject
                 playerMove -= Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY);
                 if (PlayerMove < 0)
                 {
+                    
                     PlayerMove = 0;
                 }
             }
@@ -655,7 +707,19 @@ namespace FirstSemesterExamProject
             GameBoard.UnitMap[(int)selectedUnit.Coordinates.X, (int)selectedUnit.Coordinates.Y] = selectedUnit;
             GameBoard.UnitMap[selectedUnitX, selectedUnitY] = null;
         }
-
+        /// <summary>
+        /// Moves The unit to selected Coordinates
+        /// </summary>
+        private void OnlineMoveHere(int x, int y, int s)
+        {
+            //gives unit the new coordinates
+            selectedUnit.Coordinates = new PointF(x, y);
+            //calculates how far of a move was done
+           
+           
+            GameBoard.UnitMap[(int)selectedUnit.Coordinates.X, (int)selectedUnit.Coordinates.Y] = selectedUnit;
+            GameBoard.UnitMap[selectedUnitX, selectedUnitY] = null;
+        }
         /// <summary>
         /// Returns true if the selected squere is a tile to wich you can move
         /// </summary>
@@ -852,9 +916,13 @@ namespace FirstSemesterExamProject
 
             if (selectedUnit != null)
             {
-                selectedTile.RenderTile(graphics, GameBoard.TileSize, selectedUnitX, selectedUnitY);
-                selectedUnit.RenderSelectedUnitStats(graphics);
-                DrawRange(graphics);
+                if (!(Window.OnlineGame()) || Window.OnlineGame() && Window.OnlineIsMyTurn())
+                {
+
+                    selectedTile.RenderTile(graphics, GameBoard.TileSize, selectedUnitX, selectedUnitY);
+                    selectedUnit.RenderSelectedUnitStats(graphics);
+                    DrawRange(graphics);
+                }
             }
 
             graphics.DrawImage(sprite, coordinates.X * GameBoard.TileSize, coordinates.Y * GameBoard.TileSize,

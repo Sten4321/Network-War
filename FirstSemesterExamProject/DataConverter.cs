@@ -42,7 +42,7 @@ namespace FirstSemesterExamProject
                         break;
 
                     case "Map":
-                        SetMap(information);
+                        SetMap(splitStrings);
                         break;
 
                     case "Move":
@@ -50,7 +50,7 @@ namespace FirstSemesterExamProject
                         break;
 
                     case "Start":
-                        Client.Instance.Start(information);
+                        Client.Instance.Start();
                         break;
 
                     case "EndTurn":
@@ -71,13 +71,13 @@ namespace FirstSemesterExamProject
         /// <param name="information"></param>
         private static void ChangePlayerTurn(string information)
         {
-           int playerTurn = Convert.ToInt32(information);// 1,2,3,4
+            int playerTurn = Convert.ToInt32(information);// 1,2,3,4
 
+            Player.playerMove = Player.playerMaxMove;
 
-            
             if (Server.Instance.isOnline && playerTurn == 0)
             {
-                Server.Instance.turn =true;
+                Server.Instance.turn = true;
                 System.Diagnostics.Debug.WriteLine("It's your turn!");
 
             }
@@ -87,7 +87,7 @@ namespace FirstSemesterExamProject
                 System.Diagnostics.Debug.WriteLine("It's your turn!");
             }
 
-            
+
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace FirstSemesterExamProject
                 tmpStack.Push(unit);
             }
 
-           // tmpStack = ReverseStack(tmpStack);
+            // tmpStack = ReverseStack(tmpStack);
 
             //applies local stack to the designated team's stack
             Enum.TryParse(unitStrings[0], out PlayerTeam _team); //Converts first information to a team (YELLOW,archer,knight,mage)                                                
@@ -145,10 +145,12 @@ namespace FirstSemesterExamProject
         /// Sets the clients map to be equal to the recived map number
         /// </summary>
         /// <param name="sData"></param>
-        public static void SetMap(string sData)
+        public static void SetMap(string[] sData)
         {
-            GameBoard gameBoard = new GameBoard(int.Parse(sData), 1);
-         
+            Window.playerAmount = Convert.ToInt32(sData[1]);
+
+            GameBoard gameBoard = new GameBoard(int.Parse(sData[0]), 1);
+
             Client.Instance.SetBattleGameState();
 
             if (Window.GameState is BattleGameState)
@@ -164,9 +166,9 @@ namespace FirstSemesterExamProject
         public static void MoveUnit(string[] sData)
         {
             int x = Int32.Parse(sData[0]);
-            int y = Int32.Parse(sData[0]);
-            int dx = Int32.Parse(sData[0]);
-            int dy = Int32.Parse(sData[0]);
+            int y = Int32.Parse(sData[1]);
+            int dx = Int32.Parse(sData[2]);
+            int dy = Int32.Parse(sData[3]);
             //Player.Select(int x, int y, int dx, int dy) get player from 
             if (Window.GameState is BattleGameState)
             {
@@ -177,7 +179,7 @@ namespace FirstSemesterExamProject
             }
         }
 
-        
+
         public static Stack<Enum> ReverseStack(Stack<Enum> stack)
         {
             //Declare another stack to store the values from the passed stack
