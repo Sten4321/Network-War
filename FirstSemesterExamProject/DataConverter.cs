@@ -53,6 +53,10 @@ namespace FirstSemesterExamProject
                         Client.Instance.Start(information);
                         break;
 
+                    case "EndTurn":
+                        ChangePlayerTurn(information);
+                        break;
+
 
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
@@ -61,7 +65,32 @@ namespace FirstSemesterExamProject
             }
         }
 
-                /// <summary>
+        /// <summary>
+        /// Tells the local client / server if it's their turn
+        /// </summary>
+        /// <param name="information"></param>
+        private static void ChangePlayerTurn(string information)
+        {
+           int playerTurn = Convert.ToInt32(information);// 1,2,3,4
+
+
+            
+            if (Server.Instance.isOnline && playerTurn == 0)
+            {
+                Server.Instance.turn =true;
+                System.Diagnostics.Debug.WriteLine("It's your turn!");
+
+            }
+            else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber)
+            {
+                Client.Instance.turn = true;
+                System.Diagnostics.Debug.WriteLine("It's your turn!");
+            }
+
+            
+        }
+
+        /// <summary>
         /// Adds units to the stacks
         /// </summary>
         /// <param name="team"></param>
@@ -119,7 +148,7 @@ namespace FirstSemesterExamProject
         public static void SetMap(string sData)
         {
             GameBoard gameBoard = new GameBoard(int.Parse(sData), 1);
-            /////
+         
             Client.Instance.SetBattleGameState();
 
             if (Window.GameState is BattleGameState)
