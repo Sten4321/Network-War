@@ -79,10 +79,13 @@ namespace FirstSemesterExamProject
             if (Server.Instance.isOnline && playerTurn == 0)
             {
                 Server.Instance.turn =true;
+                System.Diagnostics.Debug.WriteLine("It's your turn!");
+
             }
             else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber)
             {
                 Client.Instance.turn = true;
+                System.Diagnostics.Debug.WriteLine("It's your turn!");
             }
 
             //change player turn

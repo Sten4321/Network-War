@@ -222,6 +222,8 @@ namespace FirstSemesterExamProject
                 players[0].PlayerMove = players[0].PlayerMaxMove;
                 //resets the moves of all units
                 ResetUnitMoves();
+
+                
             }
         }
         private void ClientChangeTurn()
