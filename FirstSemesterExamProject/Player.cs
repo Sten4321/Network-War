@@ -324,7 +324,16 @@ namespace FirstSemesterExamProject
                     //tests if there is an enemy
                     if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit && !(selectedUnit is IRanged))
                     {
-                        // TODO: add hook for sending to clients/Server (Here)
+
+                        // if online and my turn 
+                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
+                        {
+                            //Send coordinates to other players 
+                            SendOnlineCoordinates(selectedUnitX, selectedUnitX, (int)Coordinates.X, (int)Coordinates.Y);
+                        }
+
+
+
                         if (selectedUnit is Scout && playerMove > 0 || !(selectedUnit is Scout))
                         {
                             //moves to melee range and attacks if the unit on the tile is an enemy
@@ -358,6 +367,29 @@ namespace FirstSemesterExamProject
             selectedUnit = null;
             selectedUnitX = 0;
             selectedUnitY = 0;
+        }
+
+        /// <summary> 
+        /// Sends movement coordinates to Server/Client 
+        /// </summary> 
+        /// <param name="x1"></param> 
+        /// <param name="y1"></param> 
+        /// <param name="x2"></param> 
+        /// <param name="y2"></param> 
+        private void SendOnlineCoordinates(int x1, int y1, int x2, int y2)
+        {
+
+            string message = "Move;" + x1 + "," + y1 + "," + x2 + "," + y2;
+
+            if (Server.Instance.isOnline)
+            {
+                // "Move;1,1,2,2 => "Move (1,1) to (2,2) 
+                Server.Instance.WriteServerMessage(message);
+            }
+            else if (Client.Instance.clientConnected)
+            {
+                Client.Instance.SendToHost(message);
+            }
         }
 
         /// <summary>
