@@ -256,6 +256,8 @@ namespace FirstSemesterExamProject
                     nextPlayer = 0;
                 }
 
+                DataConverter.ChangePlayerTurnText(nextPlayer);
+
                 //Writes the index of the next player
                 Client.Instance.SendToHost("EndTurn;" + nextPlayer);
 

@@ -957,7 +957,7 @@ namespace FirstSemesterExamProject
 
             if (Window.OnlineGame())
             {
-                ShowTeamTurn(graphics);
+                OnlineShowTeamTurn(graphics);
             }
 
         }
@@ -1128,11 +1128,11 @@ namespace FirstSemesterExamProject
         }
 
 
-        private void ShowTeamTurn(Graphics graphics)
+        private void OnlineShowTeamTurn(Graphics graphics)
         {
             graphics.DrawString("Turn: " + BattleGameState.playerTurnString,
                 new Font("Arial", Constant.playerMovesFontSize), OnlineTeambrushColor,
-                new PointF(Constant.selectedStatsX + 100, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 5));
+                new PointF(Constant.selectedStatsX + 250, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 5));
         }
     }
 }
