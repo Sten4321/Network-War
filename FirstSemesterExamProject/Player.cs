@@ -434,7 +434,7 @@ namespace FirstSemesterExamProject
                 //moves to empty tile
                 else if (GameBoard.UnitMap[dx, dy] == null)
                 {
-                    MoveHere(dx, dy);
+                    OnlineMoveHere(dx, dy, 101);
                 }
             }
             //deselects unit
@@ -704,6 +704,7 @@ namespace FirstSemesterExamProject
                 playerMove -= Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY);
                 if (PlayerMove < 0)
                 {
+                    
                     PlayerMove = 0;
                 }
             }
@@ -712,7 +713,19 @@ namespace FirstSemesterExamProject
             GameBoard.UnitMap[(int)selectedUnit.Coordinates.X, (int)selectedUnit.Coordinates.Y] = selectedUnit;
             GameBoard.UnitMap[selectedUnitX, selectedUnitY] = null;
         }
-
+        /// <summary>
+        /// Moves The unit to selected Coordinates
+        /// </summary>
+        private void OnlineMoveHere(int x, int y, int s)
+        {
+            //gives unit the new coordinates
+            selectedUnit.Coordinates = new PointF(x, y);
+            //calculates how far of a move was done
+           
+           
+            GameBoard.UnitMap[(int)selectedUnit.Coordinates.X, (int)selectedUnit.Coordinates.Y] = selectedUnit;
+            GameBoard.UnitMap[selectedUnitX, selectedUnitY] = null;
+        }
         /// <summary>
         /// Returns true if the selected squere is a tile to wich you can move
         /// </summary>
