@@ -31,6 +31,10 @@ namespace FirstSemesterExamProject
         private static string yellowTeamString;
         private static string greenTeamString;
 
+        private static string redTeamString = "";
+        private static string blueTeamString = "";
+        private static string greenTeamString = "";
+        private static string yellowTeamString = "";
 
         private PlayerTeam teamSelect;
         //UnitSelect
@@ -41,7 +45,7 @@ namespace FirstSemesterExamProject
         public static bool canEndTurn;
         public static bool canRestart;
         public static bool canMute;
-        public static bool musicOn = true;
+        public static bool musicOn = false;
         public static bool menuMusicOn = false;
 
         //Online
@@ -125,38 +129,6 @@ namespace FirstSemesterExamProject
             Render();
 
         }
-        /// <summary>
-        /// Convert teams to strings
-        /// </summary>
-        /// <param name="team"></param>
-        /// <param name="units"></param>
-        public static void ConvertCopyToString(PlayerTeam team, Stack<Enum> units)
-        {
-            foreach(Enum u in units)
-            {
-                
-
-                switch (team)
-                {
-                    case PlayerTeam.RedTeam:
-                        redTeamString = units.ToString();
-                        break;
-
-                    case PlayerTeam.BlueTeam:
-                        blueTeamString= units.ToString();
-                        break;
-
-                    case PlayerTeam.GreenTeam:
-                        greenTeamString= units.ToString();
-                        break;
-
-                    case PlayerTeam.YellowTeam:
-                       yellowTeamString = units.ToString();
-                        break;
-                }
-
-            }
-        }
 
         /// <summary>
         /// keeps track of time and fps
@@ -199,7 +171,28 @@ namespace FirstSemesterExamProject
 
             OnlineUpdate();
         }
+        public static void ConvertCopyToString(PlayerTeam team, Stack<Enum> units)
+        {
+            foreach (Enum u in units)
+            {
+                switch (team)
+                {
+                    case PlayerTeam.RedTeam:
+                        redTeamString = units.ToString();
+                        break;
+                    case PlayerTeam.BlueTeam:
+                        blueTeamString = units.ToString();
+                        break;
+                    case PlayerTeam.GreenTeam:
+                        greenTeamString = units.ToString();
+                        break;
+                    case PlayerTeam.YellowTeam:
+                        yellowTeamString = units.ToString();
+                        break;
+                }
 
+            }
+        }
 
         private void OnlineUpdate()
         {
@@ -219,7 +212,7 @@ namespace FirstSemesterExamProject
             {
 
                 if (Client.Instance.clientConnected)
-                {                                       
+                {
                     HideUiForOnlineGame();
 
                     SoundEngine.StopSound();
@@ -230,6 +223,7 @@ namespace FirstSemesterExamProject
                 }
             }
         }
+
         /// <summary>
         /// Shows the list of units depending on what team is choosing
         /// </summary>
@@ -474,6 +468,7 @@ namespace FirstSemesterExamProject
                 SoundEngine.StopSound();
                 SoundEngine.PlaySound(Constant.menuButtonSound);
                 SoundEngine.PlayBackgroundMusic();
+
                 Server.Instance.StartGame();
             }
             else
@@ -1440,11 +1435,10 @@ namespace FirstSemesterExamProject
                 {
                     case PlayerTeam.RedTeam:
                         System.Diagnostics.Debug.WriteLine("Client Tried to be Red Team (ClientReadyClick()))");
-                        
                         break;
 
                     case PlayerTeam.BlueTeam:
-                        blueteam = new Stack<Enum>( onlineUnitStack);
+                        blueteam = new Stack<Enum>(onlineUnitStack);
                         break;
 
                     case PlayerTeam.GreenTeam:
@@ -1495,7 +1489,7 @@ namespace FirstSemesterExamProject
 
 
                     string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
-                    ConvertCopyToString(PlayerTeam.RedTeam,redteam);
+                    ConvertCopyToString(PlayerTeam.RedTeam, redteam);
                     int amount = onlineUnitStack.Count;
 
                     for (int i = 0; i < amount; i++)
@@ -1517,11 +1511,6 @@ namespace FirstSemesterExamProject
 
             }
         }
-                private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         #endregion
 
         /// <summary>
@@ -1577,6 +1566,18 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary> 
+        /// Returns true if it's the player's turn 
+        /// </summary> 
+        /// <returns></returns>
+        public static bool OnlineIsMyTurn()
+        {
+            if ((Client.Instance.clientConnected && Client.Instance.turn) || Server.Instance.isOnline && Server.Instance.turn)
+            {
+                return true;
+            }
+            return false;
+        }
         /// <summary>
         /// Returns True if the game is online
         /// </summary>
@@ -1612,25 +1613,6 @@ namespace FirstSemesterExamProject
 }
 
 
-<<<<<<<<< Temporary merge branch 1
-=========
 
 
-        /// <summary> 
-        /// Returns true if it's the player's turn 
-        /// </summary> 
-        /// <returns></returns>
-        public static bool OnlineIsMyTurn()
-        {
-            if ((Client.Instance.clientConnected && Client.Instance.turn) || Server.Instance.isOnline && Server.Instance.turn)
-            {
-                return true;
-            }
-            return false;
-        }
->>>>>>>>> Temporary merge branch 2
-    }
-}
-
-    }
-}
+
