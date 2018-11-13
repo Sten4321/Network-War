@@ -205,10 +205,12 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// Starts the game for the clients
         /// </summary>
-        public void Start()
+        public void Start(string playerAmountString)
         {
+            int amount = Convert.ToInt32(playerAmountString);
 
             Window.clientShouldStart = true;
+            Window.playerAmount = amount;
 
             //Starts the game
             //  Window.GameState = new BattleGameState(windowRef, amount, windowRef.Dc);
