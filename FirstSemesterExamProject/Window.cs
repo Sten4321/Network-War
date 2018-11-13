@@ -26,12 +26,6 @@ namespace FirstSemesterExamProject
         private static Stack<Enum> greenteam;
         private static Stack<Enum> yellowteam;
         public static Stack<Enum> onlineUnitStack;
-        public static Stack<Enum> copyStack = new Stack<Enum>(new Stack<Enum>(onlineUnitStack));//Copy of online stack
-        private static string redTeamString;
-        private static string blueTeamString;
-        private static string yellowTeamString;
-        private static string greenTeamString;
-
 
         private PlayerTeam teamSelect;
         //UnitSelect
@@ -125,38 +119,6 @@ namespace FirstSemesterExamProject
             //calls my Render function
             Render();
 
-        }
-        /// <summary>
-        /// Convert teams to strings
-        /// </summary>
-        /// <param name="team"></param>
-        /// <param name="units"></param>
-        public static void ConvertCopyToString(PlayerTeam team, Stack<Enum> units)
-        {
-            foreach(Enum u in units)
-            {
-                
-
-                switch (team)
-                {
-                    case PlayerTeam.RedTeam:
-                        redTeamString = units.ToString();
-                        break;
-
-                    case PlayerTeam.BlueTeam:
-                        blueTeamString= units.ToString();
-                        break;
-
-                    case PlayerTeam.GreenTeam:
-                        greenTeamString= units.ToString();
-                        break;
-
-                    case PlayerTeam.YellowTeam:
-                       yellowTeamString = units.ToString();
-                        break;
-                }
-
-            }
         }
 
         /// <summary>
@@ -475,6 +437,7 @@ namespace FirstSemesterExamProject
                 SoundEngine.StopSound();
                 SoundEngine.PlaySound(Constant.menuButtonSound);
                 SoundEngine.PlayBackgroundMusic();
+
                 Server.Instance.StartGame();
             }
             else
@@ -1441,7 +1404,6 @@ namespace FirstSemesterExamProject
                 {
                     case PlayerTeam.RedTeam:
                         System.Diagnostics.Debug.WriteLine("Client Tried to be Red Team (ClientReadyClick()))");
-                        
                         break;
 
                     case PlayerTeam.BlueTeam:
@@ -1496,7 +1458,7 @@ namespace FirstSemesterExamProject
 
 
                     string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
-                    ConvertCopyToString(PlayerTeam.RedTeam,redteam);
+
                     int amount = onlineUnitStack.Count;
 
                     for (int i = 0; i < amount; i++)
@@ -1517,6 +1479,10 @@ namespace FirstSemesterExamProject
                 }
 
             }
+        }
+                private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
 
 
@@ -1606,6 +1572,5 @@ namespace FirstSemesterExamProject
                 }
             }
         }
-
     }
 }
