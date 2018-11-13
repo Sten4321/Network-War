@@ -26,10 +26,6 @@ namespace FirstSemesterExamProject
         private static Stack<Enum> greenteam;
         private static Stack<Enum> yellowteam;
         public static Stack<Enum> onlineUnitStack;
-        private static string redTeamString;
-        private static string blueTeamString;
-        private static string yellowTeamString;
-        private static string greenTeamString;
 
         private static string redTeamString = "";
         private static string blueTeamString = "";
