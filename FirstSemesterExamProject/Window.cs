@@ -1594,11 +1594,6 @@ namespace FirstSemesterExamProject
                 }
             }
         }
-    }
-}
-
-
-
 
         /// <summary> 
         /// Returns true if it's the player's turn 
@@ -1613,3 +1608,5 @@ namespace FirstSemesterExamProject
             return false;
         }
         #endregion
+    }
+}
