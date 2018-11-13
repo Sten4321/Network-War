@@ -1610,18 +1610,5 @@ namespace FirstSemesterExamProject
             }
         }
 
-
-        /// <summary> 
-        /// Returns true if it's the player's turn 
-        /// </summary> 
-        /// <returns></returns>
-        public static bool OnlineIsMyTurn()
-        {
-            if ((Client.Instance.clientConnected && Client.Instance.turn) || Server.Instance.isOnline && Server.Instance.turn)
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }
