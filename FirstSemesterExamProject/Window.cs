@@ -125,38 +125,6 @@ namespace FirstSemesterExamProject
             Render();
 
         }
-        /// <summary>
-        /// Convert teams to strings
-        /// </summary>
-        /// <param name="team"></param>
-        /// <param name="units"></param>
-        public static void ConvertCopyToString(PlayerTeam team, Stack<Enum> units)
-        {
-            foreach(Enum u in units)
-            {
-                
-
-                switch (team)
-                {
-                    case PlayerTeam.RedTeam:
-                        redTeamString = units.ToString();
-                        break;
-
-                    case PlayerTeam.BlueTeam:
-                        blueTeamString= units.ToString();
-                        break;
-
-                    case PlayerTeam.GreenTeam:
-                        greenTeamString= units.ToString();
-                        break;
-
-                    case PlayerTeam.YellowTeam:
-                       yellowTeamString = units.ToString();
-                        break;
-                }
-
-            }
-        }
 
         /// <summary>
         /// keeps track of time and fps
@@ -199,7 +167,7 @@ namespace FirstSemesterExamProject
 
             OnlineUpdate();
         }
-        public static void ConvertCopyToString(PlayerTeam team,Stack<Enum>units)
+        public static void ConvertCopyToString(PlayerTeam team, Stack<Enum> units)
         {
             foreach (Enum u in units)
             {
@@ -220,6 +188,7 @@ namespace FirstSemesterExamProject
                 }
 
             }
+        }
 
         private void OnlineUpdate()
         {
@@ -230,24 +199,6 @@ namespace FirstSemesterExamProject
 
                 //Hides Ui and changes music 
                 StartClientOnlineGame();
-            }
-        }
-
-        private void StartClientOnlineGame()
-        {
-            if (clientShouldStart)
-            {
-
-                if (Client.Instance.clientConnected)
-                {                                       
-                    HideUiForOnlineGame();
-
-                    SoundEngine.StopSound();
-                    SoundEngine.PlaySound(Constant.menuButtonSound);
-                    SoundEngine.PlayBackgroundMusic();
-
-                    clientShouldStart = false;
-                }
             }
         }
 
@@ -268,6 +219,7 @@ namespace FirstSemesterExamProject
                 }
             }
         }
+
         /// <summary>
         /// Shows the list of units depending on what team is choosing
         /// </summary>
@@ -1533,7 +1485,7 @@ namespace FirstSemesterExamProject
 
 
                     string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
-                    ConvertCopyToString(PlayerTeam.RedTeam,redteam);
+                    ConvertCopyToString(PlayerTeam.RedTeam, redteam);
                     int amount = onlineUnitStack.Count;
 
                     for (int i = 0; i < amount; i++)
@@ -1555,10 +1507,11 @@ namespace FirstSemesterExamProject
 
             }
         }
-                private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
+        private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
+
 
 
         #endregion
@@ -1616,6 +1569,18 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary> 
+        /// Returns true if it's the player's turn 
+        /// </summary> 
+        /// <returns></returns>
+        public static bool OnlineIsMyTurn()
+        {
+            if ((Client.Instance.clientConnected && Client.Instance.turn) || Server.Instance.isOnline && Server.Instance.turn)
+            {
+                return true;
+            }
+            return false;
+        }
         /// <summary>
         /// Returns True if the game is online
         /// </summary>
@@ -1647,87 +1612,10 @@ namespace FirstSemesterExamProject
                 }
             }
         }
-
-    }
-}
-
-        /// <summary>
-        /// Convert teams to strings
-        /// </summary>
-        /// <param name="team"></param>
-        /// <param name="units"></param>
-        public static void ConvertCopyToString(PlayerTeam team, Stack<Enum> units)
-        {
-            foreach(Enum u in units)
-            {
-                
-
-                switch (team)
-                {
-                    case PlayerTeam.RedTeam:
-                        redTeamString = units.ToString();
-                        break;
-
-                    case PlayerTeam.BlueTeam:
-                        blueTeamString= units.ToString();
-                        break;
-
-                    case PlayerTeam.GreenTeam:
-                        greenTeamString= units.ToString();
-                        break;
-
-                    case PlayerTeam.YellowTeam:
-                       yellowTeamString = units.ToString();
-                        break;
-                }
-
-            }
-        }
-        private void OnlineUpdate()
-        {
-            if (OnlineGame())
-            {
-                //Automatically shows the StartGame button for host if all players including himself is ready
-                ToggleStartOnlineGameButton();
-
-                //Hides Ui and changes music 
-                StartClientOnlineGame();
-            }
-        private void StartClientOnlineGame()
-        {
-            if (clientShouldStart)
-            {
-
-                if (Client.Instance.clientConnected)
-                {                                       
-                    HideUiForOnlineGame();
-
-                    SoundEngine.StopSound();
-                    SoundEngine.PlaySound(Constant.menuButtonSound);
-                    SoundEngine.PlayBackgroundMusic();
-
-                    clientShouldStart = false;
-                }
-            }
-                private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }
 
 
 
 
-        /// <summary> 
-        /// Returns true if it's the player's turn 
-        /// </summary> 
-        /// <returns></returns>
-        public static bool OnlineIsMyTurn()
-        {
-            if ((Client.Instance.clientConnected && Client.Instance.turn) || Server.Instance.isOnline && Server.Instance.turn)
-            {
-                return true;
-            }
-            return false;
-        }
+
