@@ -299,7 +299,6 @@ namespace FirstSemesterExamProject
             if (Window.OnlineGame())
             {
 
-
                 NotSelected(x, y);
 
                 OnlinceSelected(dx, dy);
@@ -330,11 +329,10 @@ namespace FirstSemesterExamProject
                 if (InRange((int)coordinates.X, (int)coordinates.Y) && NotSolid((int)Coordinates.X, (int)Coordinates.Y))
                 {
 
-                   
+
                     //tests if there is an enemy
                     if (GameBoard.UnitMap[(int)coordinates.X, (int)coordinates.Y] is Unit unit && !(selectedUnit is IRanged))
                     {
-
 
 
                         if (selectedUnit is Scout && playerMove > 0 || !(selectedUnit is Scout))
@@ -346,13 +344,11 @@ namespace FirstSemesterExamProject
                             {
                                 AttackMove(unit, (int)coordinates.X, (int)coordinates.Y);
 
-                                // if online and my turn 
-                                if (Window.OnlineGame() && Window.OnlineIsMyTurn())
-                                {
-                                    //Send coordinates to other players 
-                                    SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
 
-                                }
+                                //Send coordinates to other players 
+                                SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+
                             }
                             //attacks from melee range if the unit on the tile is an enemy
                             else if ((unit.Team != selectedUnit.Team)
@@ -366,12 +362,11 @@ namespace FirstSemesterExamProject
                                 playerMove--;
 
                                 // if online and my turn 
-                                if (Window.OnlineGame() && Window.OnlineIsMyTurn())
-                                {
-                                    //Send coordinates to other players 
-                                    SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
 
-                                }
+                                //Send coordinates to other players 
+                                SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+
                             }
                         }
                     }
@@ -381,12 +376,10 @@ namespace FirstSemesterExamProject
                         MoveHere((int)coordinates.X, (int)coordinates.Y);
 
                         // if online and my turn 
-                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
-                        {
-                            //Send coordinates to other players 
-                            SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
 
-                        }
+                        //Send coordinates to other players 
+                        SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
                     }
                 }
             }
@@ -405,21 +398,24 @@ namespace FirstSemesterExamProject
         /// <param name="y2"></param> 
         private void SendOnlineCoordinates(int x1, int y1, int x2, int y2)
         {
-
-            string message = "Move;" + x1 + "," + y1 + "," + x2 + "," + y2;
-
-            if (Server.Instance.isOnline)
+            if (Window.OnlineGame() && Window.OnlineIsMyTurn())
             {
                 // "Move;1,1,2,2 => "Move (1,1) to (2,2) 
-                Server.Instance.WriteServerMessage(message);
-            }
-            else if (Client.Instance.clientConnected)
-            {
-                Client.Instance.SendToHost(message);
-            }
+                string message = "Move;" + x1 + "," + y1 + "," + x2 + "," + y2;
 
-            System.Diagnostics.Debug.WriteLine("Sent Coordinates: " + message);
+                //if server 
+                if (Server.Instance.isOnline)
+                {
+                    Server.Instance.WriteServerMessage(message);
+                }
 
+                //if client
+                else if (Client.Instance.clientConnected)
+                {
+                    Client.Instance.SendToHost(message);
+                }
+
+            }
         }
 
         /// <summary>
@@ -427,7 +423,6 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void OnlinceSelected(int dx, int dy)
         {
-            // TODO: Sometimes a unit doesn't move the exact same path, and sometimes it doesn attack.
 
             Healing(dx, dy);
             RangedAttack(dx, dy);
@@ -537,13 +532,11 @@ namespace FirstSemesterExamProject
 
                                 playerMove--;
 
-                                // if online and my turn
-                                if (Window.OnlineGame() && Window.OnlineIsMyTurn())
-                                {
-                                    //Send coordinates to other players 
-                                    SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
 
-                                }
+                                //Send coordinates to other players 
+                                SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+
                             }
                         }
                     }
@@ -563,12 +556,11 @@ namespace FirstSemesterExamProject
                                         AttackMove(unit, x, y);
                                         System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED AND HEALED > " + unit.ToString());
 
-                                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
-                                        {
-                                            //Send coordinates to other players 
-                                            SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
 
-                                        }
+                                        //Send coordinates to other players 
+                                        SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+
                                     }
                                     //heals from melee range if the unit on the tile is a teammember
                                     else if ((unit.Team == selectedUnit.Team)
@@ -583,12 +575,11 @@ namespace FirstSemesterExamProject
 
                                         playerMove--;
 
-                                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
-                                        {
-                                            //Send coordinates to other players 
-                                            SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
 
-                                        }
+                                        //Send coordinates to other players 
+                                        SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+
                                     }
                                 }
                             }
