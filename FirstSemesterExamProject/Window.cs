@@ -27,6 +27,11 @@ namespace FirstSemesterExamProject
         private static Stack<Enum> yellowteam;
         public static Stack<Enum> onlineUnitStack;
 
+        private static string redTeamString;
+        private static string blueTeamString;
+        private static string greenTeamString;
+        private static string yellowTeamString;
+
         private PlayerTeam teamSelect;
         //UnitSelect
         private int pointUsed;
@@ -162,6 +167,29 @@ namespace FirstSemesterExamProject
 
             OnlineUpdate();
         }
+        public static void ConvertCopyToString(PlayerTeam team,Stack<Enum>units)
+        {
+            foreach (Enum u in units)
+            {
+                switch (team)
+                {
+                    case PlayerTeam.RedTeam:
+                        redTeamString = units.ToString();
+                        break;
+                    case PlayerTeam.BlueTeam:
+                        blueTeamString = units.ToString();
+                        break;
+                    case PlayerTeam.GreenTeam:
+                        greenTeamString = units.ToString();
+                        break;
+                    case PlayerTeam.YellowTeam:
+                        yellowTeamString = units.ToString();
+                        break;
+                }
+
+            }
+
+        }
 
 
         private void OnlineUpdate()
@@ -182,7 +210,7 @@ namespace FirstSemesterExamProject
             {
 
                 if (Client.Instance.clientConnected)
-                {                                       
+                {
                     HideUiForOnlineGame();
 
                     SoundEngine.StopSound();
@@ -1407,7 +1435,7 @@ namespace FirstSemesterExamProject
                         break;
 
                     case PlayerTeam.BlueTeam:
-                        blueteam = new Stack<Enum>( onlineUnitStack);
+                        blueteam = new Stack<Enum>(onlineUnitStack);
                         break;
 
                     case PlayerTeam.GreenTeam:
@@ -1480,7 +1508,7 @@ namespace FirstSemesterExamProject
 
             }
         }
-                private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
+        private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
