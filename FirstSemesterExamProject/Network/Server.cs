@@ -327,8 +327,13 @@ namespace FirstSemesterExamProject
             return false;
         }
 
+        /// <summary>
+        /// When a client dies, it sends a death message
+        /// </summary>
+        /// <param name="data"></param>
         private void DeathMessageHandler(Data data)
         {
+            //Winner;[PLAYER NUM]
             string playerNum = data.information.Split(';')[1];
 
             foreach (ClientObject client in clientObjects)
@@ -357,6 +362,7 @@ namespace FirstSemesterExamProject
                 }
             }
 
+            //if there's only one player left, the game is over
             if (playersAlive == 1)
             {
 
@@ -364,16 +370,16 @@ namespace FirstSemesterExamProject
 
                 if (BattleGameState.isAlive)
                 {
-
+                    //host won
                     winner = PlayerTeam.RedTeam;
 
-                    // TODO: Play victory scren 
                 }
 
                 foreach (ClientObject client in clientObjects)
                 {
                     if (client.isAlive)
                     {
+                        //this client one
                         winner = client.Team;
                     }
                 }
@@ -387,8 +393,11 @@ namespace FirstSemesterExamProject
         {
             if (team != null)
             {
-                WriteServerMessage("Winner;" +team.ToString());
+                //Team name of the team who won
+                WriteServerMessage("Winner;" + team.ToString());
 
+
+                //Clients does the same thing when receiving this message
                 BattleGameState.winnerTeam = (PlayerTeam)team;
                 BattleGameState.gameOver = true;
             }
@@ -404,7 +413,7 @@ namespace FirstSemesterExamProject
                 if (_client.tcpClient == data.clientStruct.tcpClient)
                 {
                     _client.SetReady();
-                    System.Diagnostics.Debug.WriteLine(_client.Team + " is ready?: " + _client.ready);
+                    System.Diagnostics.Debug.WriteLine(_client.Team + " is ready!");
                 }
             }
             CheckIfCanStart();

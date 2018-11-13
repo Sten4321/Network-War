@@ -154,6 +154,8 @@ namespace FirstSemesterExamProject
             }
             else
             {
+                //Online
+                //Clients are told by server who wins -> see DataConverter's case for "Winner"
                 if (gameOver == true)
                 {
                     if (Window.OnlineGame())
@@ -456,16 +458,16 @@ namespace FirstSemesterExamProject
                 }
             }
 
-            if (yourUnitsCount == 0)
+            if (yourUnitsCount == 0 && isAlive)
             {
-                isAlive = false;
 
+                isAlive = false;
                 if (Client.Instance.clientConnected)
                 {
                     Client.Instance.SendToHost("PlayerDead;" + Client.Instance.PlayerNumber);
                 }
 
-               else if (Server.Instance.isOnline)
+                else if (Server.Instance.isOnline)
                 {
                     Server.Instance.CheckIfGameOver();
                 }
