@@ -450,7 +450,7 @@ namespace FirstSemesterExamProject
                 else if (GameBoard.UnitMap[dx, dy] == null)
                 {
                     MoveHere(dx, dy);
-                    System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED TO > " + dx + "," + dy);
+                    System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED FROM " + dx + "," + dy + " TO " + dx + "," + dy);
 
                 }
             }
@@ -477,11 +477,19 @@ namespace FirstSemesterExamProject
                         //tests if the unit is on your team
                         if (unit.Team != selectedUnit.Team)
                         {
+
                             selectedUnit.Attack(unit);
                             System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " RANGED ATTACKED > " + unit.ToString());
 
                             playerMove--;
 
+                            // if online and my turn 
+                            if (Window.OnlineGame() && Window.OnlineIsMyTurn())
+                            {
+                                //Send coordinates to other players 
+                                SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+                            }
 
                         }
                     }
@@ -511,6 +519,13 @@ namespace FirstSemesterExamProject
 
                                 playerMove--;
 
+                                // if online and my turn
+                                if (Window.OnlineGame() && Window.OnlineIsMyTurn())
+                                {
+                                    //Send coordinates to other players 
+                                    SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+                                }
                             }
                         }
                     }

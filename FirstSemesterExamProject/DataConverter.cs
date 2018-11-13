@@ -37,23 +37,27 @@ namespace FirstSemesterExamProject
 
                 switch (command)
                 {
-
+                    //For adding other player's teams to your own game
                     case "UnitStack":
                         AddUnitsToTeamStack(splitStrings);
                         break;
 
+                    //For determining what map clients are going to pick - also how many players
                     case "Map":
                         SetMap(splitStrings);
                         break;
 
+                    //For moving Units based on the coordinates received
                     case "Move":
                         MoveUnit(splitStrings);
                         break;
 
+                    //Tells clients they should start their game
                     case "Start":
                         Client.Instance.Start();
                         break;
 
+                    //When a player ends their turn, they send the next player's index here. Then it's their turn
                     case "EndTurn":
                         ChangePlayerTurn(information);
                         break;
@@ -72,26 +76,29 @@ namespace FirstSemesterExamProject
         /// <param name="information"></param>
         private static void ChangePlayerTurn(string information)
         {
-            int playerTurn = Convert.ToInt32(information);// 1,2,3,4
+            int playerTurn = Convert.ToInt32(information);// 0,1,2,3
 
+            //Resets player's moves
             Player.playerMove = Player.playerMaxMove;
 
-           
 
+            //If host
             if (Server.Instance.isOnline && playerTurn == 0)
             {
                 Server.Instance.turn = true;
                 System.Diagnostics.Debug.WriteLine("It's your turn!");
 
             }
+            //If a client, and the playerturn number fits your Id it's your turn
             else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber)
             {
                 Client.Instance.turn = true;
                 System.Diagnostics.Debug.WriteLine("It's your turn!");
             }
 
+            //Changes the text displaying whose turn it is
             ChangePlayerTurnText(playerTurn);
-           
+
         }
 
         /// <summary>
@@ -151,10 +158,13 @@ namespace FirstSemesterExamProject
         /// <param name="sData"></param>
         public static void SetMap(string[] sData)
         {
+            //Total player amount
             Window.playerAmount = Convert.ToInt32(sData[1]);
 
+            //makes a new gameboard, based on map type sData[0]
             GameBoard gameBoard = new GameBoard(int.Parse(sData[0]), 1);
 
+            //Enters new game
             Client.Instance.SetBattleGameState();
 
             if (Window.GameState is BattleGameState)
@@ -169,10 +179,14 @@ namespace FirstSemesterExamProject
         /// <param name="sData"></param>
         public static void MoveUnit(string[] sData)
         {
+            //From
             int x = Int32.Parse(sData[0]);
             int y = Int32.Parse(sData[1]);
+
+            //To
             int dx = Int32.Parse(sData[2]);
             int dy = Int32.Parse(sData[3]);
+
             //Player.Select(int x, int y, int dx, int dy) get player from 
             if (Window.GameState is BattleGameState)
             {
@@ -200,7 +214,7 @@ namespace FirstSemesterExamProject
         /// Changes the text and color of whose turn it is in multiplayer mode
         /// </summary>
         /// <param name="playerTurnIndex"></param>
-        public static void ChangePlayerTurnText (int playerTurnIndex)
+        public static void ChangePlayerTurnText(int playerTurnIndex)
         {
             //for drawing teamturn
             PlayerTeam team = (PlayerTeam)playerTurnIndex;
