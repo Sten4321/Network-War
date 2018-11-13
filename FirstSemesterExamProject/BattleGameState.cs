@@ -465,6 +465,11 @@ namespace FirstSemesterExamProject
                     Client.Instance.SendToHost("PlayerDead;" + Client.Instance.PlayerNumber);
                 }
 
+               else if (Server.Instance.isOnline)
+                {
+                    Server.Instance.CheckIfGameOver();
+                }
+
             }
 
         }
