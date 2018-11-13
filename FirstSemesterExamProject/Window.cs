@@ -27,10 +27,10 @@ namespace FirstSemesterExamProject
         private static Stack<Enum> yellowteam;
         public static Stack<Enum> onlineUnitStack;
 
-        private static string redTeamString;
-        private static string blueTeamString;
-        private static string greenTeamString;
-        private static string yellowTeamString;
+        private static string redTeamString = "";
+        private static string blueTeamString = "";
+        private static string greenTeamString = "";
+        private static string yellowTeamString = "";
 
         private PlayerTeam teamSelect;
         //UnitSelect
@@ -41,7 +41,7 @@ namespace FirstSemesterExamProject
         public static bool canEndTurn;
         public static bool canRestart;
         public static bool canMute;
-        public static bool musicOn = true;
+        public static bool musicOn = false;
         public static bool menuMusicOn = false;
 
         //Online
@@ -1507,13 +1507,6 @@ namespace FirstSemesterExamProject
 
             }
         }
-        private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
-
         #endregion
 
         /// <summary>
