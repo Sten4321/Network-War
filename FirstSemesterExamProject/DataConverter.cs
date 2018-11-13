@@ -26,13 +26,15 @@ namespace FirstSemesterExamProject
                 string command = string.Empty;// Move, Map, EndTurn ect.
                 string information = string.Empty;// x1,y1,x2,y2... yellow,archer,knight,mage ect
 
-
+                //fx "Move"
                 command = splitStrings[0];
 
+                //fx "0,1,3,3"  -coordinates
                 information = splitStrings[1];
 
                 System.Diagnostics.Debug.WriteLine(command + ": " + information);
 
+                //fx "0","1","3","3" - coordinates split into individual strings and put into array
                 splitStrings = information.Split(',');
 
                 switch (command)
@@ -62,11 +64,25 @@ namespace FirstSemesterExamProject
                         ChangePlayerTurn(information);
                         break;
 
+                    case "Winner":
+                        PlayTeamVictoryScreen(information);
+                        break;
 
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
                         break;
                 }
+            }
+        }
+
+        private static void PlayTeamVictoryScreen(string information)
+        {
+            Enum.TryParse(information, out PlayerTeam _team);
+
+            if (Window.GameState is BattleGameState)
+            {
+                BattleGameState.winnerTeam = _team;
+                BattleGameState.gameOver = true;
             }
         }
 
@@ -85,15 +101,37 @@ namespace FirstSemesterExamProject
             //If host
             if (Server.Instance.isOnline && playerTurn == 0)
             {
-                Server.Instance.turn = true;
-                System.Diagnostics.Debug.WriteLine("It's your turn!");
+                if (BattleGameState.isAlive)
+                {
+                    Server.Instance.turn = true;
+                    System.Diagnostics.Debug.WriteLine("It's your turn!");
+                }
+                else
+                {
+                    Server.Instance.WriteServerMessage("EndTurn;1");
+
+                }
 
             }
             //If a client, and the playerturn number fits your Id it's your turn
             else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber)
             {
-                Client.Instance.turn = true;
-                System.Diagnostics.Debug.WriteLine("It's your turn!");
+                if (BattleGameState.isAlive)
+                {
+                    Client.Instance.turn = true;
+                    System.Diagnostics.Debug.WriteLine("It's your turn!");
+                }
+                else
+                {
+                    playerTurn++;
+
+                    if (playerTurn > Window.playerAmount - 1 || playerTurn < 0)
+                    {
+                        playerTurn = 0;
+                    }
+
+                    Client.Instance.SendToHost("EndTurn;" + playerTurn);
+                }
             }
 
             //Changes the text displaying whose turn it is

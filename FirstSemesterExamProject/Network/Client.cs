@@ -207,7 +207,7 @@ namespace FirstSemesterExamProject
         /// </summary>
         public void Start()
         {
-
+            BattleGameState.yourTeamOnline = (PlayerTeam)Team;
             Window.clientShouldStart = true;
 
             //Starts the game

@@ -318,8 +318,81 @@ namespace FirstSemesterExamProject
                 ReadyMessageHandler(data);
                 return true;
             }
+            if (data.information.Contains("PlayerDead;"))
+            {
+                DeathMessageHandler(data);
+                return true;
+            }
 
             return false;
+        }
+
+        private void DeathMessageHandler(Data data)
+        {
+            string playerNum = data.information.Split(';')[1];
+
+            foreach (ClientObject client in clientObjects)
+            {
+                if (data.clientStruct == client)
+                {
+                    client.isAlive = false;
+                }
+            }
+            CheckIfGameOver();
+        }
+
+        public void CheckIfGameOver()
+        {
+            byte playersAlive = 0;
+
+            if (BattleGameState.isAlive)
+            {
+                playersAlive++;
+            }
+            foreach (ClientObject client in clientObjects)
+            {
+                if (client.isAlive)
+                {
+                    playersAlive++;
+                }
+            }
+
+            if (playersAlive == 1)
+            {
+
+                PlayerTeam? winner = null;
+
+                if (BattleGameState.isAlive)
+                {
+
+                    winner = PlayerTeam.RedTeam;
+
+                    // TODO: Play victory scren 
+                }
+
+                foreach (ClientObject client in clientObjects)
+                {
+                    if (client.isAlive)
+                    {
+                        winner = client.Team;
+                    }
+                }
+
+                AnnounceWinner(winner);
+
+            }
+        }
+
+        private void AnnounceWinner(PlayerTeam? team)
+        {
+            if (team != null)
+            {
+                WriteServerMessage("Winner;" +team.ToString());
+
+                BattleGameState.winnerTeam = (PlayerTeam)team;
+                BattleGameState.gameOver = true;
+            }
+
         }
 
         private void ReadyMessageHandler(Data data)
@@ -330,7 +403,7 @@ namespace FirstSemesterExamProject
             {
                 if (_client.tcpClient == data.clientStruct.tcpClient)
                 {
-                    _client.SetReady();  
+                    _client.SetReady();
                     System.Diagnostics.Debug.WriteLine(_client.Team + " is ready?: " + _client.ready);
                 }
             }
@@ -379,15 +452,17 @@ namespace FirstSemesterExamProject
             mapNum = (byte)rnd.Next(1, 7 + 1);
 
             WriteServerMessage("Map;" + mapNum.ToString());
-           
+
         }
 
 
         public void StartGame()
         {
             //informs clients of the amount of total players
+            BattleGameState.yourTeamOnline = PlayerTeam.RedTeam;
+
             WriteServerMessage("Start;");
-                      
+
         }
 
 
