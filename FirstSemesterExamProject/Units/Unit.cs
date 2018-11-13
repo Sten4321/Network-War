@@ -98,6 +98,8 @@ namespace FirstSemesterExamProject
         /// </summary>
         public virtual void Die()
         {
+            // TODO: Game Crashed in online when a unit died
+
             GameBoard.RemoveObject[(int)coordinates.X, (int)coordinates.Y] = this;
 
         }
@@ -178,6 +180,12 @@ namespace FirstSemesterExamProject
             {
                 graphics.DrawString("Moves Left: " + move, new Font(Constant.fontType, Constant.selectedFontSize), brushColor, new PointF(Constant.selectedStatsX, Constant.selectedStatsY + (Constant.selectedFontSize + Constant.textGap) * 4));
             }
+
+
+        }
+        public override string ToString()
+        {
+            return "  "+team+ "  Health: " + Health; ;
         }
     }
 }

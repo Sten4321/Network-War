@@ -12,7 +12,12 @@ namespace FirstSemesterExamProject
         private static List<Player> players;
         private List<int> playersUnitCount;
         private static int playerTurn = 1;
+
+
         DateTime victoryNow;
+
+        //for online ShowTeamTurn method
+        public static string playerTurnString = "RedTeam";
 
         /// <summary>
         /// Property for players list
@@ -68,7 +73,7 @@ namespace FirstSemesterExamProject
         {
             if (Client.Instance.clientConnected)
             {
-                players.Add(new Player((PlayerTeam)Client.Instance.Team, Client.Instance.PlayerNumber));
+                players.Add(new Player((PlayerTeam)Client.Instance.Team, Window.playerAmount)); // TODO: make sure client knows how many players
             }
             else
             {
@@ -221,6 +226,9 @@ namespace FirstSemesterExamProject
                 //Write the index of the next player
                 Server.Instance.WriteServerMessage("EndTurn;" + 1);
 
+                //for drawing teamturn
+                DataConverter.ChangePlayerTurnText(1);
+
                 //Server cannot do any actions
                 Server.Instance.turn = false;
 
@@ -243,10 +251,12 @@ namespace FirstSemesterExamProject
                 int nextPlayer = Client.Instance.PlayerNumber+1;               
 
                 //If it exceeds the amount of players = 0
-                if (nextPlayer > playerNumber || nextPlayer < 0)
+                if (nextPlayer > Window.playerAmount-1 || nextPlayer < 0)
                 {
                     nextPlayer = 0;
                 }
+
+                DataConverter.ChangePlayerTurnText(nextPlayer);
 
                 //Writes the index of the next player
                 Client.Instance.SendToHost("EndTurn;" + nextPlayer);

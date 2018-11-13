@@ -70,5 +70,9 @@ namespace FirstSemesterExamProject
             base.Attack(enemy);
 
         }
+        public override string ToString()
+        {
+            return "Knight" + base.ToString();
+        }
     }
 }

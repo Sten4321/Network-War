@@ -70,6 +70,10 @@ namespace FirstSemesterExamProject
             SoundEngine.PlaySound(Constant.mageSound);
 
         }
+        public override string ToString()
+        {
+            return "Mage" + base.ToString();
+        }
     }
 }
 
