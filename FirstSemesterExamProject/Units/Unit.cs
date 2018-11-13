@@ -185,7 +185,7 @@ namespace FirstSemesterExamProject
         }
         public override string ToString()
         {
-            return team+ "  Health: " + Health; ;
+            return "  "+team+ "  Health: " + Health; ;
         }
     }
 }
