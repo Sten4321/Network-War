@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace FirstSemesterExamProject
@@ -36,23 +37,27 @@ namespace FirstSemesterExamProject
 
                 switch (command)
                 {
-
+                    //For adding other player's teams to your own game
                     case "UnitStack":
                         AddUnitsToTeamStack(splitStrings);
                         break;
 
+                    //For determining what map clients are going to pick - also how many players
                     case "Map":
-                        SetMap(information);
+                        SetMap(splitStrings);
                         break;
 
+                    //For moving Units based on the coordinates received
                     case "Move":
                         MoveUnit(splitStrings);
                         break;
 
+                    //Tells clients they should start their game
                     case "Start":
-                        Client.Instance.Start(information);
+                        Client.Instance.Start();
                         break;
 
+                    //When a player ends their turn, they send the next player's index here. Then it's their turn
                     case "EndTurn":
                         ChangePlayerTurn(information);
                         break;
@@ -71,23 +76,29 @@ namespace FirstSemesterExamProject
         /// <param name="information"></param>
         private static void ChangePlayerTurn(string information)
         {
-           int playerTurn = Convert.ToInt32(information);// 1,2,3,4
+            int playerTurn = Convert.ToInt32(information);// 0,1,2,3
+
+            //Resets player's moves
+            Player.playerMove = Player.playerMaxMove;
 
 
-            
+            //If host
             if (Server.Instance.isOnline && playerTurn == 0)
             {
-                Server.Instance.turn =true;
+                Server.Instance.turn = true;
                 System.Diagnostics.Debug.WriteLine("It's your turn!");
 
             }
+            //If a client, and the playerturn number fits your Id it's your turn
             else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber)
             {
                 Client.Instance.turn = true;
                 System.Diagnostics.Debug.WriteLine("It's your turn!");
             }
 
-            
+            //Changes the text displaying whose turn it is
+            ChangePlayerTurnText(playerTurn);
+
         }
 
         /// <summary>
@@ -108,7 +119,7 @@ namespace FirstSemesterExamProject
                 tmpStack.Push(unit);
             }
 
-           // tmpStack = ReverseStack(tmpStack);
+            // tmpStack = ReverseStack(tmpStack);
 
             //applies local stack to the designated team's stack
             Enum.TryParse(unitStrings[0], out PlayerTeam _team); //Converts first information to a team (YELLOW,archer,knight,mage)                                                
@@ -145,10 +156,15 @@ namespace FirstSemesterExamProject
         /// Sets the clients map to be equal to the recived map number
         /// </summary>
         /// <param name="sData"></param>
-        public static void SetMap(string sData)
+        public static void SetMap(string[] sData)
         {
-            GameBoard gameBoard = new GameBoard(int.Parse(sData), 1);
-         
+            //Total player amount
+            Window.playerAmount = Convert.ToInt32(sData[1]);
+
+            //makes a new gameboard, based on map type sData[0]
+            GameBoard gameBoard = new GameBoard(int.Parse(sData[0]), 1);
+
+            //Enters new game
             Client.Instance.SetBattleGameState();
 
             if (Window.GameState is BattleGameState)
@@ -163,10 +179,14 @@ namespace FirstSemesterExamProject
         /// <param name="sData"></param>
         public static void MoveUnit(string[] sData)
         {
+            //From
             int x = Int32.Parse(sData[0]);
-            int y = Int32.Parse(sData[0]);
-            int dx = Int32.Parse(sData[0]);
-            int dy = Int32.Parse(sData[0]);
+            int y = Int32.Parse(sData[1]);
+
+            //To
+            int dx = Int32.Parse(sData[2]);
+            int dy = Int32.Parse(sData[3]);
+
             //Player.Select(int x, int y, int dx, int dy) get player from 
             if (Window.GameState is BattleGameState)
             {
@@ -177,7 +197,7 @@ namespace FirstSemesterExamProject
             }
         }
 
-        
+
         public static Stack<Enum> ReverseStack(Stack<Enum> stack)
         {
             //Declare another stack to store the values from the passed stack
@@ -188,6 +208,43 @@ namespace FirstSemesterExamProject
                 reversedStack.Push(stack.Pop());
 
             return reversedStack;
+        }
+
+        /// <summary>
+        /// Changes the text and color of whose turn it is in multiplayer mode
+        /// </summary>
+        /// <param name="playerTurnIndex"></param>
+        public static void ChangePlayerTurnText(int playerTurnIndex)
+        {
+            //for drawing teamturn
+            PlayerTeam team = (PlayerTeam)playerTurnIndex;
+            BattleGameState.playerTurnString = team.ToString();
+
+            switch (team)
+            {
+                case PlayerTeam.RedTeam:
+                    Player.OnlineTeambrushColor = new SolidBrush(Color.FromArgb(180, 0, 0));
+                    break;
+                case PlayerTeam.BlueTeam:
+                    Player.OnlineTeambrushColor = Brushes.Blue;
+
+                    break;
+                case PlayerTeam.GreenTeam:
+                    Player.OnlineTeambrushColor = Brushes.LawnGreen;
+
+                    break;
+                case PlayerTeam.YellowTeam:
+                    Player.OnlineTeambrushColor = Brushes.Yellow;
+
+                    break;
+
+
+                default:
+                    Player.OnlineTeambrushColor = Brushes.Black;
+                    System.Diagnostics.Debug.WriteLine("Error in ChangePlayerTurn");
+                    break;
+
+            }
         }
     }
 }
