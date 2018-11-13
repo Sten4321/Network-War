@@ -13,8 +13,12 @@ namespace FirstSemesterExamProject
         private List<int> playersUnitCount;
         private static int playerTurn = 1;
 
+        //online
         public static PlayerTeam yourTeamOnline;
         public static bool isAlive = true;
+        public static bool gameOver = false;
+        public static PlayerTeam winnerTeam;
+
 
         DateTime victoryNow;
 
@@ -147,6 +151,18 @@ namespace FirstSemesterExamProject
                 {
                     Victory(players[0].PlayerTeamColor, graphics);
                 }
+            }
+            else
+            {
+                if (gameOver == true)
+                {
+                    if (Window.OnlineGame())
+                    {
+                        Victory(winnerTeam, graphics);
+                    }
+
+                }
+
             }
         }
 

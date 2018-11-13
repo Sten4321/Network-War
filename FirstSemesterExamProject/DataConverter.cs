@@ -64,11 +64,25 @@ namespace FirstSemesterExamProject
                         ChangePlayerTurn(information);
                         break;
 
+                    case "Winner":
+                        PlayTeamVictoryScreen(information);
+                        break;
 
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
                         break;
                 }
+            }
+        }
+
+        private static void PlayTeamVictoryScreen(string information)
+        {
+            Enum.TryParse(information, out PlayerTeam _team);
+
+            if (Window.GameState is BattleGameState)
+            {
+                BattleGameState.winnerTeam = _team;
+                BattleGameState.gameOver = true;
             }
         }
 
@@ -104,8 +118,8 @@ namespace FirstSemesterExamProject
             {
                 if (BattleGameState.isAlive)
                 {
-                Client.Instance.turn = true;
-                System.Diagnostics.Debug.WriteLine("It's your turn!");
+                    Client.Instance.turn = true;
+                    System.Diagnostics.Debug.WriteLine("It's your turn!");
                 }
                 else
                 {

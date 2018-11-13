@@ -389,6 +389,8 @@ namespace FirstSemesterExamProject
             {
                 WriteServerMessage("Winner;" +team.ToString());
 
+                BattleGameState.winnerTeam = (PlayerTeam)team;
+                BattleGameState.gameOver = true;
             }
 
         }
