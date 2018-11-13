@@ -125,6 +125,38 @@ namespace FirstSemesterExamProject
             Render();
 
         }
+        /// <summary>
+        /// Convert teams to strings
+        /// </summary>
+        /// <param name="team"></param>
+        /// <param name="units"></param>
+        public static void ConvertCopyToString(PlayerTeam team, Stack<Enum> units)
+        {
+            foreach(Enum u in units)
+            {
+                
+
+                switch (team)
+                {
+                    case PlayerTeam.RedTeam:
+                        redTeamString = units.ToString();
+                        break;
+
+                    case PlayerTeam.BlueTeam:
+                        blueTeamString= units.ToString();
+                        break;
+
+                    case PlayerTeam.GreenTeam:
+                        greenTeamString= units.ToString();
+                        break;
+
+                    case PlayerTeam.YellowTeam:
+                       yellowTeamString = units.ToString();
+                        break;
+                }
+
+            }
+        }
 
         /// <summary>
         /// keeps track of time and fps
@@ -189,9 +221,6 @@ namespace FirstSemesterExamProject
 
             }
 
-        }
-
-
         private void OnlineUpdate()
         {
             if (OnlineGame())
@@ -201,6 +230,24 @@ namespace FirstSemesterExamProject
 
                 //Hides Ui and changes music 
                 StartClientOnlineGame();
+            }
+        }
+
+        private void StartClientOnlineGame()
+        {
+            if (clientShouldStart)
+            {
+
+                if (Client.Instance.clientConnected)
+                {                                       
+                    HideUiForOnlineGame();
+
+                    SoundEngine.StopSound();
+                    SoundEngine.PlaySound(Constant.menuButtonSound);
+                    SoundEngine.PlayBackgroundMusic();
+
+                    clientShouldStart = false;
+                }
             }
         }
 
@@ -1508,7 +1555,7 @@ namespace FirstSemesterExamProject
 
             }
         }
-        private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
+                private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
@@ -1603,3 +1650,84 @@ namespace FirstSemesterExamProject
 
     }
 }
+
+        /// <summary>
+        /// Convert teams to strings
+        /// </summary>
+        /// <param name="team"></param>
+        /// <param name="units"></param>
+        public static void ConvertCopyToString(PlayerTeam team, Stack<Enum> units)
+        {
+            foreach(Enum u in units)
+            {
+                
+
+                switch (team)
+                {
+                    case PlayerTeam.RedTeam:
+                        redTeamString = units.ToString();
+                        break;
+
+                    case PlayerTeam.BlueTeam:
+                        blueTeamString= units.ToString();
+                        break;
+
+                    case PlayerTeam.GreenTeam:
+                        greenTeamString= units.ToString();
+                        break;
+
+                    case PlayerTeam.YellowTeam:
+                       yellowTeamString = units.ToString();
+                        break;
+                }
+
+            }
+        }
+        private void OnlineUpdate()
+        {
+            if (OnlineGame())
+            {
+                //Automatically shows the StartGame button for host if all players including himself is ready
+                ToggleStartOnlineGameButton();
+
+                //Hides Ui and changes music 
+                StartClientOnlineGame();
+            }
+        private void StartClientOnlineGame()
+        {
+            if (clientShouldStart)
+            {
+
+                if (Client.Instance.clientConnected)
+                {                                       
+                    HideUiForOnlineGame();
+
+                    SoundEngine.StopSound();
+                    SoundEngine.PlaySound(Constant.menuButtonSound);
+                    SoundEngine.PlayBackgroundMusic();
+
+                    clientShouldStart = false;
+                }
+            }
+                private void HighscoreList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
+
+
+
+
+        /// <summary> 
+        /// Returns true if it's the player's turn 
+        /// </summary> 
+        /// <returns></returns>
+        public static bool OnlineIsMyTurn()
+        {
+            if ((Client.Instance.clientConnected && Client.Instance.turn) || Server.Instance.isOnline && Server.Instance.turn)
+            {
+                return true;
+            }
+            return false;
+        }
