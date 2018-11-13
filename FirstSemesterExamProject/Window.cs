@@ -1458,7 +1458,7 @@ namespace FirstSemesterExamProject
 
 
                     string message = "UnitStack;" + PlayerTeam.RedTeam.ToString();
-
+                    ConvertCopyToString(PlayerTeam.RedTeam,redteam);
                     int amount = onlineUnitStack.Count;
 
                     for (int i = 0; i < amount; i++)
@@ -1572,5 +1572,6 @@ namespace FirstSemesterExamProject
                 }
             }
         }
+
     }
 }
