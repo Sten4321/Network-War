@@ -563,6 +563,12 @@ namespace FirstSemesterExamProject
                                         AttackMove(unit, x, y);
                                         System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED AND HEALED > " + unit.ToString());
 
+                                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
+                                        {
+                                            //Send coordinates to other players 
+                                            SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+                                        }
                                     }
                                     //heals from melee range if the unit on the tile is a teammember
                                     else if ((unit.Team == selectedUnit.Team)
@@ -577,6 +583,12 @@ namespace FirstSemesterExamProject
 
                                         playerMove--;
 
+                                        if (Window.OnlineGame() && Window.OnlineIsMyTurn())
+                                        {
+                                            //Send coordinates to other players 
+                                            SendOnlineCoordinates(selectedUnitX, selectedUnitY, (int)Coordinates.X, (int)Coordinates.Y);
+
+                                        }
                                     }
                                 }
                             }
