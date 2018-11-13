@@ -13,6 +13,8 @@ namespace FirstSemesterExamProject
         private List<int> playersUnitCount;
         private static int playerTurn = 1;
 
+        public static PlayerTeam yourTeamOnline;
+        public static bool isAlive = true;
 
         DateTime victoryNow;
 
@@ -136,6 +138,7 @@ namespace FirstSemesterExamProject
                     }
                 }
             }
+
             players[playerTurn - 1].ObjectRender(graphics);
 
             if (Window.OnlineGame() != true)//only if not online
@@ -208,12 +211,12 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void OnlineChangeTurn()
         {
-          
+
             ServerChangeTurn();
             ClientChangeTurn();
 
 
-            
+
 
         }
 
@@ -222,7 +225,7 @@ namespace FirstSemesterExamProject
 
             //if player is server
             if (Server.Instance.turn && Server.Instance.isOnline)
-            {                               
+            {
                 //Write the index of the next player
                 Server.Instance.WriteServerMessage("EndTurn;" + 1);
 
@@ -239,7 +242,7 @@ namespace FirstSemesterExamProject
                 //resets the moves of all units
                 ResetUnitMoves();
 
-                
+
             }
         }
         private void ClientChangeTurn()
@@ -248,10 +251,10 @@ namespace FirstSemesterExamProject
             if (Client.Instance.turn)
             {
                 //Index of the next player
-                int nextPlayer = Client.Instance.PlayerNumber+1;               
+                int nextPlayer = Client.Instance.PlayerNumber + 1;
 
                 //If it exceeds the amount of players = 0
-                if (nextPlayer > Window.playerAmount-1 || nextPlayer < 0)
+                if (nextPlayer > Window.playerAmount - 1 || nextPlayer < 0)
                 {
                     nextPlayer = 0;
                 }
@@ -320,69 +323,79 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// checks if a player has a gameover (no units) and removes the player if true
         /// </summary>
-        public void PlayerDies()// TODO: add player death
+        public void PlayerDies()
         {
             if (GameBoard.UnitMap != null)
             {
-                foreach (Player pl in players)
+                if (Window.OnlineGame())
                 {
-                    playersUnitCount.Add(0);
+                    OnlinePlayerDie();
                 }
-
-                for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)
+                else
                 {
-                    for (int Y = 0; Y < GameBoard.UnitMap.GetLength(1); Y++)
+
+                    foreach (Player pl in players)
                     {
-                        if (GameBoard.UnitMap[X, Y] != null)
+                        playersUnitCount.Add(0);
+                    }
+
+                    for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)
+                    {
+                        for (int Y = 0; Y < GameBoard.UnitMap.GetLength(1); Y++)
                         {
-                            switch (((Unit)GameBoard.UnitMap[X, Y]).Team)
+                            if (GameBoard.UnitMap[X, Y] != null)
                             {
-                                case PlayerTeam.RedTeam:
-                                    foreach (Player player in players)
-                                    {
-                                        if (player.PlayerTeamColor == PlayerTeam.RedTeam)
+                                switch (((Unit)GameBoard.UnitMap[X, Y]).Team)
+                                {
+                                    case PlayerTeam.RedTeam:
+                                        foreach (Player player in players)
                                         {
-                                            playersUnitCount[players.IndexOf(player)]++;
+                                            if (player.PlayerTeamColor == PlayerTeam.RedTeam)
+                                            {
+                                                playersUnitCount[players.IndexOf(player)]++;
+                                            }
                                         }
-                                    }
-                                    break;
+                                        break;
 
-                                case PlayerTeam.BlueTeam:
-                                    foreach (Player player in players)
-                                    {
-                                        if (player.PlayerTeamColor == PlayerTeam.BlueTeam)
+                                    case PlayerTeam.BlueTeam:
+                                        foreach (Player player in players)
                                         {
-                                            playersUnitCount[players.IndexOf(player)]++;
+                                            if (player.PlayerTeamColor == PlayerTeam.BlueTeam)
+                                            {
+                                                playersUnitCount[players.IndexOf(player)]++;
+                                            }
                                         }
-                                    }
-                                    break;
+                                        break;
 
-                                case PlayerTeam.GreenTeam:
-                                    foreach (Player player in players)
-                                    {
-                                        if (player.PlayerTeamColor == PlayerTeam.GreenTeam)
+                                    case PlayerTeam.GreenTeam:
+                                        foreach (Player player in players)
                                         {
-                                            playersUnitCount[players.IndexOf(player)]++;
+                                            if (player.PlayerTeamColor == PlayerTeam.GreenTeam)
+                                            {
+                                                playersUnitCount[players.IndexOf(player)]++;
+                                            }
                                         }
-                                    }
-                                    break;
+                                        break;
 
-                                case PlayerTeam.YellowTeam:
-                                    foreach (Player player in players)
-                                    {
-                                        if (player.PlayerTeamColor == PlayerTeam.YellowTeam)
+                                    case PlayerTeam.YellowTeam:
+                                        foreach (Player player in players)
                                         {
-                                            playersUnitCount[players.IndexOf(player)]++;
+                                            if (player.PlayerTeamColor == PlayerTeam.YellowTeam)
+                                            {
+                                                playersUnitCount[players.IndexOf(player)]++;
+                                            }
                                         }
-                                    }
-                                    break;
+                                        break;
 
-                                default:
-                                    break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                     }
                 }
+
+
 
                 for (int i = 0; i < playersUnitCount.Count; i++)
                 {
@@ -401,9 +414,45 @@ namespace FirstSemesterExamProject
                     playerTurn = 1;
                 }
 
+
                 playersUnitCount.Clear();
             }
         }
+
+
+        private void OnlinePlayerDie()
+        {
+
+            int yourUnitsCount = 0;
+
+
+            for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)
+            {
+                for (int Y = 0; Y < GameBoard.UnitMap.GetLength(1); Y++)
+                {
+                    if (GameBoard.UnitMap[X, Y] != null)
+                    {
+                        if ((((Unit)GameBoard.UnitMap[X, Y]).Team) == yourTeamOnline)
+                        {
+                            yourUnitsCount++;
+                        }
+                    }
+                }
+            }
+
+            if (yourUnitsCount == 0)
+            {
+                isAlive = false;
+
+                if (Client.Instance.clientConnected)
+                {
+                    Client.Instance.SendToHost("PlayerDead;" + Client.Instance.PlayerNumber);
+                }
+
+            }
+
+        }
+
 
         /// <summary>
         /// Handles what happens when a victory has happened
@@ -453,5 +502,7 @@ namespace FirstSemesterExamProject
                 Application.Restart();
             }
         }
+
     }
 }
+
