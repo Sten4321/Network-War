@@ -26,7 +26,6 @@ namespace FirstSemesterExamProject
         private static Stack<Enum> greenteam;
         private static Stack<Enum> yellowteam;
         public static Stack<Enum> onlineUnitStack;
-        public static Stack<Enum> copyStack = new Stack<Enum>(new Stack<Enum>(onlineUnitStack));//Copy of online stack
         private static string redTeamString;
         private static string blueTeamString;
         private static string yellowTeamString;
