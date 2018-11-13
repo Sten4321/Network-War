@@ -182,7 +182,7 @@ namespace FirstSemesterExamProject
             {
 
                 if (Client.Instance.clientConnected)
-                {                                       
+                {
                     HideUiForOnlineGame();
 
                     SoundEngine.StopSound();
@@ -660,7 +660,9 @@ namespace FirstSemesterExamProject
         {
             if (OnlineGame())
             {
-                onlineUnitStack = null;
+                onlineUnitStack.Clear();
+                PointUsing();
+
 
             }
             if (Server.Instance.isOnline)
@@ -1407,7 +1409,7 @@ namespace FirstSemesterExamProject
                         break;
 
                     case PlayerTeam.BlueTeam:
-                        blueteam = new Stack<Enum>( onlineUnitStack);
+                        blueteam = new Stack<Enum>(onlineUnitStack);
                         break;
 
                     case PlayerTeam.GreenTeam:

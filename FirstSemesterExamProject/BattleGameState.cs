@@ -189,7 +189,7 @@ namespace FirstSemesterExamProject
             {
                 foreach (Player pl in players)
                 {
-                    // TODO: Check if player move works!!!
+
                     pl.Move();
                 }
             }
@@ -482,17 +482,20 @@ namespace FirstSemesterExamProject
         /// </summary>
         public void Victory(PlayerTeam victoryTeam, Graphics graphics)
         {
-            for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)
+            if (victoryNow == DateTime.MinValue) // if first running victory code
             {
-                for (int Y = 0; Y < GameBoard.UnitMap.GetLength(1); Y++)
+                for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)
                 {
-                    if (GameBoard.UnitMap[X, Y] is Unit unit)
+                    for (int Y = 0; Y < GameBoard.UnitMap.GetLength(1); Y++)
                     {
-                        unit.AnimationSpeed = 1;//Adds a slowmotion effect
+                        if (GameBoard.UnitMap[X, Y] is Unit unit)
+                        {
+                            unit.AnimationSpeed = 1;//Adds a slowmotion effect
+                        }
                     }
                 }
+                System.Diagnostics.Debug.WriteLine("{0} Won.", victoryTeam);
             }
-            System.Diagnostics.Debug.WriteLine("{0} Won.", victoryTeam);
             //draws the victory image depending on the team that won.
             switch (victoryTeam)
             {

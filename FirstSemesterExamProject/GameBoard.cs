@@ -65,7 +65,15 @@ namespace FirstSemesterExamProject
             removeObjects = new GameObject[GroundMap.GetLength(0), GroundMap.GetLength(1)];
 
 
-            Server.Instance.WriteServerMessage("Map;"+mapNumber+","+(Server.Instance.clientObjects.Count+1));
+            
+            //  Server.Instance.WriteServerMessage("Map;"+mapNumber+","+(Server.Instance.clientObjects.Count+1));
+
+            //Sends map info to all clients
+            if (Window.OnlineGame())
+            {
+                Server.Instance.SendMapInfo(mapNumber);
+            }
+
 
         }
 
