@@ -97,9 +97,5 @@ namespace FirstSemesterExamProject
                 base.Attack(enemy);
             }
         }
-        public override string ToString()
-        {
-            return "Artifact" + base.ToString();
-        }
     }
 }
