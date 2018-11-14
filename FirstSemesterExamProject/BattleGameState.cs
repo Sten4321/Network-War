@@ -471,6 +471,7 @@ namespace FirstSemesterExamProject
         }
 
 
+
         /// <summary>
         /// Handles what happens when a victory has happened
         /// </summary>
@@ -488,7 +489,17 @@ namespace FirstSemesterExamProject
                         }
                     }
                 }
-                System.Diagnostics.Debug.WriteLine("{0} Won.", victoryTeam);
+                //Tells highscoreConnection which team composition won
+                try
+                {
+                    Server.Instance.WriteWinnerTeamCompositionToDatabase(winnerTeam);
+
+                }
+                catch (Exception e)
+                {
+
+                    Console.WriteLine(e.ToString());
+                }
             }
             //draws the victory image depending on the team that won.
             switch (victoryTeam)

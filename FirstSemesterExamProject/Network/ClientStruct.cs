@@ -22,7 +22,10 @@ namespace FirstSemesterExamProject
 
         //What team are they on?
         public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
+
         public bool clientsTurn;
+
+        public string unitTeamComposition;
 
         public ClientObject(TcpClient _client)
         {

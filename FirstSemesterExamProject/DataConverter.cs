@@ -42,6 +42,7 @@ namespace FirstSemesterExamProject
                     //For adding other player's teams to your own game
                     case "UnitStack":
                         AddUnitsToTeamStack(splitStrings);
+                        
                         break;
 
                     //For determining what map clients are going to pick - also how many players
@@ -146,6 +147,7 @@ namespace FirstSemesterExamProject
         /// <param name="unitStrings"></param>
         public static void AddUnitsToTeamStack(string[] unitStrings)
         {
+            
 
             Stack<Enum> tmpStack = new Stack<Enum>();
 
