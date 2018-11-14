@@ -163,7 +163,9 @@ namespace FirstSemesterExamProject
             OnlineUpdate();
         }
 
-
+        /// <summary>
+        /// updates the game if online
+        /// </summary>
         private void OnlineUpdate()
         {
             if (OnlineGame())
@@ -182,7 +184,7 @@ namespace FirstSemesterExamProject
             {
 
                 if (Client.Instance.clientConnected)
-                {
+                {                                       
                     HideUiForOnlineGame();
 
                     SoundEngine.StopSound();
@@ -423,6 +425,12 @@ namespace FirstSemesterExamProject
             EndTurnKeyPress();
 
         }
+
+        /// <summary>
+        /// Starts the game from the lobby
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartOnlineGame_Click(object sender, EventArgs e)
         {
             if (((redteam != null && redteam.Count > 0) || (redteam == null))
@@ -677,6 +685,10 @@ namespace FirstSemesterExamProject
                 Client.Instance.GetClient.Close();
             }
         }
+
+        /// <summary>
+        /// Handles what happens when 'Back' is clicked
+        /// </summary>
         private void BackClickUIHandler()
         {
             TwoPlayer.Visible = true;
@@ -1303,6 +1315,9 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary>
+        /// Opens the online lobby
+        /// </summary>
         public void UpdateIpLabelText()
         {
             if (InvokeRequired)
@@ -1342,6 +1357,7 @@ namespace FirstSemesterExamProject
                 */
             }
         }
+
         /// <summary>
         /// Make it possible to join a host through their IP-adress
         /// </summary>
@@ -1398,6 +1414,9 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary>
+        /// The ready button and its funktions
+        /// </summary>
         private void ClientReadyClick()
         {
             if (!(Server.Instance.isOnline) && Client.Instance.clientConnected)
@@ -1483,9 +1502,6 @@ namespace FirstSemesterExamProject
             }
         }
 
-
-        #endregion
-
         /// <summary>
         /// Checks if the text in EnterIP TextBox is valid
         /// </summary>
@@ -1530,6 +1546,11 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary>
+        /// Handles what happens when endturn is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EndTurn_MouseClick(object sender, MouseEventArgs e)
         {
             if (gs is BattleGameState bs)
@@ -1556,7 +1577,9 @@ namespace FirstSemesterExamProject
             }
         }
 
-        //Toggles startonlinegame button (Shows it to host when all players are ready)
+        /// <summary>
+        /// Toggles startonlinegame button (Shows it to host when all players are ready)
+        /// </summary>
         public void ToggleStartOnlineGameButton()
         {
             if (allPlayersReady)
@@ -1571,8 +1594,6 @@ namespace FirstSemesterExamProject
             }
         }
 
-
-
         /// <summary> 
         /// Returns true if it's the player's turn 
         /// </summary> 
@@ -1585,5 +1606,6 @@ namespace FirstSemesterExamProject
             }
             return false;
         }
+        #endregion
     }
 }
