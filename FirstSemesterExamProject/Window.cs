@@ -1488,6 +1488,7 @@ namespace FirstSemesterExamProject
                         message = message + "," + onlineUnitStack.Pop().ToString();
                     }
 
+                    Server.Instance.SaveTeamComposition(message);
                     // UnitStack;TeamColor,unit1,unit2,unit3 ect
                     Server.Instance.WriteServerMessage(message);
 
