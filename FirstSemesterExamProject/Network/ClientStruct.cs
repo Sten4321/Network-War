@@ -18,6 +18,7 @@ namespace FirstSemesterExamProject
         //is client ready to start a game?
         public bool ready;
 
+        public bool isAlive = true;
 
         //What team are they on?
         public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
