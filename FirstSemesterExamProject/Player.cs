@@ -349,50 +349,53 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void Selected(int dx, int dy)
         {
-
-            Healing(dx, dy);
-            RangedAttack(dx, dy);
-            //test if the tile is in range and a tile to which you can move
-            if (InRange(dx, dy) && NotSolid(dx, dy))
+            if ((selectedUnit.Move > 0 && playerMove > 0 || (selectedUnit is Scout && selectedUnit.Move > 0))
+                || (Window.OnlineGame() && !(Window.OnlineIsMyTurn())))
             {
-                //tests if there is an enemy
-                if (GameBoard.UnitMap[dx, dy] is Unit unit && !(selectedUnit is IRanged))
+                Healing(dx, dy);
+                RangedAttack(dx, dy);
+                //test if the tile is in range and a tile to which you can move
+                if (InRange(dx, dy) && NotSolid(dx, dy))
                 {
-                    if (selectedUnit is Scout && playerMove > 0 || !(selectedUnit is Scout))
+                    //tests if there is an enemy
+                    if (GameBoard.UnitMap[dx, dy] is Unit unit && !(selectedUnit is IRanged))
                     {
-                        //moves to melee range and attacks if the unit on the tile is an enemy
-                        if ((unit.Team != selectedUnit.Team)
-                        && ((selectedUnitX < dx - 1) || (selectedUnitX > dx + 1)
-                        || (selectedUnitY < dy - 1) || (selectedUnitY > dy + 1)))
+                        if (selectedUnit is Scout && playerMove > 0 || !(selectedUnit is Scout))
                         {
-                            AttackMove(unit, dx, dy);
+                            //moves to melee range and attacks if the unit on the tile is an enemy
+                            if ((unit.Team != selectedUnit.Team)
+                            && ((selectedUnitX < dx - 1) || (selectedUnitX > dx + 1)
+                            || (selectedUnitY < dy - 1) || (selectedUnitY > dy + 1)))
+                            {
+                                AttackMove(unit, dx, dy);
 
-                            SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
-                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVE ATTACKED > " + unit.ToString());
+                                SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
+                                System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVE ATTACKED > " + unit.ToString());
 
-                        }
-                        //attacks from melee range if the unit on the tile is an enemy
-                        else if ((unit.Team != selectedUnit.Team)
-                            && ((selectedUnitX < dx)
-                            || (selectedUnitX > dx)
-                            || (selectedUnitY < dy)
-                            || (selectedUnitY > dy)))
-                        {
+                            }
+                            //attacks from melee range if the unit on the tile is an enemy
+                            else if ((unit.Team != selectedUnit.Team)
+                                && ((selectedUnitX < dx)
+                                || (selectedUnitX > dx)
+                                || (selectedUnitY < dy)
+                                || (selectedUnitY > dy)))
+                            {
 
-                            selectedUnit.Attack(unit);
-                            playerMove--;
+                                selectedUnit.Attack(unit);
+                                playerMove--;
 
-                            SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
-                            System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE ATTACKED > " + unit.ToString());
+                                SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
+                                System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE ATTACKED > " + unit.ToString());
+                            }
                         }
                     }
-                }
-                //moves to empty tile
-                else if (GameBoard.UnitMap[dx, dy] == null)
-                {
-                    MoveHere(dx, dy);
-                    System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED FROM " + dx + "," + dy + " TO " + dx + "," + dy);
-                    SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
+                    //moves to empty tile
+                    else if (GameBoard.UnitMap[dx, dy] == null)
+                    {
+                        MoveHere(dx, dy);
+                        System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED FROM " + dx + "," + dy + " TO " + dx + "," + dy);
+                        SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
+                    }
                 }
             }
             //deselects unit
