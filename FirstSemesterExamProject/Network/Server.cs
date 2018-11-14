@@ -327,24 +327,35 @@ namespace FirstSemesterExamProject
             return false;
         }
 
+        /// <summary>
+        /// When a client dies, it sends a death message
+        /// </summary>
+        /// <param name="data"></param>
         private void DeathMessageHandler(Data data)
         {
-            string playerNum = data.information.Split(';')[1];
 
+            //PlayerDead;[PLAYER NUM]
+            string playerNum = data.information.Split(';')[1]; // TODO: use for telling clients who's dead? if needed...
+
+            //Finds the sender of the message
             foreach (ClientObject client in clientObjects)
             {
                 if (data.clientStruct == client)
                 {
+                    //he won't be walking for a long time >:~)
                     client.isAlive = false;
                 }
             }
+
+            //checks if there's only one player left
             CheckIfGameOver();
         }
 
         public void CheckIfGameOver()
         {
-            byte playersAlive = 0;
 
+            //How many is alive?
+            byte playersAlive = 0;
             if (BattleGameState.isAlive)
             {
                 playersAlive++;
@@ -357,6 +368,7 @@ namespace FirstSemesterExamProject
                 }
             }
 
+            //if there's only one player left, the game is over
             if (playersAlive == 1)
             {
 
@@ -364,16 +376,16 @@ namespace FirstSemesterExamProject
 
                 if (BattleGameState.isAlive)
                 {
-
+                    //host won
                     winner = PlayerTeam.RedTeam;
 
-                    // TODO: Play victory scren 
                 }
 
                 foreach (ClientObject client in clientObjects)
                 {
                     if (client.isAlive)
                     {
+                        //this client one
                         winner = client.Team;
                     }
                 }
@@ -383,14 +395,26 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary>
+        /// Sends the winning team to clients and starts the end screen for host
+        /// </summary>
+        /// <param name="team"></param>
         private void AnnounceWinner(PlayerTeam? team)
         {
             if (team != null)
             {
-                WriteServerMessage("Winner;" +team.ToString());
+                //Tells all clients Team name of the winner
 
+                WriteServerMessage("Winner;" + team.ToString());
+
+
+                //Clients does the same thing when receiving this message  through the data converter
                 BattleGameState.winnerTeam = (PlayerTeam)team;
                 BattleGameState.gameOver = true;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Error in announcing winner");
             }
 
         }
@@ -404,13 +428,13 @@ namespace FirstSemesterExamProject
                 if (_client.tcpClient == data.clientStruct.tcpClient)
                 {
                     _client.SetReady();
-                    System.Diagnostics.Debug.WriteLine(_client.Team + " is ready?: " + _client.ready);
+                    System.Diagnostics.Debug.WriteLine(_client.Team + " is ready!");
                 }
             }
             CheckIfCanStart();
 
-
         }
+
         private bool AllIsReady()
         {
             int readyCount = 0;
@@ -446,19 +470,21 @@ namespace FirstSemesterExamProject
             }
         }
 
-        public void SendMapInfo()
-        {
-            Random rnd = new Random();
-            mapNum = (byte)rnd.Next(1, 7 + 1);
-
-            WriteServerMessage("Map;" + mapNum.ToString());
-
+        /// <summary>
+        /// Tells all client what map to choose, and how many players there are going to be
+        /// </summary>
+        /// <param name="mapNum"></param>
+        public void SendMapInfo(int mapNum)
+        {            
+            WriteServerMessage("Map;" + mapNum + "," + (clientObjects.Count + 1)); //+1 for self
+            
         }
 
-
+        /// <summary>
+        /// Tells clients to start their games
+        /// </summary>
         public void StartGame()
         {
-            //informs clients of the amount of total players
             BattleGameState.yourTeamOnline = PlayerTeam.RedTeam;
 
             WriteServerMessage("Start;");
@@ -495,6 +521,7 @@ namespace FirstSemesterExamProject
             }
 
         }
+
         public void WriteServerMessage(string message)
         {
             lock (clientsListKey)

@@ -178,16 +178,13 @@ namespace FirstSemesterExamProject
             }
         }
 
-        /// <summary>
-        /// Starts the game for the client
-        /// </summary>
         private void StartClientOnlineGame()
         {
             if (clientShouldStart)
             {
 
                 if (Client.Instance.clientConnected)
-                {
+                {                                       
                     HideUiForOnlineGame();
 
                     SoundEngine.StopSound();
@@ -671,7 +668,9 @@ namespace FirstSemesterExamProject
         {
             if (OnlineGame())
             {
-                onlineUnitStack = null;
+                onlineUnitStack.Clear();
+                PointUsing();
+
 
             }
             if (Server.Instance.isOnline)
