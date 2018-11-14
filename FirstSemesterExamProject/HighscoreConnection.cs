@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FirstSemesterExamProject
 {
@@ -62,7 +65,24 @@ namespace FirstSemesterExamProject
                 var serialize = JsonConvert.SerializeObject(myParameters);
                 string response = client.UploadString(serverUrl, serialize);
                 var result = JsonConvert.DeserializeObject(response);
+                JObject obje = new JObject();
             }
+        }
+
+        public void SetTest()
+        {
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(serverUrl);
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Accept = "application/json; charset=utf-8";
+            string sContentType = "application/json";
+
+            JObject oJsonObject = new JObject();
+
+            oJsonObject.Add("ReferenceId", "a123");
+
+            HttpClient oHttpClient = new HttpClient();
+            var oTaskPostAsync = oHttpClient.PostAsync(serverUrl, new StringContent(oJsonObject.ToString(), Encoding.UTF8, sContentType));
         }
     }
 }
