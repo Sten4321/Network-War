@@ -60,13 +60,7 @@ namespace FirstSemesterExamProject
             players = new List<Player>();
             playersUnitCount = new List<int>();
 
-            if (Client.Instance.clientConnected)
-            {
-                // TODO: implement code for gameBord: -> look at client
-
-
-            }
-            else
+            if (!Client.Instance.clientConnected)
             {
                 gameBoard = new GameBoard(playerNumber);
             }
@@ -79,7 +73,7 @@ namespace FirstSemesterExamProject
         {
             if (Client.Instance.clientConnected)
             {
-                players.Add(new Player((PlayerTeam)Client.Instance.Team, Window.playerAmount)); // TODO: make sure client knows how many players
+                players.Add(new Player((PlayerTeam)Client.Instance.Team, Window.playerAmount));
             }
             else
             {
