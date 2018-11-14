@@ -21,6 +21,7 @@ namespace FirstSemesterExamProject
         //Collections
         public List<ClientObject> clientObjects = new List<ClientObject>(); //Client Structs contain the clients TcpClient and Team (could add ip ect.)
         private Queue<Data> receivedDataQueue = new Queue<Data>(); // Datas contains messages and the clients who sent them 
+        public string teamComposition;
 
         //Threading
         private readonly object clientsListKey = new object(); //Two keys for threads to make sure only one can get in at a time
@@ -55,6 +56,49 @@ namespace FirstSemesterExamProject
                     instance = new Server();
                     return instance;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Server remembers initial team compositions
+        /// </summary>
+        /// <param name="data"></param>
+        private void AddUnitStringToClient(Data data)
+        {
+            //UnitStack;Team,unit,unit,unit
+            string[] splitUnitStackString = data.information.Split(';');
+
+            //Team,unit,unit,unit
+
+            splitUnitStackString = splitUnitStackString[1].Split(',');
+
+            foreach (ClientObject client in clientObjects)
+            {
+                if (client == data.clientStruct)
+                {
+                    string teamComposition = "";
+
+                    for (int i = 1; i < splitUnitStackString.Length; i++)
+                    {
+                        if (i < splitUnitStackString.Length - 1)
+                        {
+                            //unit,
+                            teamComposition += splitUnitStackString[i] + ",";
+
+                        }
+                        else
+                        {
+                            //unit
+                            teamComposition += splitUnitStackString[i];
+
+                        }
+                    }
+                    client.unitTeamComposition = teamComposition;
+
+
+
+                }
+
             }
         }
 
@@ -323,6 +367,13 @@ namespace FirstSemesterExamProject
                 DeathMessageHandler(data);
                 return true;
             }
+            if (data.information.Contains("UnitStack;"))
+            {
+                if (Server.Instance.isOnline)
+                {
+                    Server.Instance.AddUnitStringToClient(data);
+                }
+            }
 
             return false;
         }
@@ -475,9 +526,9 @@ namespace FirstSemesterExamProject
         /// </summary>
         /// <param name="mapNum"></param>
         public void SendMapInfo(int mapNum)
-        {            
+        {
             WriteServerMessage("Map;" + mapNum + "," + (clientObjects.Count + 1)); //+1 for self
-            
+
         }
 
         /// <summary>
@@ -559,7 +610,57 @@ namespace FirstSemesterExamProject
             System.Diagnostics.Debug.WriteLine("Server has been shut down");
         }
 
+        internal void SaveTeamComposition(string message)
+        {
+            string[] splitUnitStackString = message.Split(';');
 
+            splitUnitStackString = splitUnitStackString[1].Split(',');
+
+            string teamComposition = "";
+
+            for (int i = 1; i < splitUnitStackString.Length; i++)
+            {
+                if (i < splitUnitStackString.Length - 1)
+                {
+                    teamComposition += splitUnitStackString[i] + ",";
+
+                }
+                else
+                {
+                    teamComposition += splitUnitStackString[i];
+
+                }
+
+
+            }
+            teamComposition = message;
+        }
+
+        public void WriteWinnerTeamCompositionToDatabase(PlayerTeam team)
+        {
+
+            string message = "";
+
+            if (team == PlayerTeam.RedTeam)
+            {
+                //Team comp = server's comp - server won.
+                message = teamComposition;
+            }
+            else
+            {
+                foreach (ClientObject client in clientObjects)
+                {
+                    if (team == client.Team)
+                    {
+                        message = client.unitTeamComposition;
+                    }
+                }
+
+            }
+
+            HighscoreConnection._Instance.SetAllEventData(message);
+
+        }
     }
 }
 
