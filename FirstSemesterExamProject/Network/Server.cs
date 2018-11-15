@@ -348,7 +348,7 @@ namespace FirstSemesterExamProject
                 {
                     if (GameBoard.UnitMap[X, Y] is Unit unit && unit.Team == team)
                     {
-                        GameBoard.RemoveObject[X,Y] = unit;
+                        GameBoard.RemoveObject[X, Y] = unit;
                     }
                 }
             }
@@ -736,7 +736,7 @@ namespace FirstSemesterExamProject
         public int NextAvailablePlayerNum(int currentNum)
         {
 
-
+            //next player's id
             int nextPlayerNum = currentNum + 1;
 
             if (nextPlayerNum > clientObjects.Count + 1)
@@ -746,10 +746,12 @@ namespace FirstSemesterExamProject
 
             PlayerTeam _nextTeam = (PlayerTeam)nextPlayerNum;
 
-            while (true)
+
+            while (true) //Exit's when a new team is found
             {
                 if (_nextTeam == PlayerTeam.RedTeam)
                 {
+                    //is next team host?
                     if (BattleGameState.isAlive)
                     {
                         return (int)PlayerTeam.RedTeam;
@@ -759,6 +761,7 @@ namespace FirstSemesterExamProject
                 }
                 else
                 {
+                    //is it a client?
                     foreach (ClientObject client in clientObjects)
                     {
 
@@ -766,11 +769,14 @@ namespace FirstSemesterExamProject
                         {
                             if (client.isAlive)
                             {
+                                //it's this client
                                 return (int)client.Team;
                             }
                         }
                     }
                 }
+
+                //if that team isn't alive, let's try the next team
                 nextPlayerNum++;
                 if (nextPlayerNum > clientObjects.Count + 1)
                 {
@@ -778,17 +784,7 @@ namespace FirstSemesterExamProject
                 }
                 _nextTeam = (PlayerTeam)nextPlayerNum;
             }
-
-
-
-
         }
-
-        private void SetHostTurn()
-        {
-
-        }
-
     }
 }
 

@@ -60,15 +60,15 @@ namespace FirstSemesterExamProject
                         Client.Instance.Start();
                         break;
 
-                    //When a player ends their turn, they send the next player's index here. Then it's their turn
+                        //A message sent from the server, calculating who the next player to move will be
                     case "EndTurn":
                         ChangePlayerTurn(Convert.ToInt32(information));
                         break;
 
-                    case "Winner":
+                    case "Winner": //Winner;RedTeam
                         PlayTeamVictoryScreen(information);
                         break;
-                    case "RemoveAll":
+                    case "RemoveAll": //"RemoveAll;RedTeam"
                         Enum.TryParse(information, out PlayerTeam _team);
                         Client.Instance.RemoveAllFromTeam(_team);
                         break;
