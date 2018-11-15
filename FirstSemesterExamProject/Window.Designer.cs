@@ -63,6 +63,7 @@ namespace FirstSemesterExamProject
             this.HostIPAdress = new System.Windows.Forms.Label();
             this.StartOnlineGame = new System.Windows.Forms.Button();
             this.ReadyCheck = new System.Windows.Forms.Button();
+            this.HighScoreBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // Tick
@@ -484,6 +485,17 @@ namespace FirstSemesterExamProject
             this.ReadyCheck.Visible = false;
             this.ReadyCheck.Click += new System.EventHandler(this.ReadyCheck_Click);
             // 
+            // HighScoreBox
+            // 
+            this.HighScoreBox.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.HighScoreBox.DetectUrls = false;
+            this.HighScoreBox.Font = new System.Drawing.Font("Lucida Handwriting", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HighScoreBox.Location = new System.Drawing.Point(-1, 385);
+            this.HighScoreBox.Name = "HighScoreBox";
+            this.HighScoreBox.Size = new System.Drawing.Size(529, 252);
+            this.HighScoreBox.TabIndex = 47;
+            this.HighScoreBox.Text = "";
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -517,6 +529,7 @@ namespace FirstSemesterExamProject
             this.Controls.Add(this.TwoPlayer);
             this.Controls.Add(this.Start);
             this.Controls.Add(this.EndTurn);
+            this.Controls.Add(this.HighScoreBox);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -566,5 +579,6 @@ namespace FirstSemesterExamProject
         private System.Windows.Forms.Label HostIPAdress;
         private System.Windows.Forms.Button StartOnlineGame;
         private System.Windows.Forms.Button ReadyCheck;
+        private System.Windows.Forms.RichTextBox HighScoreBox;
     }
 }
