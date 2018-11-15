@@ -318,7 +318,11 @@ namespace FirstSemesterExamProject
                     System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
                     lock (clientsListKey)
                     {
-                        clientObjects.Remove(_clientStruct);
+                        //clientObjects.Remove(_clientStruct);
+
+                        _clientStruct.isAlive = false;
+
+                        RemoveAllUnitsFromClient(_clientStruct.Team);
                     }
                     Thread.CurrentThread.Abort();
                 }
@@ -332,6 +336,15 @@ namespace FirstSemesterExamProject
             }
         }
 
+        private void RemoveAllUnitsFromClient(PlayerTeam? team)
+        {
+
+            // TODO: remove all units from that team
+
+
+            WriteServerMessage("RemoveAll;" + team.ToString());
+        }
+
         /// <summary>
         /// handles the received data and its client. 
         /// </summary>
@@ -343,7 +356,10 @@ namespace FirstSemesterExamProject
 
             lock (receivedDataKey)
             {
-                receivedDataQueue.Enqueue(data);
+                if (MessageDirectlyToServer(data) == false)
+                {
+                    receivedDataQueue.Enqueue(data);
+                }
             }
 
             //Applies data to own game - if it's not a message to the server (Ready, EndTurn ect)
@@ -373,6 +389,13 @@ namespace FirstSemesterExamProject
                 {
                     Server.Instance.AddUnitStringToClient(data);
                 }
+            }
+            if (data.information.Contains("EndTurn;"))
+            {
+
+                ManageTurnChange(data);
+                return true;
+
             }
 
             return false;
@@ -662,7 +685,95 @@ namespace FirstSemesterExamProject
 
         }
 
-        
+        public void ManageTurnChange(Data data)
+        {
+
+
+            int playerTurn = Convert.ToInt32(data.information.Split(';')[1]);
+
+            playerTurn = NextAvailablePlayerNum(playerTurn);
+
+
+            if (Server.Instance.isOnline && playerTurn == 0)
+            {
+                if (BattleGameState.isAlive)
+                {
+
+                    Server.Instance.turn = true;
+                    System.Diagnostics.Debug.WriteLine("It's your turn!");
+                    Server.Instance.WriteServerMessage("EndTurn;" + 0);
+                    //    DataConverter.ChangePlayerTurnText(0);
+                }
+                else
+                {
+                    Server.Instance.WriteServerMessage("EndTurn;" + NextAvailablePlayerNum(0));
+                    DataConverter.ChangePlayerTurnText(playerTurn);
+
+                    return;
+                }
+            }
+            Server.Instance.WriteServerMessage("EndTurn;" + playerTurn);
+
+            DataConverter.ChangePlayerTurnText(playerTurn);
+
+        }
+
+        public int NextAvailablePlayerNum(int currentNum)
+        {
+
+
+            int nextPlayerNum = currentNum + 1;
+
+            if (nextPlayerNum > clientObjects.Count + 1)
+            {
+                nextPlayerNum = 0;
+            }
+
+            PlayerTeam _nextTeam = (PlayerTeam)nextPlayerNum;
+
+            while (true)
+            {
+                if (_nextTeam == PlayerTeam.RedTeam)
+                {
+                    if (BattleGameState.isAlive)
+                    {
+                        return (int)PlayerTeam.RedTeam;
+
+                    }
+
+                }
+                else
+                {
+                    foreach (ClientObject client in clientObjects)
+                    {
+
+                        if (client.Team == _nextTeam)
+                        {
+                            if (client.isAlive)
+                            {
+                                return (int)client.Team;
+                            }
+                        }
+                    }
+                }
+                nextPlayerNum++;
+                if (nextPlayerNum > clientObjects.Count + 1)
+                {
+                    nextPlayerNum = 0;
+                }
+                _nextTeam = (PlayerTeam)nextPlayerNum;
+            }
+
+
+
+
+        }
+
+        private void SetHostTurn()
+        {
+
+        }
+
     }
 }
 

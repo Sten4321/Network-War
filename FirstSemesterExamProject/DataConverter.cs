@@ -42,7 +42,7 @@ namespace FirstSemesterExamProject
                     //For adding other player's teams to your own game
                     case "UnitStack":
                         AddUnitsToTeamStack(splitStrings);
-                        
+
                         break;
 
                     //For determining what map clients are going to pick - also how many players
@@ -62,7 +62,7 @@ namespace FirstSemesterExamProject
 
                     //When a player ends their turn, they send the next player's index here. Then it's their turn
                     case "EndTurn":
-                        ChangePlayerTurn(information);
+                        ChangePlayerTurn(Convert.ToInt32(information));
                         break;
 
                     case "Winner":
@@ -91,52 +91,27 @@ namespace FirstSemesterExamProject
         /// Tells the local client / server if it's their turn
         /// </summary>
         /// <param name="information"></param>
-        private static void ChangePlayerTurn(string information)
+        private static void ChangePlayerTurn(int? _playerTurn)
         {
-            int playerTurn = Convert.ToInt32(information);// 0,1,2,3
-
+            if (_playerTurn != null)
+            {
+                if (Client.Instance.clientConnected && _playerTurn == Client.Instance.PlayerNumber)
+                {
+                    if (BattleGameState.isAlive)
+                    {
+                        Client.Instance.turn = true;
+                        System.Diagnostics.Debug.WriteLine("It's your turn!");
+                    }
+                    else
+                    {
+                        Client.Instance.SendToHost("EndTurn;" + _playerTurn);
+                    }
+                }
+            }
             //Resets player's moves
             Player.playerMove = Player.playerMaxMove;
-
-
-            //If host
-            if (Server.Instance.isOnline && playerTurn == 0)
-            {
-                if (BattleGameState.isAlive)
-                {
-                    Server.Instance.turn = true;
-                    System.Diagnostics.Debug.WriteLine("It's your turn!");
-                }
-                else
-                {
-                    Server.Instance.WriteServerMessage("EndTurn;1");
-
-                }
-
-            }
-            //If a client, and the playerturn number fits your Id it's your turn
-            else if (Client.Instance.clientConnected && playerTurn == Client.Instance.PlayerNumber)
-            {
-                if (BattleGameState.isAlive)
-                {
-                    Client.Instance.turn = true;
-                    System.Diagnostics.Debug.WriteLine("It's your turn!");
-                }
-                else
-                {
-                    playerTurn++;
-
-                    if (playerTurn > Window.playerAmount - 1 || playerTurn < 0)
-                    {
-                        playerTurn = 0;
-                    }
-
-                    Client.Instance.SendToHost("EndTurn;" + playerTurn);
-                }
-            }
-
             //Changes the text displaying whose turn it is
-            ChangePlayerTurnText(playerTurn);
+            ChangePlayerTurnText(_playerTurn);
 
         }
 
@@ -147,7 +122,7 @@ namespace FirstSemesterExamProject
         /// <param name="unitStrings"></param>
         public static void AddUnitsToTeamStack(string[] unitStrings)
         {
-            
+
 
             Stack<Enum> tmpStack = new Stack<Enum>();
 
@@ -254,8 +229,12 @@ namespace FirstSemesterExamProject
         /// Changes the text and color of whose turn it is in multiplayer mode
         /// </summary>
         /// <param name="playerTurnIndex"></param>
-        public static void ChangePlayerTurnText(int playerTurnIndex)
+        public static void ChangePlayerTurnText(int? playerTurnIndex)
         {
+            if (playerTurnIndex == null)
+            {
+                return;
+            }
             //for drawing teamturn
             PlayerTeam team = (PlayerTeam)playerTurnIndex;
             BattleGameState.playerTurnString = team.ToString();
@@ -288,3 +267,4 @@ namespace FirstSemesterExamProject
         }
     }
 }
+
