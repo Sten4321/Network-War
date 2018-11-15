@@ -10,8 +10,6 @@ namespace FirstSemesterExamProject
 {
     public partial class Window : Form
     {
-
-
         private Graphics dc;
         private static GameState gs;
         //Time Keeping
@@ -99,6 +97,7 @@ namespace FirstSemesterExamProject
             // SoundEngine.PlayMenuBackgroundMusic();
             this.DoubleBuffered = true;
             HighscoreConnection._Instance.SetAllEventData("Tester 20");
+            ShowHighscore();
         }
 
         /// <summary>
@@ -119,7 +118,6 @@ namespace FirstSemesterExamProject
 
             //calls my Render function
             Render();
-
         }
 
         /// <summary>
@@ -483,6 +481,7 @@ namespace FirstSemesterExamProject
             Online.Visible = false;
             EnterIP.Visible = false;
             EndTurn.Visible = true;
+            HighScoreBox.Hide();
 
             StartOnlineGame.Visible = false;
             ReadyCheck.Visible = false;
@@ -626,6 +625,7 @@ namespace FirstSemesterExamProject
             Online.Visible = false;
             EnterIP.Visible = false;
             EndTurn.Visible = true;
+            HighScoreBox.Hide();
         }
 
         /// <summary>
@@ -1609,5 +1609,20 @@ namespace FirstSemesterExamProject
             return false;
         }
         #endregion
+
+        public void ShowHighscore()
+        {
+            HighScoreBox.ReadOnly = true;
+            foreach (string s in HighscoreConnection._Instance.GetAllEventData())
+            {
+                HighScoreBox.AppendText(s + Environment.NewLine);
+            }
+
+
+            if (HighScoreBox.Text == "")
+            {
+                HighScoreBox.Hide();
+            }
+        }
     }
 }
