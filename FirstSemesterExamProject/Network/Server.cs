@@ -318,11 +318,14 @@ namespace FirstSemesterExamProject
                     System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
                     lock (clientsListKey)
                     {
-                        //clientObjects.Remove(_clientStruct);
+                        clientObjects.Remove(_clientStruct);
 
                         _clientStruct.isAlive = false;
 
                         RemoveAllUnitsFromClient(_clientStruct.Team);
+
+                        clientObjects.Remove(_clientStruct);
+
                     }
                     Thread.CurrentThread.Abort();
                 }
@@ -339,9 +342,18 @@ namespace FirstSemesterExamProject
         private void RemoveAllUnitsFromClient(PlayerTeam? team)
         {
 
-            // TODO: remove all units from that team
+            for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)
+            {
+                for (int Y = 0; Y < GameBoard.UnitMap.GetLength(1); Y++)
+                {
+                    if (GameBoard.UnitMap[X, Y] is Unit unit && unit.Team == team)
+                    {
+                        GameBoard.RemoveObject[X,Y] = unit;
+                    }
+                }
+            }
 
-
+            CheckIfGameOver();
             WriteServerMessage("RemoveAll;" + team.ToString());
         }
 
@@ -602,17 +614,20 @@ namespace FirstSemesterExamProject
             {
                 for (int i = 0; i < clientObjects.Count; i++)
                 {
+                    if (clientObjects[i].tcpClient.Connected)
+                    {
 
-                    //Writes to the specefic client
-                    StreamWriter sWriter = new StreamWriter(clientObjects[i].tcpClient.GetStream(), Encoding.ASCII);
+                        //Writes to the specefic client
+                        StreamWriter sWriter = new StreamWriter(clientObjects[i].tcpClient.GetStream(), Encoding.ASCII);
 
 
-                    //sends data
-                    sWriter.WriteLine(message);
+                        //sends data
+                        sWriter.WriteLine(message);
 
-                    //Clears buffer
-                    sWriter.Flush();
+                        //Clears buffer
+                        sWriter.Flush();
 
+                    }
                 }
                 System.Diagnostics.Debug.WriteLine("ServerMessage Sent: " + message);
 

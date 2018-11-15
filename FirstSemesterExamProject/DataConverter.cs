@@ -68,6 +68,10 @@ namespace FirstSemesterExamProject
                     case "Winner":
                         PlayTeamVictoryScreen(information);
                         break;
+                    case "RemoveAll":
+                        Enum.TryParse(information, out PlayerTeam _team);
+                        Client.Instance.RemoveAllFromTeam(_team);
+                        break;
 
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
@@ -265,6 +269,8 @@ namespace FirstSemesterExamProject
 
             }
         }
+
+        
     }
 }
 
