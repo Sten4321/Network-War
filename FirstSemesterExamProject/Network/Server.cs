@@ -639,7 +639,7 @@ namespace FirstSemesterExamProject
         public void WriteWinnerTeamCompositionToDatabase(PlayerTeam team)
         {
 
-            string message = "";
+            string message = "Morten was here! Test!";
 
             if (team == PlayerTeam.RedTeam)
             {
