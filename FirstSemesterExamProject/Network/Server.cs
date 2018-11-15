@@ -616,30 +616,30 @@ namespace FirstSemesterExamProject
 
             splitUnitStackString = splitUnitStackString[1].Split(',');
 
-            string teamComposition = "";
+            string tmp = "";
 
             for (int i = 1; i < splitUnitStackString.Length; i++)
             {
                 if (i < splitUnitStackString.Length - 1)
                 {
-                    teamComposition += splitUnitStackString[i] + ",";
+                    tmp += splitUnitStackString[i] + ",";
 
                 }
                 else
                 {
-                    teamComposition += splitUnitStackString[i];
+                    tmp += splitUnitStackString[i];
 
                 }
 
 
             }
-            teamComposition = message;
+            teamComposition = tmp;
         }
 
         public void WriteWinnerTeamCompositionToDatabase(PlayerTeam team)
         {
 
-            string message = "";
+            string message = "Morten was here! Test!";
 
             if (team == PlayerTeam.RedTeam)
             {
@@ -661,6 +661,8 @@ namespace FirstSemesterExamProject
             HighscoreConnection._Instance.SetAllEventData(message);
 
         }
+
+        
     }
 }
 

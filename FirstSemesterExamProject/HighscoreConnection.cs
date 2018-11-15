@@ -41,16 +41,22 @@ namespace FirstSemesterExamProject
         //</summary>
         public List<string> GetAllEventData() //Get All Events Records  
         {
-            resultList = new List<string>();
-            using (var client = new System.Net.WebClient()) //WebClient  
+            try
             {
-                client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json"; //Content-Type  
-                var result = client.DownloadString(serverUrl);
-                foreach (string s in result.Split(','))
+                resultList = new List<string>();
+                using (var client = new System.Net.WebClient()) //WebClient  
                 {
-                    resultList.Add(s);
+                    client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json"; //Content-Type  
+                    var result = client.DownloadString(serverUrl);
+                    foreach (string s in result.Split(','))
+                    {
+                        resultList.Add(s);
+                    }
                 }
+                
             }
+            catch (Exception e){ Console.WriteLine("No connection to the database, the highscore wont be shown!"); }
+
             return resultList;
         }
 
@@ -59,14 +65,18 @@ namespace FirstSemesterExamProject
         //</summary>
         public void SetAllEventData(string myParameters) //Get All Events Records  
         {
-            using (var client = new System.Net.WebClient()) //WebClient  
+            try
             {
-                client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json";
-                var serialize = JsonConvert.SerializeObject(myParameters);
-                string response = client.UploadString(serverUrl, serialize);
-                var result = JsonConvert.DeserializeObject(response);
-                JObject obje = new JObject();
+                using (var client = new System.Net.WebClient()) //WebClient  
+                {
+                    client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json";
+                    var serialize = JsonConvert.SerializeObject(myParameters);
+                    string response = client.UploadString(serverUrl, serialize);
+                    var result = JsonConvert.DeserializeObject(response);
+                }
             }
+            catch (Exception e){ Console.WriteLine("No database is connected!");}
+            
         }
 
         public void SetTest()
