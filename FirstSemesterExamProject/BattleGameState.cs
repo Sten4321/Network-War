@@ -284,7 +284,7 @@ namespace FirstSemesterExamProject
         /// <summary>
         /// Reset the max moves of all units
         /// </summary>
-        private void ResetUnitMoves()
+        public void ResetUnitMoves()
         {
             //goes through each unit and checks their type:
             for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)

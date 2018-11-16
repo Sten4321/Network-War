@@ -60,7 +60,7 @@ namespace FirstSemesterExamProject
                         Client.Instance.Start();
                         break;
 
-                        //A message sent from the server, calculating who the next player to move will be
+                    //A message sent from the server, calculating who the next player to move will be
                     case "EndTurn":
                         ChangePlayerTurn(Convert.ToInt32(information));
                         break;
@@ -103,8 +103,13 @@ namespace FirstSemesterExamProject
                 {
                     if (BattleGameState.isAlive)
                     {
+                        if (Window.GameState is BattleGameState bs)
+                        {
+                            bs.ResetUnitMoves();
+                        }
                         Client.Instance.turn = true;
                         System.Diagnostics.Debug.WriteLine("It's your turn!");
+
                     }
                     else
                     {
@@ -270,7 +275,7 @@ namespace FirstSemesterExamProject
             }
         }
 
-        
+
     }
 }
 
