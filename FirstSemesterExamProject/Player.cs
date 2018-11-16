@@ -552,7 +552,7 @@ namespace FirstSemesterExamProject
                 && !(GameBoard.UnitMap[(int)unit.Coordinates.X + 1, (int)unit.Coordinates.Y] != null))
             {
                 //moves unit to new coordinates
-                selectedUnit.Coordinates = new PointF(x + 1, coordinates.Y);
+                selectedUnit.Coordinates = new PointF(x + 1, y);
                 selectedUnit.Move -= (Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY) - 1);
                 //a units move must not be less than 0
                 if (selectedUnit.Move < 0)
