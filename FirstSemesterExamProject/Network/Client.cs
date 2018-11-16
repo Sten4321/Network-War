@@ -14,7 +14,7 @@ namespace FirstSemesterExamProject
         TcpClient client;
         public static readonly object key = new object();
         int sleepDelay = 17;
-        public int port = 13000;//The port to connect to
+        public int port = 13001;//The port to connect to
         StreamWriter sWriter;
         StreamReader sReader;
         private bool validIp = false;

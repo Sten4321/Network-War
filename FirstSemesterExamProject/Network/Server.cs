@@ -13,7 +13,7 @@ namespace FirstSemesterExamProject
     {
         //Server Settings / info
         public string serverIp;
-        public int port = 13000;
+        public int port = 13001;
         public bool isOnline = false;
         private readonly byte clientsMaxAmount = 3;
         private static TcpListener tcpListener;

@@ -381,8 +381,16 @@ namespace FirstSemesterExamProject
                                 || (selectedUnitY > dy)))
                             {
 
-                                selectedUnit.Attack(unit);
-                                playerMove--;
+                                if (!(selectedUnit is Scout))
+                                {
+                                    selectedUnit.Attack(unit);
+                                    playerMove--;
+                                }
+                                else if (((Scout)selectedUnit).CanAttack)
+                                {
+                                    selectedUnit.Attack(unit);
+                                    playerMove--;
+                                }
 
                                 SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
                                 System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE ATTACKED > " + unit.ToString());
