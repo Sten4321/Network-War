@@ -729,6 +729,9 @@ namespace FirstSemesterExamProject
             }
             Server.Instance.WriteServerMessage("EndTurn;" + playerTurn);
 
+            Player.playerMove = Player.playerMaxMove;
+
+
             DataConverter.ChangePlayerTurnText(playerTurn);
 
         }
