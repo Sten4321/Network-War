@@ -55,7 +55,7 @@ namespace FirstSemesterExamProject
                 }
                 
             }
-            catch (Exception e){ Console.WriteLine("No connection to the database, the highscore wont be shown!"); }
+            catch (Exception){ Console.WriteLine("No connection to the database, the highscore wont be shown!"); }
 
             return resultList;
         }
@@ -75,7 +75,7 @@ namespace FirstSemesterExamProject
                     var result = JsonConvert.DeserializeObject(response);
                 }
             }
-            catch (Exception e){ Console.WriteLine("No database is connected!");}
+            catch (Exception){ Console.WriteLine("No database is connected!");}
             
         }
 
