@@ -69,31 +69,35 @@ namespace FirstSemesterExamProject
             string[] splitUnitStackString = data.information.Split(';');
 
             //Team,unit,unit,unit
-
             splitUnitStackString = splitUnitStackString[1].Split(',');
 
             foreach (ClientObject client in clientObjects)
             {
+                //if it's the sender of the unitStack message
                 if (client == data.clientStruct)
                 {
                     string teamComposition = "";
 
+                    //starts at 1, because we already know its team
                     for (int i = 1; i < splitUnitStackString.Length; i++)
                     {
+                        //for all units except the last one
                         if (i < splitUnitStackString.Length - 1)
                         {
                             //unit,
                             teamComposition += splitUnitStackString[i] + ",";
 
                         }
-                        else
+                        else //if it's the last one, don't write ','
                         {
                             //unit
                             teamComposition += splitUnitStackString[i];
 
                         }
                     }
-                    client.unitTeamComposition = teamComposition;
+
+                    //the team composition of this client (and its team)
+                    client.unitTeamComposition = teamComposition; 
 
 
 
@@ -648,8 +652,10 @@ namespace FirstSemesterExamProject
             System.Diagnostics.Debug.WriteLine("Server has been shut down");
         }
 
-        internal void SaveTeamComposition(string message)
+        public void SaveTeamComposition(string message)
         {
+            // see AddUnitStringToClient for an explenation of what's going on below :)
+
             string[] splitUnitStackString = message.Split(';');
 
             splitUnitStackString = splitUnitStackString[1].Split(',');
@@ -677,7 +683,7 @@ namespace FirstSemesterExamProject
         public void WriteWinnerTeamCompositionToDatabase(PlayerTeam team)
         {
 
-            string message = "Morten was here! Test!";
+            string message = "Morten McFart was here! Test!";
 
             if (team == PlayerTeam.RedTeam)
             {
@@ -702,7 +708,7 @@ namespace FirstSemesterExamProject
 
         public void ManageTurnChange(Data data)
         {
-
+         
 
             int playerTurn = Convert.ToInt32(data.information.Split(';')[1]);
 
@@ -713,6 +719,10 @@ namespace FirstSemesterExamProject
             {
                 if (BattleGameState.isAlive)
                 {
+                    if (Window.GameState is BattleGameState bs)
+                    {
+                        bs.ResetUnitMoves();
+                    }
 
                     Server.Instance.turn = true;
                     System.Diagnostics.Debug.WriteLine("It's your turn!");
@@ -729,6 +739,7 @@ namespace FirstSemesterExamProject
             }
             Server.Instance.WriteServerMessage("EndTurn;" + playerTurn);
 
+
             Player.playerMove = Player.playerMaxMove;
 
 
@@ -742,15 +753,17 @@ namespace FirstSemesterExamProject
             //next player's id
             int nextPlayerNum = currentNum + 1;
 
+            //If it exceeds the amount of players
             if (nextPlayerNum > clientObjects.Count + 1)
             {
                 nextPlayerNum = 0;
             }
 
+            //team enum based on the nextplayer id
             PlayerTeam _nextTeam = (PlayerTeam)nextPlayerNum;
 
-
-            while (true) //Exit's when a new team is found
+            //Exit's when a new team is found            
+            while (true) 
             {
                 if (_nextTeam == PlayerTeam.RedTeam)
                 {
@@ -783,10 +796,13 @@ namespace FirstSemesterExamProject
                 nextPlayerNum++;
                 if (nextPlayerNum > clientObjects.Count + 1)
                 {
+                    //resets if the number exceeds 
                     nextPlayerNum = 0;
                 }
                 _nextTeam = (PlayerTeam)nextPlayerNum;
+
             }
+          
         }
     }
 }
