@@ -401,7 +401,7 @@ namespace FirstSemesterExamProject
                     else if (GameBoard.UnitMap[dx, dy] == null)
                     {
                         MoveHere(dx, dy);
-                        System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED FROM " + dx + "," + dy + " TO " + dx + "," + dy);
+                        System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED FROM " + selectedUnitX + "," + selectedUnitY + " TO " + dx + "," + dy);
                         SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
                     }
                 }
