@@ -215,5 +215,19 @@ namespace FirstSemesterExamProject
 
 
         }
+        public void RemoveAllFromTeam(PlayerTeam team)
+        {
+            for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)
+            {
+                for (int Y = 0; Y < GameBoard.UnitMap.GetLength(1); Y++)
+                {
+                    if (GameBoard.UnitMap[X, Y] is Unit unit && unit.Team == team)
+                    {
+                        GameBoard.RemoveObject[X, Y] = unit;
+                    }
+                }
+            }
+        }
     }
+
 }

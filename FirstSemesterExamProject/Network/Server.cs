@@ -319,6 +319,13 @@ namespace FirstSemesterExamProject
                     lock (clientsListKey)
                     {
                         clientObjects.Remove(_clientStruct);
+
+                        _clientStruct.isAlive = false;
+
+                        RemoveAllUnitsFromClient(_clientStruct.Team);
+
+                        clientObjects.Remove(_clientStruct);
+
                     }
                     Thread.CurrentThread.Abort();
                 }
@@ -332,6 +339,24 @@ namespace FirstSemesterExamProject
             }
         }
 
+        private void RemoveAllUnitsFromClient(PlayerTeam? team)
+        {
+
+            for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)
+            {
+                for (int Y = 0; Y < GameBoard.UnitMap.GetLength(1); Y++)
+                {
+                    if (GameBoard.UnitMap[X, Y] is Unit unit && unit.Team == team)
+                    {
+                        GameBoard.RemoveObject[X, Y] = unit;
+                    }
+                }
+            }
+
+            CheckIfGameOver();
+            WriteServerMessage("RemoveAll;" + team.ToString());
+        }
+
         /// <summary>
         /// handles the received data and its client. 
         /// </summary>
@@ -343,7 +368,10 @@ namespace FirstSemesterExamProject
 
             lock (receivedDataKey)
             {
-                receivedDataQueue.Enqueue(data);
+                if (MessageDirectlyToServer(data) == false)
+                {
+                    receivedDataQueue.Enqueue(data);
+                }
             }
 
             //Applies data to own game - if it's not a message to the server (Ready, EndTurn ect)
@@ -373,6 +401,13 @@ namespace FirstSemesterExamProject
                 {
                     Server.Instance.AddUnitStringToClient(data);
                 }
+            }
+            if (data.information.Contains("EndTurn;"))
+            {
+
+                ManageTurnChange(data);
+                return true;
+
             }
 
             return false;
@@ -579,17 +614,20 @@ namespace FirstSemesterExamProject
             {
                 for (int i = 0; i < clientObjects.Count; i++)
                 {
+                    if (clientObjects[i].tcpClient.Connected)
+                    {
 
-                    //Writes to the specefic client
-                    StreamWriter sWriter = new StreamWriter(clientObjects[i].tcpClient.GetStream(), Encoding.ASCII);
+                        //Writes to the specefic client
+                        StreamWriter sWriter = new StreamWriter(clientObjects[i].tcpClient.GetStream(), Encoding.ASCII);
 
 
-                    //sends data
-                    sWriter.WriteLine(message);
+                        //sends data
+                        sWriter.WriteLine(message);
 
-                    //Clears buffer
-                    sWriter.Flush();
+                        //Clears buffer
+                        sWriter.Flush();
 
+                    }
                 }
                 System.Diagnostics.Debug.WriteLine("ServerMessage Sent: " + message);
 
@@ -662,7 +700,91 @@ namespace FirstSemesterExamProject
 
         }
 
-        
+        public void ManageTurnChange(Data data)
+        {
+
+
+            int playerTurn = Convert.ToInt32(data.information.Split(';')[1]);
+
+            playerTurn = NextAvailablePlayerNum(playerTurn);
+
+
+            if (Server.Instance.isOnline && playerTurn == 0)
+            {
+                if (BattleGameState.isAlive)
+                {
+
+                    Server.Instance.turn = true;
+                    System.Diagnostics.Debug.WriteLine("It's your turn!");
+                    Server.Instance.WriteServerMessage("EndTurn;" + 0);
+                    //    DataConverter.ChangePlayerTurnText(0);
+                }
+                else
+                {
+                    Server.Instance.WriteServerMessage("EndTurn;" + NextAvailablePlayerNum(0));
+                    DataConverter.ChangePlayerTurnText(playerTurn);
+
+                    return;
+                }
+            }
+            Server.Instance.WriteServerMessage("EndTurn;" + playerTurn);
+
+            DataConverter.ChangePlayerTurnText(playerTurn);
+
+        }
+
+        public int NextAvailablePlayerNum(int currentNum)
+        {
+
+            //next player's id
+            int nextPlayerNum = currentNum + 1;
+
+            if (nextPlayerNum > clientObjects.Count + 1)
+            {
+                nextPlayerNum = 0;
+            }
+
+            PlayerTeam _nextTeam = (PlayerTeam)nextPlayerNum;
+
+
+            while (true) //Exit's when a new team is found
+            {
+                if (_nextTeam == PlayerTeam.RedTeam)
+                {
+                    //is next team host?
+                    if (BattleGameState.isAlive)
+                    {
+                        return (int)PlayerTeam.RedTeam;
+
+                    }
+
+                }
+                else
+                {
+                    //is it a client?
+                    foreach (ClientObject client in clientObjects)
+                    {
+
+                        if (client.Team == _nextTeam)
+                        {
+                            if (client.isAlive)
+                            {
+                                //it's this client
+                                return (int)client.Team;
+                            }
+                        }
+                    }
+                }
+
+                //if that team isn't alive, let's try the next team
+                nextPlayerNum++;
+                if (nextPlayerNum > clientObjects.Count + 1)
+                {
+                    nextPlayerNum = 0;
+                }
+                _nextTeam = (PlayerTeam)nextPlayerNum;
+            }
+        }
     }
 }
 
