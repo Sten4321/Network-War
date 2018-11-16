@@ -238,11 +238,13 @@ namespace FirstSemesterExamProject
             //if player is server
             if (Server.Instance.turn && Server.Instance.isOnline)
             {
+                int nextPlayer = Server.Instance.NextAvailablePlayerNum(0);
+
                 //Write the index of the next player
-                Server.Instance.WriteServerMessage("EndTurn;" + 1);
+                Server.Instance.WriteServerMessage("EndTurn;" + nextPlayer);
 
                 //for drawing teamturn
-                DataConverter.ChangePlayerTurnText(1);
+                DataConverter.ChangePlayerTurnText(nextPlayer);
 
                 //Server cannot do any actions
                 Server.Instance.turn = false;
@@ -253,8 +255,6 @@ namespace FirstSemesterExamProject
                 players[0].PlayerMove = players[0].PlayerMaxMove;
                 //resets the moves of all units
                 ResetUnitMoves();
-
-
             }
         }
         private void ClientChangeTurn()
@@ -263,18 +263,13 @@ namespace FirstSemesterExamProject
             if (Client.Instance.turn)
             {
                 //Index of the next player
-                int nextPlayer = Client.Instance.PlayerNumber + 1;
+                int thisPlayerNum = Client.Instance.PlayerNumber;
+                                
 
-                //If it exceeds the amount of players = 0
-                if (nextPlayer > Window.playerAmount - 1 || nextPlayer < 0)
-                {
-                    nextPlayer = 0;
-                }
-
-                DataConverter.ChangePlayerTurnText(nextPlayer);
+                DataConverter.ChangePlayerTurnText(thisPlayerNum);
 
                 //Writes the index of the next player
-                Client.Instance.SendToHost("EndTurn;" + nextPlayer);
+                Client.Instance.SendToHost("EndTurn;" + thisPlayerNum);
 
                 //client cannot move
                 Client.Instance.turn = false;
