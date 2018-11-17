@@ -200,6 +200,7 @@ namespace FirstSemesterExamProject
                 if (Client.Instance.clientConnected)
                 {
                     HideUiForOnlineGame();
+                    HideLobbyList();
 
                     SoundEngine.StopSound();
                     SoundEngine.PlaySound(Constant.menuButtonSound);
@@ -454,6 +455,7 @@ namespace FirstSemesterExamProject
                 && ((yellowteam != null && yellowteam.Count > 0) || (yellowteam == null)))
             {
                 HideUiForOnlineGame();
+                HideLobbyList();
 
                 //Starts the game
                 gs = new BattleGameState(this, Server.Instance.clientObjects.Count + 1, dc);
@@ -653,6 +655,7 @@ namespace FirstSemesterExamProject
         {
 
             OnlineBackClick();
+            HideLobbyList();
 
             SoundEngine.PlaySound(Constant.menuBackSound);
 
@@ -1438,6 +1441,20 @@ namespace FirstSemesterExamProject
             LobbyPlayerListImage.Visible = true;
         }
 
+        private void HideLobbyList()
+        {
+            LobbyPlayerListImage.Visible = false;
+            RedTeamLobbyLabel.Visible = false;
+            RedCheckMark.Visible = false;
+            BlueTeamLobbyLabel.Visible = false;
+            BlueCheckMark.Visible = false;
+            GreenTeamLobbyLabel.Visible = false;
+            GreenCheckMark.Visible = false;
+            YellowTeamLobbyLabel.Visible = false;
+            YellowCheckMark.Visible = false;
+
+        }
+
         /// <summary>
         /// Make it possible to join a host through their IP-adress
         /// </summary>
@@ -1612,6 +1629,8 @@ namespace FirstSemesterExamProject
                     Server.Instance.WriteServerMessage(message);
 
                     Server.Instance.WriteServerMessage("Ready;RedTeam");
+
+                    DataConverter.UpdateLobbyListSetTeamReady(PlayerTeam.RedTeam);
 
                     //If all clients are ready it sends map details
                     Server.Instance.CheckIfCanStart();
