@@ -1382,12 +1382,19 @@ namespace FirstSemesterExamProject
             }
         }
 
-
+        /// <summary>
+        /// Updates the loby list 
+        /// </summary>
         private void RefreshLobbyList()
         {
 
             RedTeamLobbyLabel.Visible = true;
             RedTeamLobbyLabel.BringToFront();
+
+            if (IsMyTeam(PlayerTeam.RedTeam))
+            {
+                RedTeamLobbyLabel.ForeColor = Color.White;
+            }
 
             if (redTeamReady)
             {
@@ -1399,6 +1406,11 @@ namespace FirstSemesterExamProject
             {
                 BlueTeamLobbyLabel.Visible = true;
                 BlueTeamLobbyLabel.BringToFront();
+
+                if (IsMyTeam(PlayerTeam.BlueTeam))
+                {
+                    BlueTeamLobbyLabel.ForeColor = Color.White;
+                }
 
                 if (blueTeamReady)
                 {
@@ -1413,6 +1425,11 @@ namespace FirstSemesterExamProject
                 GreenTeamLobbyLabel.Visible = true;
                 GreenTeamLobbyLabel.BringToFront();
 
+                if (IsMyTeam(PlayerTeam.GreenTeam))
+                {
+                    GreenTeamLobbyLabel.ForeColor = Color.White;
+                }
+
                 if (greenTeamReady)
                 {
                     GreenCheckMark.Visible = true;
@@ -1425,6 +1442,11 @@ namespace FirstSemesterExamProject
             {
                 YellowTeamLobbyLabel.Visible = true;
                 YellowTeamLobbyLabel.BringToFront();
+
+                if (IsMyTeam(PlayerTeam.YellowTeam))
+                {
+                    YellowTeamLobbyLabel.ForeColor = Color.White;
+                }
 
                 if (yelloTeamReady)
                 {
@@ -1591,7 +1613,7 @@ namespace FirstSemesterExamProject
                 // UnitStack;TeamColor,unit1,unit2,unit3 ect
                 Client.Instance.SendToHost(message);
 
-                Client.Instance.SendToHost("Ready;"+Client.Instance.Team);
+                Client.Instance.SendToHost("Ready;" + Client.Instance.Team);
 
                 DataConverter.UpdateLobbyListSetTeamReady((PlayerTeam)Client.Instance.Team);
 
@@ -1762,6 +1784,20 @@ namespace FirstSemesterExamProject
             {
                 HighScoreBox.Hide();
             }
+        }
+
+        private bool IsMyTeam(PlayerTeam team)
+        {
+            if (Client.Instance.clientConnected && Client.Instance.Team == team)
+            {
+                return true;
+            }
+            else if (Server.Instance.isOnline && team == PlayerTeam.RedTeam)
+            {
+                return true;
+            }
+            return false;
+
         }
     }
 }
