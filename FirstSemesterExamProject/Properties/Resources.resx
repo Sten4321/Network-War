@@ -121,6 +121,9 @@
   <data name="add_archer1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\add_archer11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Spinner-1.7s-200px" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Spinner-1.7s-200px.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="knap_2_players" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Sprites\Buttons\knap_2_players.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -145,9 +148,6 @@
   <data name="EndTurn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\EndTurn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="knap_blue_team_colour" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Sprites\Buttons\knap_blue_team_colour.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="add_mage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\add_mage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -159,6 +159,9 @@
   </data>
   <data name="knap_3_players" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Sprites\Buttons\knap_3_players.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mute1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Sprites\Buttons\mute1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="add_knight" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\add_knight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -172,10 +175,13 @@
   <data name="add_cleric" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\add_cleric.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="knap_blue_team_colour" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Sprites\Buttons\knap_blue_team_colour.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="remove_unit (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\remove_unit (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mute1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Sprites\Buttons\mute1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="PlayerBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PlayerBox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

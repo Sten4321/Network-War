@@ -64,6 +64,9 @@ namespace FirstSemesterExamProject
             this.StartOnlineGame = new System.Windows.Forms.Button();
             this.ReadyCheck = new System.Windows.Forms.Button();
             this.HighScoreBox = new System.Windows.Forms.RichTextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // Tick
@@ -496,11 +499,33 @@ namespace FirstSemesterExamProject
             this.HighScoreBox.TabIndex = 47;
             this.HighScoreBox.Text = "";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::FirstSemesterExamProject.Properties.Resources.PlayerBox;
+            this.pictureBox1.Location = new System.Drawing.Point(1031, 2);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(232, 221);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 48;
+            this.pictureBox1.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Location = new System.Drawing.Point(1049, 23);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 49;
+            this.label1.Text = "label1";
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1265, 639);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.ReadyCheck);
             this.Controls.Add(this.StartOnlineGame);
             this.Controls.Add(this.HostIPAdress);
@@ -531,7 +556,7 @@ namespace FirstSemesterExamProject
             this.Controls.Add(this.EndTurn);
             this.Controls.Add(this.HighScoreBox);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "Window";
@@ -540,6 +565,7 @@ namespace FirstSemesterExamProject
             this.Text = "fps:";
             this.Load += new System.EventHandler(this.Window_Load);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Window_MouseClick);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -580,5 +606,7 @@ namespace FirstSemesterExamProject
         private System.Windows.Forms.Button StartOnlineGame;
         private System.Windows.Forms.Button ReadyCheck;
         private System.Windows.Forms.RichTextBox HighScoreBox;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label1;
     }
 }
