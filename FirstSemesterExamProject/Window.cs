@@ -183,7 +183,7 @@ namespace FirstSemesterExamProject
             {
 
                 if (Client.Instance.clientConnected)
-                {                                       
+                {
                     HideUiForOnlineGame();
 
                     SoundEngine.StopSound();
@@ -1348,6 +1348,8 @@ namespace FirstSemesterExamProject
                 StartOnlineGame.Visible = false;
                 ReadyCheck.Visible = true;
                 HostIPAdress.Text = Server.Instance.serverIp;
+                Label.Visible = false;
+
                 //portLabel.Text = Server.Instance.port;
                 /*
                  * ipLabel.Visible = true;
@@ -1408,11 +1410,47 @@ namespace FirstSemesterExamProject
             {
                 ServerReadyClick();
                 ClientReadyClick();
+
+                DisableUnitSelection();
             }
             else
             {
                 MessageBox.Show("Select atleast one unit", "Oops", MessageBoxButtons.OK);
             }
+        }
+        private void DisableUnitSelection()
+        {
+            RedTeam.Visible = false;
+            BlueTeam.Visible = false;
+            GreenTeam.Visible = false;
+            YellowTeam.Visible = false;
+            TwoPlayer.Visible = false;
+            ThreePlayer.Visible = false;
+            FourPlayer.Visible = false;
+            Back.Visible = false;
+            Label.Visible = false;
+            Start.Visible = false;
+            PointsLabel.Visible = false;
+           // ListBox1.Visible = false;
+            AddArcher.Visible = false;
+            AddCleric.Visible = false;
+            AddKnight.Visible = false;
+            AddScout.Visible = false;
+            AddArtifact.Visible = false;
+            AddMage.Visible = false;
+            RemoveUnit.Visible = false;
+            muteButton.Visible = false;
+            Host.Visible = false;
+            JoinGame.Visible = false;
+            Online.Visible = false;
+            EnterIP.Visible = false;
+            HighScoreBox.Hide();
+
+            StartOnlineGame.Visible = false;
+            ReadyCheck.Visible = false;
+            HostIPAdress.Visible = false;
+
+
         }
 
         /// <summary>
