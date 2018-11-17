@@ -154,6 +154,7 @@ namespace FirstSemesterExamProject
             PlayerNumber = Convert.ToInt32(ReceiveFromHost());
             Team = (PlayerTeam)Convert.ToInt32(PlayerNumber);
             //Then host will be Red, 1st: Blue, 2nd: Green, 3rd: Yellow
+            DataConverter.UpdateLobbyList(PlayerNumber);
 
             System.Diagnostics.Debug.WriteLine(Team.ToString());
         }

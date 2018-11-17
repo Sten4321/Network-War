@@ -42,6 +42,12 @@ namespace FirstSemesterExamProject
         public static bool allPlayersReady = false;
         public static bool clientShouldStart = false;
 
+        //lobby management
+        public static bool redTeamReady = false;
+        public static bool blueTeamInLobby, blueTeamReady = false;
+        public static bool greenTeamInLobby, greenTeamReady = false;
+        public static bool yellowTeamInLobby, yelloTeamReady = false;
+        public static bool lobbyChangeHasHappened = false;
 
         public Graphics Dc
         {
@@ -174,8 +180,17 @@ namespace FirstSemesterExamProject
 
                 //Hides Ui and changes music 
                 StartClientOnlineGame();
+
+
+                if (lobbyChangeHasHappened)
+                {
+                    RefreshLobbyList();
+
+                    lobbyChangeHasHappened = false;
+                }
             }
         }
+
 
         private void StartClientOnlineGame()
         {
@@ -316,7 +331,7 @@ namespace FirstSemesterExamProject
             // SoundEngine.PlayMenuBackgroundMusic();
         }
 
-      
+
 
         /// <summary>
         /// Calculates the amount of points used out of max points
@@ -1359,7 +1374,68 @@ namespace FirstSemesterExamProject
                 ipLabel.Text = Server.Instance.serverIp;
                 portLabel.Text = Server.Instance.port;
                 */
+
+                RefreshLobbyList();
             }
+        }
+
+
+        private void RefreshLobbyList()
+        {
+
+            RedTeamLobbyLabel.Visible = true;
+            RedTeamLobbyLabel.BringToFront();
+
+            if (redTeamReady)
+            {
+                RedCheckMark.Visible = true;
+                RedCheckMark.BringToFront();
+            }
+
+            if (blueTeamInLobby)
+            {
+                BlueTeamLobbyLabel.Visible = true;
+                BlueTeamLobbyLabel.BringToFront();
+
+                if (blueTeamReady)
+                {
+                    BlueCheckMark.Visible = true;
+                    BlueCheckMark.BringToFront();
+
+                }
+
+            }
+            if (greenTeamInLobby)
+            {
+                GreenTeamLobbyLabel.Visible = true;
+                GreenTeamLobbyLabel.BringToFront();
+
+                if (greenTeamReady)
+                {
+                    GreenCheckMark.Visible = true;
+                    GreenCheckMark.BringToFront();
+
+                }
+
+            }
+            if (yellowTeamInLobby)
+            {
+                YellowTeamLobbyLabel.Visible = true;
+                YellowTeamLobbyLabel.BringToFront();
+
+                if (yelloTeamReady)
+                {
+                    YellowCheckMark.Visible = true;
+                    YellowCheckMark.BringToFront();
+
+                }
+            }
+
+
+
+
+            //has to be written last for other to be on top??
+            LobbyPlayerListImage.Visible = true;
         }
 
         /// <summary>
@@ -1432,7 +1508,7 @@ namespace FirstSemesterExamProject
             Label.Visible = false;
             Start.Visible = false;
             PointsLabel.Visible = false;
-           // ListBox1.Visible = false;
+            // ListBox1.Visible = false;
             AddArcher.Visible = false;
             AddCleric.Visible = false;
             AddKnight.Visible = false;
@@ -1497,7 +1573,10 @@ namespace FirstSemesterExamProject
 
                 // UnitStack;TeamColor,unit1,unit2,unit3 ect
                 Client.Instance.SendToHost(message);
-                Client.Instance.SendToHost("Ready;");
+
+                Client.Instance.SendToHost("Ready;"+Client.Instance.Team);
+
+                DataConverter.UpdateLobbyListSetTeamReady((PlayerTeam)Client.Instance.Team);
 
 
             }
@@ -1531,6 +1610,8 @@ namespace FirstSemesterExamProject
                     Server.Instance.SaveTeamComposition(message);
                     // UnitStack;TeamColor,unit1,unit2,unit3 ect
                     Server.Instance.WriteServerMessage(message);
+
+                    Server.Instance.WriteServerMessage("Ready;RedTeam");
 
                     //If all clients are ready it sends map details
                     Server.Instance.CheckIfCanStart();

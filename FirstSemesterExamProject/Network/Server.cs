@@ -97,7 +97,7 @@ namespace FirstSemesterExamProject
                     }
 
                     //the team composition of this client (and its team)
-                    client.unitTeamComposition = teamComposition; 
+                    client.unitTeamComposition = teamComposition;
 
 
 
@@ -276,6 +276,10 @@ namespace FirstSemesterExamProject
             //Clears buffer
             sWriter.Flush();
 
+            //for updating the clients lobbies
+            WriteServerMessage("NewPlayer;" + clientObjects.Count);
+
+            DataConverter.UpdateLobbyList(clientObjects.Count);
 
         }
 
@@ -389,10 +393,10 @@ namespace FirstSemesterExamProject
         private bool MessageDirectlyToServer(Data data)
         {
 
-            if (data.information == "Ready;")
+            if (data.information.Contains("Ready;"))
             {
                 ReadyMessageHandler(data);
-                return true;
+
             }
             if (data.information.Contains("PlayerDead;"))
             {
@@ -512,6 +516,8 @@ namespace FirstSemesterExamProject
         private void ReadyMessageHandler(Data data)
         {
             //This client is ready
+            Enum.TryParse(data.information.Split(';')[1], out PlayerTeam _rdyTeam);
+            DataConverter.UpdateLobbyListSetTeamReady(_rdyTeam);
 
             foreach (ClientObject _client in clientObjects)
             {
@@ -708,7 +714,7 @@ namespace FirstSemesterExamProject
 
         public void ManageTurnChange(Data data)
         {
-         
+
 
             int playerTurn = Convert.ToInt32(data.information.Split(';')[1]);
 
@@ -763,7 +769,7 @@ namespace FirstSemesterExamProject
             PlayerTeam _nextTeam = (PlayerTeam)nextPlayerNum;
 
             //Exit's when a new team is found            
-            while (true) 
+            while (true)
             {
                 if (_nextTeam == PlayerTeam.RedTeam)
                 {
@@ -802,7 +808,7 @@ namespace FirstSemesterExamProject
                 _nextTeam = (PlayerTeam)nextPlayerNum;
 
             }
-          
+
         }
     }
 }
