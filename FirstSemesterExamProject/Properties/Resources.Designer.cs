@@ -143,6 +143,16 @@ namespace FirstSemesterExamProject.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap CheckMark {
+            get {
+                object obj = ResourceManager.GetObject("CheckMark", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap EndTurn {
             get {
                 object obj = ResourceManager.GetObject("EndTurn", resourceCulture);
@@ -243,6 +253,16 @@ namespace FirstSemesterExamProject.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap PlayerBox {
+            get {
+                object obj = ResourceManager.GetObject("PlayerBox", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap remove_unit__1_ {
             get {
                 object obj = ResourceManager.GetObject("remove_unit (1)", resourceCulture);
@@ -256,6 +276,16 @@ namespace FirstSemesterExamProject.Properties {
         internal static System.Drawing.Bitmap remove_unit1 {
             get {
                 object obj = ResourceManager.GetObject("remove_unit1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Spinner_1_7s_200px {
+            get {
+                object obj = ResourceManager.GetObject("Spinner-1.7s-200px", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
