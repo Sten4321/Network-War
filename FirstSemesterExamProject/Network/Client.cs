@@ -119,8 +119,6 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void ReaderThread()
         {
-
-
             string sData;
             clientConnected = true;
             while (clientConnected)
@@ -132,8 +130,8 @@ namespace FirstSemesterExamProject
 
                     System.Diagnostics.Debug.WriteLine(sData);
 
-                    Thread.Sleep(sleepDelay);
                 }
+                Thread.Sleep(sleepDelay);
             }
         }
 
