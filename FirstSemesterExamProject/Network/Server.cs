@@ -300,16 +300,16 @@ namespace FirstSemesterExamProject
         public void ClientUpdate(object obj)
         {
             // retrieve client from parameter passed to thread
-            ClientObject _clientStruct = (ClientObject)obj;
+            ClientObject _clientObject = (ClientObject)obj;
 
             // sets two streams
-            StreamReader sReader = new StreamReader(_clientStruct.tcpClient.GetStream(), Encoding.ASCII);
+            StreamReader sReader = new StreamReader(_clientObject.tcpClient.GetStream(), Encoding.ASCII);
 
             bool isConnected = true;
             string sData = null;
 
-            IPEndPoint endPoint = (IPEndPoint)_clientStruct.tcpClient.Client.RemoteEndPoint;
-            IPEndPoint localPoint = (IPEndPoint)_clientStruct.tcpClient.Client.LocalEndPoint;
+            IPEndPoint endPoint = (IPEndPoint)_clientObject.tcpClient.Client.RemoteEndPoint;
+            IPEndPoint localPoint = (IPEndPoint)_clientObject.tcpClient.Client.LocalEndPoint;
 
             while (isConnected)
             {
@@ -326,13 +326,22 @@ namespace FirstSemesterExamProject
                     System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
                     lock (clientsListKey)
                     {
-                        clientObjects.Remove(_clientStruct);
+                        //If it's the disconnected client's turn
+                        if (_clientObject.clientsTurn)
+                        {
+                            int nextPlayerInt = NextAvailablePlayerNum((int)_clientObject.Team);
+                            //change turn 
+                            WriteServerMessage("EndTurn;" + nextPlayerInt);
 
-                        _clientStruct.isAlive = false;
+                            DataConverter.ChangePlayerTurnText(nextPlayerInt);
+                        }
 
-                        RemoveAllUnitsFromClient(_clientStruct.Team);
+                        _clientObject.isAlive = false;
 
-                        clientObjects.Remove(_clientStruct);
+                        //removes all his units
+                        RemoveAllUnitsFromClient(_clientObject.Team);
+
+                        clientObjects.Remove(_clientObject);
 
                     }
                     Thread.CurrentThread.Abort();
@@ -342,7 +351,7 @@ namespace FirstSemesterExamProject
                 if (sData != null)
                 {
                     //evaluate the Data and the client who sent it
-                    EvaluateData(sData, _clientStruct);
+                    EvaluateData(sData, _clientObject);
                 }
             }
         }
@@ -718,6 +727,8 @@ namespace FirstSemesterExamProject
 
             int playerTurn = Convert.ToInt32(data.information.Split(';')[1]);
 
+            clientObjects[playerTurn - 1].clientsTurn = false;
+
             playerTurn = NextAvailablePlayerNum(playerTurn);
 
 
@@ -791,10 +802,12 @@ namespace FirstSemesterExamProject
                         {
                             if (client.isAlive)
                             {
+                                client.clientsTurn = true;
                                 //it's this client
                                 return (int)client.Team;
                             }
                         }
+                        
                     }
                 }
 
