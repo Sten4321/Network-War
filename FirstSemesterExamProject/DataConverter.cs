@@ -73,6 +73,15 @@ namespace FirstSemesterExamProject
                         Client.Instance.RemoveAllFromTeam(_team);
                         break;
 
+                    case "Ready":
+                        Enum.TryParse(information, out PlayerTeam rdyTeam);
+                        UpdateLobbyListSetTeamReady(rdyTeam);
+                        break;
+
+                    case "NewPlayer":
+                        UpdateLobbyList(Convert.ToInt32(information));
+                        break;
+
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
                         break;
@@ -275,6 +284,66 @@ namespace FirstSemesterExamProject
             }
         }
 
+        public static void UpdateLobbyList(int playerIndex)
+        {
+            PlayerTeam team = (PlayerTeam)playerIndex;
+
+
+            switch (team)
+            {
+                case PlayerTeam.RedTeam:
+                    System.Diagnostics.Debug.WriteLine("Error ");
+                    break;
+                case PlayerTeam.BlueTeam:
+                    Window.blueTeamInLobby = true;
+
+                    break;
+                case PlayerTeam.GreenTeam:
+                    Window.blueTeamInLobby = true;
+                    Window.greenTeamInLobby = true;
+
+                    break;
+                case PlayerTeam.YellowTeam:
+                    Window.blueTeamInLobby = true;
+                    Window.greenTeamInLobby = true;
+                    Window.yellowTeamInLobby = true;
+                    break;
+
+                default:
+                    System.Diagnostics.Debug.WriteLine("Error ");
+
+                    break;
+            }
+            Window.lobbyChangeHasHappened = true;
+        }
+
+        public static void UpdateLobbyListSetTeamReady(PlayerTeam team)
+        {
+
+            switch (team)
+            {
+                case PlayerTeam.RedTeam:
+                    Window.redTeamReady = true;
+                    break;
+                case PlayerTeam.BlueTeam:
+                    Window.blueTeamReady = true;
+
+                    break;
+                case PlayerTeam.GreenTeam:
+                    Window.greenTeamReady = true;
+
+                    break;
+                case PlayerTeam.YellowTeam:
+                    Window.yelloTeamReady = true;
+                    break;
+
+                default:
+                    System.Diagnostics.Debug.WriteLine("Error");
+
+                    break;
+            }
+            Window.lobbyChangeHasHappened = true;
+        }
 
     }
 }
