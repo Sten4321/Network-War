@@ -324,24 +324,52 @@ namespace FirstSemesterExamProject
                     //if client disconnects
 
                     System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
+                    int clientNum = (int)_clientObject.Team;
+
                     lock (clientsListKey)
                     {
-                        //If it's the disconnected client's turn
-                        if (_clientObject.clientsTurn)
-                        {
-                            int nextPlayerInt = NextAvailablePlayerNum((int)_clientObject.Team);
-                            //change turn 
-                            WriteServerMessage("EndTurn;" + nextPlayerInt);
+                        clientObjects.Remove(_clientObject);
 
-                            DataConverter.ChangePlayerTurnText(nextPlayerInt);
+                        if (Window.GameState is BattleGameState)
+                        {
+
+                            //If it's the disconnected client's turn
+                            if (_clientObject.clientsTurn)
+                            {
+                                int nextPlayerInt = NextAvailablePlayerNum(clientNum);
+                                //change turn 
+                                WriteServerMessage("EndTurn;" + nextPlayerInt);
+
+                                DataConverter.ChangePlayerTurnText(nextPlayerInt);
+
+
+                            }
+                            //removes all his units
+                            RemoveAllUnitsFromClient(_clientObject.Team);
+
+                            _clientObject.isAlive = false;
+                        }
+                        else
+                        {
+                            WriteServerMessage("PlayerLeft;" + clientNum +","+clientObjects.Count);
+
+                            foreach (ClientObject client in clientObjects)
+                            {
+                                if ((int)client.Team > clientNum)
+                                {//if client is on a higher team, than the one who quit, they all go one team down
+
+                                    //yellow -> green -> blue
+                                    //if green leaves, and there are 4 players, yellow becomes green
+                                    client.Team = (PlayerTeam)(int)client.Team - 1;
+                                }
+                            }
+
+                            DataConverter.UpdateLobbyList(clientObjects.Count);
+                            Window.lobbyChangeHasHappened = true;
+
                         }
 
-                        _clientObject.isAlive = false;
 
-                        //removes all his units
-                        RemoveAllUnitsFromClient(_clientObject.Team);
-
-                        clientObjects.Remove(_clientObject);
 
                     }
                     Thread.CurrentThread.Abort();
@@ -807,7 +835,7 @@ namespace FirstSemesterExamProject
                                 return (int)client.Team;
                             }
                         }
-                        
+
                     }
                 }
 

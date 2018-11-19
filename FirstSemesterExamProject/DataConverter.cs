@@ -82,9 +82,30 @@ namespace FirstSemesterExamProject
                         UpdateLobbyList(Convert.ToInt32(information));
                         break;
 
+                    case "PlayerLeft":
+                        PlayerLeftHandler(Convert.ToInt32(splitStrings[0]),Convert.ToInt32(splitStrings[1]));
+                        break;
+
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid Command!");
                         break;
+                }
+            }
+        }
+
+        private static void PlayerLeftHandler(int playerWhoLeft, int newAmount)
+        {
+            if (Client.Instance.clientConnected)
+            {
+                if (Window.GameState is UnitChoiceGameState) //if it's in the lobby (shouldn't change teams during game :))
+                {
+                    if (Client.Instance.PlayerNumber > playerWhoLeft)
+                    {
+                        Client.Instance.Team = (PlayerTeam)(int)Client.Instance.Team - 1;
+
+                        DataConverter.UpdateLobbyList(newAmount);
+                        Window.lobbyChangeHasHappened = true;
+                    }
                 }
             }
         }
@@ -292,15 +313,20 @@ namespace FirstSemesterExamProject
             switch (team)
             {
                 case PlayerTeam.RedTeam:
-                    System.Diagnostics.Debug.WriteLine("Error ");
+                    Window.blueTeamInLobby = false;
+                    Window.greenTeamInLobby = false;
+                    Window.yellowTeamInLobby = false;
                     break;
                 case PlayerTeam.BlueTeam:
                     Window.blueTeamInLobby = true;
+                    Window.greenTeamInLobby = false;
+                    Window.yellowTeamInLobby = false;
 
                     break;
                 case PlayerTeam.GreenTeam:
                     Window.blueTeamInLobby = true;
                     Window.greenTeamInLobby = true;
+                    Window.yellowTeamInLobby = false;
 
                     break;
                 case PlayerTeam.YellowTeam:
