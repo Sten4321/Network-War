@@ -427,32 +427,32 @@ namespace FirstSemesterExamProject
             // 
             // Online
             // 
-            this.Online.Location = new System.Drawing.Point(587, 566);
+            this.Online.Image = ((System.Drawing.Image)(resources.GetObject("Online.Image")));
+            this.Online.Location = new System.Drawing.Point(570, 566);
             this.Online.Name = "Online";
-            this.Online.Size = new System.Drawing.Size(75, 23);
+            this.Online.Size = new System.Drawing.Size(118, 44);
             this.Online.TabIndex = 38;
-            this.Online.Text = "Online";
             this.Online.UseVisualStyleBackColor = true;
             this.Online.Click += new System.EventHandler(this.Online_Click);
             // 
             // Host
             // 
-            this.Host.Location = new System.Drawing.Point(587, 422);
+            this.Host.Image = ((System.Drawing.Image)(resources.GetObject("Host.Image")));
+            this.Host.Location = new System.Drawing.Point(550, 422);
             this.Host.Name = "Host";
-            this.Host.Size = new System.Drawing.Size(75, 23);
+            this.Host.Size = new System.Drawing.Size(159, 61);
             this.Host.TabIndex = 39;
-            this.Host.Text = "Host";
             this.Host.UseVisualStyleBackColor = true;
             this.Host.Visible = false;
             this.Host.Click += new System.EventHandler(this.Host_Click);
             // 
             // JoinGame
             // 
-            this.JoinGame.Location = new System.Drawing.Point(748, 596);
+            this.JoinGame.Image = ((System.Drawing.Image)(resources.GetObject("JoinGame.Image")));
+            this.JoinGame.Location = new System.Drawing.Point(748, 585);
             this.JoinGame.Name = "JoinGame";
-            this.JoinGame.Size = new System.Drawing.Size(75, 23);
+            this.JoinGame.Size = new System.Drawing.Size(118, 44);
             this.JoinGame.TabIndex = 40;
-            this.JoinGame.Text = "Join Game";
             this.JoinGame.UseVisualStyleBackColor = true;
             this.JoinGame.Visible = false;
             this.JoinGame.Click += new System.EventHandler(this.JoinGame_Click);
@@ -479,22 +479,22 @@ namespace FirstSemesterExamProject
             // 
             // StartOnlineGame
             // 
+            this.StartOnlineGame.Image = ((System.Drawing.Image)(resources.GetObject("StartOnlineGame.Image")));
             this.StartOnlineGame.Location = new System.Drawing.Point(1070, 560);
             this.StartOnlineGame.Name = "StartOnlineGame";
             this.StartOnlineGame.Size = new System.Drawing.Size(167, 57);
             this.StartOnlineGame.TabIndex = 45;
-            this.StartOnlineGame.Text = "Start";
             this.StartOnlineGame.UseVisualStyleBackColor = true;
             this.StartOnlineGame.Visible = false;
             this.StartOnlineGame.Click += new System.EventHandler(this.StartOnlineGame_Click);
             // 
             // ReadyCheck
             // 
+            this.ReadyCheck.Image = ((System.Drawing.Image)(resources.GetObject("ReadyCheck.Image")));
             this.ReadyCheck.Location = new System.Drawing.Point(1070, 491);
             this.ReadyCheck.Name = "ReadyCheck";
             this.ReadyCheck.Size = new System.Drawing.Size(167, 57);
             this.ReadyCheck.TabIndex = 46;
-            this.ReadyCheck.Text = "Ready";
             this.ReadyCheck.UseVisualStyleBackColor = true;
             this.ReadyCheck.Visible = false;
             this.ReadyCheck.Click += new System.EventHandler(this.ReadyCheck_Click);
@@ -503,7 +503,7 @@ namespace FirstSemesterExamProject
             // 
             this.HighScoreBox.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.HighScoreBox.DetectUrls = false;
-            this.HighScoreBox.Font = new System.Drawing.Font("Lucida Handwriting", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HighScoreBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HighScoreBox.Location = new System.Drawing.Point(-1, 385);
             this.HighScoreBox.Name = "HighScoreBox";
             this.HighScoreBox.Size = new System.Drawing.Size(529, 252);
