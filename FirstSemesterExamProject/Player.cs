@@ -381,8 +381,16 @@ namespace FirstSemesterExamProject
                                 || (selectedUnitY > dy)))
                             {
 
-                                selectedUnit.Attack(unit);
-                                playerMove--;
+                                if (!(selectedUnit is Scout))
+                                {
+                                    selectedUnit.Attack(unit);
+                                    playerMove--;
+                                }
+                                else if (((Scout)selectedUnit).CanAttack)
+                                {
+                                    selectedUnit.Attack(unit);
+                                    playerMove--;
+                                }
 
                                 SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
                                 System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MELEE ATTACKED > " + unit.ToString());
@@ -393,7 +401,7 @@ namespace FirstSemesterExamProject
                     else if (GameBoard.UnitMap[dx, dy] == null)
                     {
                         MoveHere(dx, dy);
-                        System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED FROM " + dx + "," + dy + " TO " + dx + "," + dy);
+                        System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED FROM " + selectedUnitX + "," + selectedUnitY + " TO " + dx + "," + dy);
                         SendOnlineCoordinates(selectedUnitX, selectedUnitY, dx, dy);
                     }
                 }
@@ -544,7 +552,7 @@ namespace FirstSemesterExamProject
                 && !(GameBoard.UnitMap[(int)unit.Coordinates.X + 1, (int)unit.Coordinates.Y] != null))
             {
                 //moves unit to new coordinates
-                selectedUnit.Coordinates = new PointF(x + 1, coordinates.Y);
+                selectedUnit.Coordinates = new PointF(x + 1, y);
                 selectedUnit.Move -= (Math.Abs(x - selectedUnitX) + Math.Abs(y - selectedUnitY) - 1);
                 //a units move must not be less than 0
                 if (selectedUnit.Move < 0)

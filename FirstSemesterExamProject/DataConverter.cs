@@ -60,7 +60,7 @@ namespace FirstSemesterExamProject
                         Client.Instance.Start();
                         break;
 
-                        //A message sent from the server, calculating who the next player to move will be
+                    //A message sent from the server, calculating who the next player to move will be
                     case "EndTurn":
                         ChangePlayerTurn(Convert.ToInt32(information));
                         break;
@@ -71,6 +71,15 @@ namespace FirstSemesterExamProject
                     case "RemoveAll": //"RemoveAll;RedTeam"
                         Enum.TryParse(information, out PlayerTeam _team);
                         Client.Instance.RemoveAllFromTeam(_team);
+                        break;
+
+                    case "Ready":
+                        Enum.TryParse(information, out PlayerTeam rdyTeam);
+                        UpdateLobbyListSetTeamReady(rdyTeam);
+                        break;
+
+                    case "NewPlayer":
+                        UpdateLobbyList(Convert.ToInt32(information));
                         break;
 
                     default:
@@ -103,8 +112,13 @@ namespace FirstSemesterExamProject
                 {
                     if (BattleGameState.isAlive)
                     {
+                        if (Window.GameState is BattleGameState bs)
+                        {
+                            bs.ResetUnitMoves();
+                        }
                         Client.Instance.turn = true;
                         System.Diagnostics.Debug.WriteLine("It's your turn!");
+
                     }
                     else
                     {
@@ -270,7 +284,67 @@ namespace FirstSemesterExamProject
             }
         }
 
-        
+        public static void UpdateLobbyList(int playerIndex)
+        {
+            PlayerTeam team = (PlayerTeam)playerIndex;
+
+
+            switch (team)
+            {
+                case PlayerTeam.RedTeam:
+                    System.Diagnostics.Debug.WriteLine("Error ");
+                    break;
+                case PlayerTeam.BlueTeam:
+                    Window.blueTeamInLobby = true;
+
+                    break;
+                case PlayerTeam.GreenTeam:
+                    Window.blueTeamInLobby = true;
+                    Window.greenTeamInLobby = true;
+
+                    break;
+                case PlayerTeam.YellowTeam:
+                    Window.blueTeamInLobby = true;
+                    Window.greenTeamInLobby = true;
+                    Window.yellowTeamInLobby = true;
+                    break;
+
+                default:
+                    System.Diagnostics.Debug.WriteLine("Error ");
+
+                    break;
+            }
+            Window.lobbyChangeHasHappened = true;
+        }
+
+        public static void UpdateLobbyListSetTeamReady(PlayerTeam team)
+        {
+
+            switch (team)
+            {
+                case PlayerTeam.RedTeam:
+                    Window.redTeamReady = true;
+                    break;
+                case PlayerTeam.BlueTeam:
+                    Window.blueTeamReady = true;
+
+                    break;
+                case PlayerTeam.GreenTeam:
+                    Window.greenTeamReady = true;
+
+                    break;
+                case PlayerTeam.YellowTeam:
+                    Window.yelloTeamReady = true;
+                    break;
+
+                default:
+                    System.Diagnostics.Debug.WriteLine("Error");
+
+                    break;
+            }
+            Window.lobbyChangeHasHappened = true;
+        }
+
     }
 }
 

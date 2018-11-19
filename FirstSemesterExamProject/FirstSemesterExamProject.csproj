@@ -247,6 +247,9 @@
     <Content Include="plugins\ikpMP3\ikpMP3.cpp" />
     <Content Include="plugins\ikpMP3\license.txt" />
     <Content Include="plugins\ikpMP3\readme.txt" />
+    <None Include="Resources\Spinner-1.7s-200px.gif" />
+    <None Include="Resources\PlayerBox.png" />
+    <None Include="Resources\CheckMark.png" />
     <Content Include="Sprites\Buttons\knap_2_players.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

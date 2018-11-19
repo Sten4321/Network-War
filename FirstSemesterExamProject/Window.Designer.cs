@@ -64,6 +64,20 @@ namespace FirstSemesterExamProject
             this.StartOnlineGame = new System.Windows.Forms.Button();
             this.ReadyCheck = new System.Windows.Forms.Button();
             this.HighScoreBox = new System.Windows.Forms.RichTextBox();
+            this.LobbyPlayerListImage = new System.Windows.Forms.PictureBox();
+            this.RedTeamLobbyLabel = new System.Windows.Forms.Label();
+            this.BlueTeamLobbyLabel = new System.Windows.Forms.Label();
+            this.GreenTeamLobbyLabel = new System.Windows.Forms.Label();
+            this.YellowTeamLobbyLabel = new System.Windows.Forms.Label();
+            this.RedCheckMark = new System.Windows.Forms.PictureBox();
+            this.BlueCheckMark = new System.Windows.Forms.PictureBox();
+            this.GreenCheckMark = new System.Windows.Forms.PictureBox();
+            this.YellowCheckMark = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.LobbyPlayerListImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RedCheckMark)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BlueCheckMark)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GreenCheckMark)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.YellowCheckMark)).BeginInit();
             this.SuspendLayout();
             // 
             // Tick
@@ -496,11 +510,131 @@ namespace FirstSemesterExamProject
             this.HighScoreBox.TabIndex = 47;
             this.HighScoreBox.Text = "";
             // 
+            // LobbyPlayerListImage
+            // 
+            this.LobbyPlayerListImage.Image = global::FirstSemesterExamProject.Properties.Resources.PlayerBox;
+            this.LobbyPlayerListImage.Location = new System.Drawing.Point(1031, 2);
+            this.LobbyPlayerListImage.Name = "LobbyPlayerListImage";
+            this.LobbyPlayerListImage.Size = new System.Drawing.Size(232, 221);
+            this.LobbyPlayerListImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.LobbyPlayerListImage.TabIndex = 48;
+            this.LobbyPlayerListImage.TabStop = false;
+            this.LobbyPlayerListImage.Visible = false;
+            // 
+            // RedTeamLobbyLabel
+            // 
+            this.RedTeamLobbyLabel.AutoSize = true;
+            this.RedTeamLobbyLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.RedTeamLobbyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RedTeamLobbyLabel.ForeColor = System.Drawing.Color.Black;
+            this.RedTeamLobbyLabel.Location = new System.Drawing.Point(1049, 23);
+            this.RedTeamLobbyLabel.Name = "RedTeamLobbyLabel";
+            this.RedTeamLobbyLabel.Size = new System.Drawing.Size(112, 25);
+            this.RedTeamLobbyLabel.TabIndex = 49;
+            this.RedTeamLobbyLabel.Text = "RedTeam";
+            this.RedTeamLobbyLabel.Visible = false;
+            // 
+            // BlueTeamLobbyLabel
+            // 
+            this.BlueTeamLobbyLabel.AutoSize = true;
+            this.BlueTeamLobbyLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.BlueTeamLobbyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BlueTeamLobbyLabel.ForeColor = System.Drawing.Color.Black;
+            this.BlueTeamLobbyLabel.Location = new System.Drawing.Point(1049, 74);
+            this.BlueTeamLobbyLabel.Name = "BlueTeamLobbyLabel";
+            this.BlueTeamLobbyLabel.Size = new System.Drawing.Size(117, 25);
+            this.BlueTeamLobbyLabel.TabIndex = 50;
+            this.BlueTeamLobbyLabel.Text = "BlueTeam";
+            this.BlueTeamLobbyLabel.Visible = false;
+            // 
+            // GreenTeamLobbyLabel
+            // 
+            this.GreenTeamLobbyLabel.AutoSize = true;
+            this.GreenTeamLobbyLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.GreenTeamLobbyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GreenTeamLobbyLabel.ForeColor = System.Drawing.Color.Black;
+            this.GreenTeamLobbyLabel.Location = new System.Drawing.Point(1049, 129);
+            this.GreenTeamLobbyLabel.Name = "GreenTeamLobbyLabel";
+            this.GreenTeamLobbyLabel.Size = new System.Drawing.Size(134, 25);
+            this.GreenTeamLobbyLabel.TabIndex = 51;
+            this.GreenTeamLobbyLabel.Text = "GreenTeam";
+            this.GreenTeamLobbyLabel.Visible = false;
+            // 
+            // YellowTeamLobbyLabel
+            // 
+            this.YellowTeamLobbyLabel.AutoSize = true;
+            this.YellowTeamLobbyLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.YellowTeamLobbyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.YellowTeamLobbyLabel.ForeColor = System.Drawing.Color.Black;
+            this.YellowTeamLobbyLabel.Location = new System.Drawing.Point(1049, 179);
+            this.YellowTeamLobbyLabel.Name = "YellowTeamLobbyLabel";
+            this.YellowTeamLobbyLabel.Size = new System.Drawing.Size(140, 25);
+            this.YellowTeamLobbyLabel.TabIndex = 52;
+            this.YellowTeamLobbyLabel.Text = "YellowTeam";
+            this.YellowTeamLobbyLabel.Visible = false;
+            // 
+            // RedCheckMark
+            // 
+            this.RedCheckMark.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.RedCheckMark.Image = global::FirstSemesterExamProject.Properties.Resources.CheckMark;
+            this.RedCheckMark.Location = new System.Drawing.Point(1207, 17);
+            this.RedCheckMark.Name = "RedCheckMark";
+            this.RedCheckMark.Size = new System.Drawing.Size(41, 35);
+            this.RedCheckMark.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.RedCheckMark.TabIndex = 53;
+            this.RedCheckMark.TabStop = false;
+            this.RedCheckMark.Visible = false;
+            // 
+            // BlueCheckMark
+            // 
+            this.BlueCheckMark.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.BlueCheckMark.Image = global::FirstSemesterExamProject.Properties.Resources.CheckMark;
+            this.BlueCheckMark.Location = new System.Drawing.Point(1207, 69);
+            this.BlueCheckMark.Name = "BlueCheckMark";
+            this.BlueCheckMark.Size = new System.Drawing.Size(41, 35);
+            this.BlueCheckMark.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.BlueCheckMark.TabIndex = 54;
+            this.BlueCheckMark.TabStop = false;
+            this.BlueCheckMark.Visible = false;
+            // 
+            // GreenCheckMark
+            // 
+            this.GreenCheckMark.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.GreenCheckMark.Image = global::FirstSemesterExamProject.Properties.Resources.CheckMark;
+            this.GreenCheckMark.Location = new System.Drawing.Point(1207, 123);
+            this.GreenCheckMark.Name = "GreenCheckMark";
+            this.GreenCheckMark.Size = new System.Drawing.Size(41, 35);
+            this.GreenCheckMark.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.GreenCheckMark.TabIndex = 55;
+            this.GreenCheckMark.TabStop = false;
+            this.GreenCheckMark.Visible = false;
+            // 
+            // YellowCheckMark
+            // 
+            this.YellowCheckMark.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.YellowCheckMark.Image = global::FirstSemesterExamProject.Properties.Resources.CheckMark;
+            this.YellowCheckMark.Location = new System.Drawing.Point(1207, 174);
+            this.YellowCheckMark.Name = "YellowCheckMark";
+            this.YellowCheckMark.Size = new System.Drawing.Size(41, 35);
+            this.YellowCheckMark.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.YellowCheckMark.TabIndex = 56;
+            this.YellowCheckMark.TabStop = false;
+            this.YellowCheckMark.Visible = false;
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1265, 639);
+            this.Controls.Add(this.YellowCheckMark);
+            this.Controls.Add(this.GreenCheckMark);
+            this.Controls.Add(this.BlueCheckMark);
+            this.Controls.Add(this.RedCheckMark);
+            this.Controls.Add(this.YellowTeamLobbyLabel);
+            this.Controls.Add(this.GreenTeamLobbyLabel);
+            this.Controls.Add(this.BlueTeamLobbyLabel);
+            this.Controls.Add(this.RedTeamLobbyLabel);
+            this.Controls.Add(this.LobbyPlayerListImage);
             this.Controls.Add(this.ReadyCheck);
             this.Controls.Add(this.StartOnlineGame);
             this.Controls.Add(this.HostIPAdress);
@@ -531,7 +665,7 @@ namespace FirstSemesterExamProject
             this.Controls.Add(this.EndTurn);
             this.Controls.Add(this.HighScoreBox);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "Window";
@@ -540,6 +674,11 @@ namespace FirstSemesterExamProject
             this.Text = "fps:";
             this.Load += new System.EventHandler(this.Window_Load);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Window_MouseClick);
+            ((System.ComponentModel.ISupportInitialize)(this.LobbyPlayerListImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RedCheckMark)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BlueCheckMark)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GreenCheckMark)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.YellowCheckMark)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -580,5 +719,14 @@ namespace FirstSemesterExamProject
         private System.Windows.Forms.Button StartOnlineGame;
         private System.Windows.Forms.Button ReadyCheck;
         private System.Windows.Forms.RichTextBox HighScoreBox;
+        private System.Windows.Forms.PictureBox LobbyPlayerListImage;
+        private System.Windows.Forms.Label RedTeamLobbyLabel;
+        private System.Windows.Forms.Label BlueTeamLobbyLabel;
+        private System.Windows.Forms.Label GreenTeamLobbyLabel;
+        private System.Windows.Forms.Label YellowTeamLobbyLabel;
+        private System.Windows.Forms.PictureBox RedCheckMark;
+        private System.Windows.Forms.PictureBox BlueCheckMark;
+        private System.Windows.Forms.PictureBox GreenCheckMark;
+        private System.Windows.Forms.PictureBox YellowCheckMark;
     }
 }
