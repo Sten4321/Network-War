@@ -21,7 +21,7 @@ namespace FirstSemesterExamProject
         //Collections
         public List<ClientObject> clientObjects = new List<ClientObject>(); //Client Structs contain the clients TcpClient and Team (could add ip ect.)
         private Queue<Data> receivedDataQueue = new Queue<Data>(); // Datas contains messages and the clients who sent them 
-        public string teamComposition;
+        public string teamComposition = string.Empty;
 
         //Threading
         private readonly object clientsListKey = new object(); //Two keys for threads to make sure only one can get in at a time
@@ -257,6 +257,9 @@ namespace FirstSemesterExamProject
             //Tells the client what team it's assigned to
             AssignNewClientToTeam(_clientStruct);
 
+            // If there are already existing teams, tell the new client
+            SendExistingTeamsToLateClient(_clientStruct);
+
             // create a thread to handle communication
             Thread clientThread = new Thread(new ParameterizedThreadStart(ClientUpdate));
             clientThread.Start(_clientStruct);
@@ -351,7 +354,7 @@ namespace FirstSemesterExamProject
                         }
                         else
                         {
-                            WriteServerMessage("PlayerLeft;" + clientNum +","+clientObjects.Count);
+                            WriteServerMessage("PlayerLeft;" + clientNum + "," + clientObjects.Count);
 
                             foreach (ClientObject client in clientObjects)
                             {
@@ -850,6 +853,33 @@ namespace FirstSemesterExamProject
 
             }
 
+        }
+        private void SendExistingTeamsToLateClient(ClientObject client)
+        {
+            StreamWriter sWriter = new StreamWriter(client.tcpClient.GetStream(), Encoding.ASCII);
+
+            if (teamComposition != string.Empty)
+            {
+
+                //sends data
+                sWriter.WriteLine("UnitStack;" + PlayerTeam.RedTeam.ToString() + "," + teamComposition);
+
+                //Clears buffer
+                sWriter.Flush();
+            }
+
+            foreach (ClientObject _client in clientObjects)
+            {
+                if (_client.unitTeamComposition != string.Empty)
+                {
+
+                    //sends data
+                    sWriter.WriteLine("UnitStack;" + _client.Team.ToString() + "," + _client.unitTeamComposition);
+
+                    //Clears buffer
+                    sWriter.Flush();
+                }
+            }
         }
     }
 }
