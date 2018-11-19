@@ -867,6 +867,7 @@ namespace FirstSemesterExamProject
                 //Clears buffer
                 sWriter.Flush();
             }
+            
 
             foreach (ClientObject _client in clientObjects)
             {
@@ -875,6 +876,15 @@ namespace FirstSemesterExamProject
 
                     //sends data
                     sWriter.WriteLine("UnitStack;" + _client.Team.ToString() + "," + _client.unitTeamComposition);
+
+                    //Clears buffer
+                    sWriter.Flush();
+                }
+
+                if (_client.ready)
+                {
+                    //sends data
+                    sWriter.WriteLine("Ready;" + _client.Team.ToString());
 
                     //Clears buffer
                     sWriter.Flush();
