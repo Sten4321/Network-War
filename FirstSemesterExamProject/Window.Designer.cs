@@ -427,32 +427,39 @@ namespace FirstSemesterExamProject
             // 
             // Online
             // 
+            this.Online.FlatAppearance.BorderSize = 0;
             this.Online.Image = ((System.Drawing.Image)(resources.GetObject("Online.Image")));
             this.Online.Location = new System.Drawing.Point(570, 566);
             this.Online.Name = "Online";
             this.Online.Size = new System.Drawing.Size(118, 44);
             this.Online.TabIndex = 38;
+            this.Online.TabStop = false;
             this.Online.UseVisualStyleBackColor = true;
             this.Online.Click += new System.EventHandler(this.Online_Click);
             // 
             // Host
             // 
+            this.Host.FlatAppearance.BorderSize = 0;
             this.Host.Image = ((System.Drawing.Image)(resources.GetObject("Host.Image")));
             this.Host.Location = new System.Drawing.Point(550, 422);
             this.Host.Name = "Host";
             this.Host.Size = new System.Drawing.Size(159, 61);
             this.Host.TabIndex = 39;
+            this.Host.TabStop = false;
             this.Host.UseVisualStyleBackColor = true;
             this.Host.Visible = false;
             this.Host.Click += new System.EventHandler(this.Host_Click);
+
             // 
             // JoinGame
             // 
+            this.JoinGame.FlatAppearance.BorderSize = 0;
             this.JoinGame.Image = ((System.Drawing.Image)(resources.GetObject("JoinGame.Image")));
             this.JoinGame.Location = new System.Drawing.Point(748, 585);
             this.JoinGame.Name = "JoinGame";
             this.JoinGame.Size = new System.Drawing.Size(118, 44);
             this.JoinGame.TabIndex = 40;
+            this.JoinGame.TabStop = false;
             this.JoinGame.UseVisualStyleBackColor = true;
             this.JoinGame.Visible = false;
             this.JoinGame.Click += new System.EventHandler(this.JoinGame_Click);
@@ -479,22 +486,26 @@ namespace FirstSemesterExamProject
             // 
             // StartOnlineGame
             // 
+            this.StartOnlineGame.FlatAppearance.BorderSize = 0;
             this.StartOnlineGame.Image = ((System.Drawing.Image)(resources.GetObject("StartOnlineGame.Image")));
             this.StartOnlineGame.Location = new System.Drawing.Point(1070, 560);
             this.StartOnlineGame.Name = "StartOnlineGame";
             this.StartOnlineGame.Size = new System.Drawing.Size(167, 57);
             this.StartOnlineGame.TabIndex = 45;
+            this.StartOnlineGame.TabStop = false;
             this.StartOnlineGame.UseVisualStyleBackColor = true;
             this.StartOnlineGame.Visible = false;
             this.StartOnlineGame.Click += new System.EventHandler(this.StartOnlineGame_Click);
             // 
             // ReadyCheck
             // 
+            this.ReadyCheck.FlatAppearance.BorderSize = 0;
             this.ReadyCheck.Image = ((System.Drawing.Image)(resources.GetObject("ReadyCheck.Image")));
             this.ReadyCheck.Location = new System.Drawing.Point(1070, 491);
             this.ReadyCheck.Name = "ReadyCheck";
             this.ReadyCheck.Size = new System.Drawing.Size(167, 57);
             this.ReadyCheck.TabIndex = 46;
+            this.ReadyCheck.TabStop = false;
             this.ReadyCheck.UseVisualStyleBackColor = true;
             this.ReadyCheck.Visible = false;
             this.ReadyCheck.Click += new System.EventHandler(this.ReadyCheck_Click);
