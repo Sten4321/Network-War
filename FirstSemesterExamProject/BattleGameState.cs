@@ -264,7 +264,7 @@ namespace FirstSemesterExamProject
             {
                 //Index of the next player
                 int thisPlayerNum = Client.Instance.PlayerNumber;
-                                
+
 
                 DataConverter.ChangePlayerTurnText(thisPlayerNum);
 
@@ -485,15 +485,18 @@ namespace FirstSemesterExamProject
                     }
                 }
                 //Tells highscoreConnection which team composition won
-                try
+                if (Server.Instance.isOnline)
                 {
-                    Server.Instance.WriteWinnerTeamCompositionToDatabase(winnerTeam);
+                    try
+                    {
+                        Server.Instance.WriteWinnerTeamCompositionToDatabase(winnerTeam);
 
-                }
-                catch (Exception e)
-                {
+                    }
+                    catch (Exception e)
+                    {
 
-                    Console.WriteLine(e.ToString());
+                        Console.WriteLine(e.ToString());
+                    }
                 }
             }
             //draws the victory image depending on the team that won.
