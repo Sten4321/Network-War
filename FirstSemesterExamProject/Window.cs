@@ -102,7 +102,6 @@ namespace FirstSemesterExamProject
             InitializeComponent();
             // SoundEngine.PlayMenuBackgroundMusic();
             this.DoubleBuffered = true;
-            HighscoreConnection._Instance.SetAllEventData("Tester 20");
             ShowHighscore();
         }
 

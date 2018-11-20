@@ -11,21 +11,17 @@ namespace HighScore.Controllers
 {
     public class HighscoreController : ApiController
     {
-        int number;
         List<string> highScore;
-        int addScoreToString;
 
         // GET: api/Highscore
         public IEnumerable<string> Get()
         {
-            addScoreToString = 0;
             Database._Instance.ReadHighScoreList("Select * from HighScore order by score desc");
             highScore = new List<string>();
             highScore.Add("<HighScore list of most winning hero combo>!,");
-            foreach (string s in Database._Instance.User)
+            foreach (KeyValuePair<string,int> s in Database._Instance.DatabaseData)
             {
-                string t = "Wins:  "+Database._Instance.Score.ElementAt(addScoreToString)+"... With Combo......<"+s+">";
-                addScoreToString++;
+                string t = "Wins:  "+s.Value+"... With Combo......<"+s.Key+">";
                 highScore.Add(t);
             }
             return highScore;
@@ -43,28 +39,20 @@ namespace HighScore.Controllers
         {
             Database._Instance.CreateDatabase();
             Database._Instance.ReadHighScoreList("Select * from HighScore");
-            bool breaker = false;
-            foreach (int i in Database._Instance.Score)
+            bool create = true;
+            foreach (KeyValuePair<string,int> i in Database._Instance.DatabaseData)
             {
-                number = i;
-                number++;
-                foreach (string s in Database._Instance.User)
+
+                if (value == i.Key)
                 {
-                    if (s == value)
-                    {
-                        breaker = true;
-                        Database._Instance.UpdateTable("UPDATE Highscore SET score = "+number+" WHERE user = '"+s+"';");
-                        break;
-                    }
-                    
-                }
-                
-                if (breaker)
-                {
+                    create = false;
+                    int score = i.Value;
+                    score++;
+                    Database._Instance.UpdateTable("UPDATE Highscore SET score = "+score+" WHERE user = '"+i.Key+"';");
                     break;
                 }
             }
-            if (breaker == false)
+            if (create == true)
             {
                 Database._Instance.AddHighScore(value, 1);
             }
