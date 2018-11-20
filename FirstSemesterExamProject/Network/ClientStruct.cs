@@ -25,7 +25,7 @@ namespace FirstSemesterExamProject
 
         public bool clientsTurn;
 
-        public string unitTeamComposition;
+        public string unitTeamComposition = string.Empty;
 
         public ClientObject(TcpClient _client)
         {
