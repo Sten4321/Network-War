@@ -350,7 +350,20 @@ namespace FirstSemesterExamProject
 
                                 DataConverter.ChangePlayerTurnText(nextPlayerInt);
 
+                                if (Server.Instance.isOnline && nextPlayerInt == 0)
+                                {
+                                    if (BattleGameState.isAlive)
+                                    {
+                                        if (Window.GameState is BattleGameState bs)
+                                        {
+                                            bs.ResetUnitMoves();
+                                        }
 
+                                        Server.Instance.turn = true;
+                                        System.Diagnostics.Debug.WriteLine("It's your turn!");
+                                    }
+
+                                }
                             }
                             //removes all his units                          
 
@@ -594,7 +607,7 @@ namespace FirstSemesterExamProject
                     break;
                 }
             }
-            if (readyCount == clientObjects.Count && /*host*/ isReady)
+            if (readyCount == clientObjects.Count && /*host*/ isReady && readyCount > 1)
             {
                 System.Diagnostics.Debug.WriteLine("All players are ready!");
 
@@ -754,6 +767,7 @@ namespace FirstSemesterExamProject
                     if (team == client.Team)
                     {
                         message = client.unitTeamComposition;
+                        break;
                     }
                 }
 
