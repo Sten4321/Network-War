@@ -74,7 +74,7 @@ namespace FirstSemesterExamProject
             foreach (ClientObject client in clientObjects)
             {
                 //if it's the sender of the unitStack message
-                if (client == data.clientStruct)
+                if (client == data.clientReference)
                 {
                     string teamComposition = "";
 
@@ -127,14 +127,11 @@ namespace FirstSemesterExamProject
             {
                 tcpListener = new TcpListener(IPAddress.Any, port);
                 tcpListener.Start();
-                //
             }
-
 
             isOnline = true;
 
             StartServerThreads();
-
 
             //Prints Status and info to debug output
             System.Diagnostics.Debug.WriteLine("Server online status: " + isOnline);
@@ -231,7 +228,7 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void FindNewClients()
         {
-            while (LessThanMaxClients() && isOnline)
+            while (LessThanMaxClients() && isOnline && Window.GameState is UnitChoiceGameState)
             {
                 SearchAndAddClient();
 
@@ -246,23 +243,23 @@ namespace FirstSemesterExamProject
         {
             // wait for client connection
             TcpClient newClient = tcpListener.AcceptTcpClient();
-            // client found.
 
-            ClientObject _clientStruct = new ClientObject(newClient);
+            // client found.
+            ClientObject _clientObject = new ClientObject(newClient);
 
             //add to collection
-            _clientStruct.Team = (PlayerTeam)clientObjects.Count + 1;
-            clientObjects.Add(_clientStruct);
+            _clientObject.Team = (PlayerTeam)clientObjects.Count + 1;
+            clientObjects.Add(_clientObject);
 
             //Tells the client what team it's assigned to
-            AssignNewClientToTeam(_clientStruct);
+            AssignNewClientToTeam(_clientObject);
 
             // If there are already existing teams, tell the new client
-            SendExistingTeamsToLateClient(_clientStruct);
+            SendExistingTeamsToLateClient(_clientObject);
 
             // create a thread to handle communication
             Thread clientThread = new Thread(new ParameterizedThreadStart(ClientUpdate));
-            clientThread.Start(_clientStruct);
+            clientThread.Start(_clientObject);
         }
 
         /// <summary>
@@ -345,12 +342,26 @@ namespace FirstSemesterExamProject
                             if (_clientObject.clientsTurn)
                             {
                                 int nextPlayerInt = NextAvailablePlayerNum(clientNum);
+
                                 //change turn 
                                 WriteServerMessage("EndTurn;" + nextPlayerInt);
 
                                 DataConverter.ChangePlayerTurnText(nextPlayerInt);
 
+                                if (Server.Instance.isOnline && nextPlayerInt == 0)
+                                {
+                                    if (BattleGameState.isAlive)
+                                    {
+                                        if (Window.GameState is BattleGameState bs)
+                                        {
+                                            bs.ResetUnitMoves();
+                                        }
 
+                                        Server.Instance.turn = true;
+                                        System.Diagnostics.Debug.WriteLine("It's your turn!");
+                                    }
+
+                                }
                             }
                             //removes all his units                          
 
@@ -407,8 +418,8 @@ namespace FirstSemesterExamProject
                     }
                 }
             }
-
             CheckIfGameOver();
+
             WriteServerMessage("RemoveAll;" + team.ToString());
         }
 
@@ -423,17 +434,15 @@ namespace FirstSemesterExamProject
 
             lock (receivedDataKey)
             {
+                //If the data is not something only the server should know                
                 if (MessageDirectlyToServer(data) == false)
                 {
+                    //The data is ready to be distributed to all other clients
                     receivedDataQueue.Enqueue(data);
+
+                    //Applies data to own game 
+                    DataConverter.ApplyDataToself(data.information);
                 }
-            }
-
-            //Applies data to own game - if it's not a message to the server (Ready, EndTurn ect)
-
-            if (MessageDirectlyToServer(data) == false)
-            {
-                DataConverter.ApplyDataToself(data.information);
             }
 
         }
@@ -452,17 +461,12 @@ namespace FirstSemesterExamProject
             }
             if (data.information.Contains("UnitStack;"))
             {
-                if (Server.Instance.isOnline)
-                {
-                    Server.Instance.AddUnitStringToClient(data);
-                }
+                AddUnitStringToClient(data);
             }
             if (data.information.Contains("EndTurn;"))
             {
-
                 ManageTurnChange(data);
                 return true;
-
             }
 
             return false;
@@ -481,7 +485,7 @@ namespace FirstSemesterExamProject
             //Finds the sender of the message
             foreach (ClientObject client in clientObjects)
             {
-                if (data.clientStruct == client)
+                if (data.clientReference == client)
                 {
                     //he won't be walking for a long time >:~)
                     client.isAlive = false;
@@ -568,7 +572,7 @@ namespace FirstSemesterExamProject
 
             foreach (ClientObject _client in clientObjects)
             {
-                if (_client.tcpClient == data.clientStruct.tcpClient)
+                if (_client.tcpClient == data.clientReference.tcpClient)
                 {
                     _client.SetReady();
                     System.Diagnostics.Debug.WriteLine(_client.Team + " is ready!");
@@ -582,6 +586,10 @@ namespace FirstSemesterExamProject
         {
             int readyCount = 0;
 
+            if (isReady)
+            {
+                readyCount++;
+            }
             //Check if all clients are ready
             foreach (ClientObject client in clientObjects)
             {
@@ -594,7 +602,7 @@ namespace FirstSemesterExamProject
                     break;
                 }
             }
-            if (readyCount == clientObjects.Count && /*host*/ isReady)
+            if (readyCount == clientObjects.Count + 1 && readyCount > 1)
             {
                 System.Diagnostics.Debug.WriteLine("All players are ready!");
 
@@ -645,7 +653,7 @@ namespace FirstSemesterExamProject
             {
                 for (int i = 0; i < clientObjects.Count; i++)
                 {
-                    if (clientObjects[i].tcpClient != _data.clientStruct.tcpClient) //if the client is not the sender of the data
+                    if (clientObjects[i].tcpClient != _data.clientReference.tcpClient) //if the client is not the sender of the data
                     {
                         if (clientObjects[i].tcpClient != null)
                         {
@@ -664,7 +672,8 @@ namespace FirstSemesterExamProject
                     }
 
                 }
-                System.Diagnostics.Debug.WriteLine("Forwarded Client Message From " + _data.clientStruct.Team.ToString() + ": " + _data.information);
+                System.Diagnostics.Debug.WriteLine("Forwarded Client Message From " +
+                    _data.clientReference.Team.ToString() + ": " + _data.information);
             }
 
         }
@@ -754,6 +763,7 @@ namespace FirstSemesterExamProject
                     if (team == client.Team)
                     {
                         message = client.unitTeamComposition;
+                        break;
                     }
                 }
 
@@ -765,8 +775,6 @@ namespace FirstSemesterExamProject
 
         public void ManageTurnChange(Data data)
         {
-
-
             int playerTurn = Convert.ToInt32(data.information.Split(';')[1]);
 
             clientObjects[playerTurn - 1].clientsTurn = false;
@@ -832,7 +840,6 @@ namespace FirstSemesterExamProject
                         return (int)PlayerTeam.RedTeam;
 
                     }
-
                 }
                 else
                 {
