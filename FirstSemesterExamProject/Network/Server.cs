@@ -331,7 +331,12 @@ namespace FirstSemesterExamProject
 
                     lock (clientsListKey)
                     {
-                        clientObjects.Remove(_clientObject);
+                        _clientObject.tcpClient = null;
+
+                        if (Window.GameState is UnitChoiceGameState)
+                        {
+                            clientObjects.Remove(_clientObject);
+                        }
 
                         if (Window.GameState is BattleGameState)
                         {
@@ -347,10 +352,12 @@ namespace FirstSemesterExamProject
 
 
                             }
-                            //removes all his units
-                            RemoveAllUnitsFromClient(_clientObject.Team);
+                            //removes all his units                          
 
                             _clientObject.isAlive = false;
+
+                            RemoveAllUnitsFromClient(_clientObject.Team);
+
                         }
                         else
                         {
@@ -640,16 +647,20 @@ namespace FirstSemesterExamProject
                 {
                     if (clientObjects[i].tcpClient != _data.clientStruct.tcpClient) //if the client is not the sender of the data
                     {
-                        //Writes to the specefic client
-                        StreamWriter sWriter = new StreamWriter(clientObjects[i].tcpClient.GetStream(), Encoding.ASCII);
+                        if (clientObjects[i].tcpClient != null)
+                        {
+
+                            //Writes to the specefic client
+                            StreamWriter sWriter = new StreamWriter(clientObjects[i].tcpClient.GetStream(), Encoding.ASCII);
 
 
-                        //sends data
-                        sWriter.WriteLine(_data.information);
+                            //sends data
+                            sWriter.WriteLine(_data.information);
 
-                        //Clears buffer
-                        sWriter.Flush();
+                            //Clears buffer
+                            sWriter.Flush();
 
+                        }
                     }
 
                 }
@@ -664,7 +675,7 @@ namespace FirstSemesterExamProject
             {
                 for (int i = 0; i < clientObjects.Count; i++)
                 {
-                    if (clientObjects[i].tcpClient.Connected)
+                    if (clientObjects[i].tcpClient != null && clientObjects[i].tcpClient.Connected)
                     {
 
                         //Writes to the specefic client
@@ -867,7 +878,7 @@ namespace FirstSemesterExamProject
                 //Clears buffer
                 sWriter.Flush();
             }
-            
+
 
             foreach (ClientObject _client in clientObjects)
             {
