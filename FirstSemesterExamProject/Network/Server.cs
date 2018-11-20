@@ -21,7 +21,7 @@ namespace FirstSemesterExamProject
         //Collections
         public List<ClientObject> clientObjects = new List<ClientObject>(); //Client Structs contain the clients TcpClient and Team (could add ip ect.)
         private Queue<Data> receivedDataQueue = new Queue<Data>(); // Datas contains messages and the clients who sent them 
-        public string teamComposition;
+        public string teamComposition = string.Empty;
 
         //Threading
         private readonly object clientsListKey = new object(); //Two keys for threads to make sure only one can get in at a time
@@ -257,6 +257,9 @@ namespace FirstSemesterExamProject
             //Tells the client what team it's assigned to
             AssignNewClientToTeam(_clientStruct);
 
+            // If there are already existing teams, tell the new client
+            SendExistingTeamsToLateClient(_clientStruct);
+
             // create a thread to handle communication
             Thread clientThread = new Thread(new ParameterizedThreadStart(ClientUpdate));
             clientThread.Start(_clientStruct);
@@ -300,16 +303,16 @@ namespace FirstSemesterExamProject
         public void ClientUpdate(object obj)
         {
             // retrieve client from parameter passed to thread
-            ClientObject _clientStruct = (ClientObject)obj;
+            ClientObject _clientObject = (ClientObject)obj;
 
             // sets two streams
-            StreamReader sReader = new StreamReader(_clientStruct.tcpClient.GetStream(), Encoding.ASCII);
+            StreamReader sReader = new StreamReader(_clientObject.tcpClient.GetStream(), Encoding.ASCII);
 
             bool isConnected = true;
             string sData = null;
 
-            IPEndPoint endPoint = (IPEndPoint)_clientStruct.tcpClient.Client.RemoteEndPoint;
-            IPEndPoint localPoint = (IPEndPoint)_clientStruct.tcpClient.Client.LocalEndPoint;
+            IPEndPoint endPoint = (IPEndPoint)_clientObject.tcpClient.Client.RemoteEndPoint;
+            IPEndPoint localPoint = (IPEndPoint)_clientObject.tcpClient.Client.LocalEndPoint;
 
             while (isConnected)
             {
@@ -324,15 +327,52 @@ namespace FirstSemesterExamProject
                     //if client disconnects
 
                     System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
+                    int clientNum = (int)_clientObject.Team;
+
                     lock (clientsListKey)
                     {
-                        clientObjects.Remove(_clientStruct);
+                        clientObjects.Remove(_clientObject);
 
-                        _clientStruct.isAlive = false;
+                        if (Window.GameState is BattleGameState)
+                        {
 
-                        RemoveAllUnitsFromClient(_clientStruct.Team);
+                            //If it's the disconnected client's turn
+                            if (_clientObject.clientsTurn)
+                            {
+                                int nextPlayerInt = NextAvailablePlayerNum(clientNum);
+                                //change turn 
+                                WriteServerMessage("EndTurn;" + nextPlayerInt);
 
-                        clientObjects.Remove(_clientStruct);
+                                DataConverter.ChangePlayerTurnText(nextPlayerInt);
+
+
+                            }
+                            //removes all his units
+                            RemoveAllUnitsFromClient(_clientObject.Team);
+
+                            _clientObject.isAlive = false;
+                        }
+                        else
+                        {
+                            WriteServerMessage("PlayerLeft;" + clientNum + "," + clientObjects.Count);
+
+                            foreach (ClientObject client in clientObjects)
+                            {
+                                if ((int)client.Team > clientNum)
+                                {//if client is on a higher team, than the one who quit, they all go one team down
+
+                                    //yellow -> green -> blue
+                                    //if green leaves, and there are 4 players, yellow becomes green
+                                    client.Team = (PlayerTeam)(int)client.Team - 1;
+                                }
+                            }
+
+                            DataConverter.UpdateLobbyList(clientObjects.Count);
+                            Window.lobbyChangeHasHappened = true;
+
+                        }
+
+
 
                     }
                     Thread.CurrentThread.Abort();
@@ -342,7 +382,7 @@ namespace FirstSemesterExamProject
                 if (sData != null)
                 {
                     //evaluate the Data and the client who sent it
-                    EvaluateData(sData, _clientStruct);
+                    EvaluateData(sData, _clientObject);
                 }
             }
         }
@@ -718,6 +758,8 @@ namespace FirstSemesterExamProject
 
             int playerTurn = Convert.ToInt32(data.information.Split(';')[1]);
 
+            clientObjects[playerTurn - 1].clientsTurn = false;
+
             playerTurn = NextAvailablePlayerNum(playerTurn);
 
 
@@ -791,10 +833,12 @@ namespace FirstSemesterExamProject
                         {
                             if (client.isAlive)
                             {
+                                client.clientsTurn = true;
                                 //it's this client
                                 return (int)client.Team;
                             }
                         }
+
                     }
                 }
 
@@ -809,6 +853,43 @@ namespace FirstSemesterExamProject
 
             }
 
+        }
+        private void SendExistingTeamsToLateClient(ClientObject client)
+        {
+            StreamWriter sWriter = new StreamWriter(client.tcpClient.GetStream(), Encoding.ASCII);
+
+            if (teamComposition != string.Empty)
+            {
+
+                //sends data
+                sWriter.WriteLine("UnitStack;" + PlayerTeam.RedTeam.ToString() + "," + teamComposition);
+
+                //Clears buffer
+                sWriter.Flush();
+            }
+            
+
+            foreach (ClientObject _client in clientObjects)
+            {
+                if (_client.unitTeamComposition != string.Empty)
+                {
+
+                    //sends data
+                    sWriter.WriteLine("UnitStack;" + _client.Team.ToString() + "," + _client.unitTeamComposition);
+
+                    //Clears buffer
+                    sWriter.Flush();
+                }
+
+                if (_client.ready)
+                {
+                    //sends data
+                    sWriter.WriteLine("Ready;" + _client.Team.ToString());
+
+                    //Clears buffer
+                    sWriter.Flush();
+                }
+            }
         }
     }
 }

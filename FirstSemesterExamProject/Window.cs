@@ -1387,7 +1387,7 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void RefreshLobbyList()
         {
-
+            #region RefreshRedLabel
             RedTeamLobbyLabel.Visible = true;
             RedTeamLobbyLabel.BringToFront();
 
@@ -1395,13 +1395,19 @@ namespace FirstSemesterExamProject
             {
                 RedTeamLobbyLabel.ForeColor = Color.White;
             }
+            else
+            {
+                RedTeamLobbyLabel.ForeColor = Color.Black;
+
+            }
 
             if (redTeamReady)
             {
                 RedCheckMark.Visible = true;
                 RedCheckMark.BringToFront();
             }
-
+            #endregion
+            #region RefreshBlueLabel
             if (blueTeamInLobby)
             {
                 BlueTeamLobbyLabel.Visible = true;
@@ -1410,6 +1416,11 @@ namespace FirstSemesterExamProject
                 if (IsMyTeam(PlayerTeam.BlueTeam))
                 {
                     BlueTeamLobbyLabel.ForeColor = Color.White;
+                }
+                else
+                {
+                    BlueTeamLobbyLabel.ForeColor = Color.Black;
+
                 }
 
                 if (blueTeamReady)
@@ -1420,6 +1431,13 @@ namespace FirstSemesterExamProject
                 }
 
             }
+            else
+            {
+                BlueTeamLobbyLabel.Visible = false;
+
+            }
+            #endregion
+            #region RefreshGreenLabel
             if (greenTeamInLobby)
             {
                 GreenTeamLobbyLabel.Visible = true;
@@ -1428,6 +1446,11 @@ namespace FirstSemesterExamProject
                 if (IsMyTeam(PlayerTeam.GreenTeam))
                 {
                     GreenTeamLobbyLabel.ForeColor = Color.White;
+                }
+                else
+                {
+                    GreenTeamLobbyLabel.ForeColor = Color.Black;
+
                 }
 
                 if (greenTeamReady)
@@ -1438,6 +1461,13 @@ namespace FirstSemesterExamProject
                 }
 
             }
+            else
+            {
+                GreenTeamLobbyLabel.Visible = false;
+
+            }
+            #endregion
+            #region RefreshYellowLabel
             if (yellowTeamInLobby)
             {
                 YellowTeamLobbyLabel.Visible = true;
@@ -1447,6 +1477,11 @@ namespace FirstSemesterExamProject
                 {
                     YellowTeamLobbyLabel.ForeColor = Color.White;
                 }
+                else
+                {
+                    YellowTeamLobbyLabel.ForeColor = Color.Black;
+
+                }
 
                 if (yelloTeamReady)
                 {
@@ -1455,8 +1490,12 @@ namespace FirstSemesterExamProject
 
                 }
             }
+            else
+            {
+                YellowTeamLobbyLabel.Visible = false;
 
-
+            }
+            #endregion
 
 
             //has to be written last for other to be on top??
