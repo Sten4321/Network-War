@@ -322,6 +322,10 @@ namespace FirstSemesterExamProject
             PointsLabel.Text = pointUsed + "/" + pointMax + " Points Used";
             #endregion
 
+            TextBoxImage.SendToBack();
+            UnitListBoxImage.SendToBack();
+            PointsLabelImage.SendToBack();
+
             //line for gameplay testing
             //gs = new BattleGameState(this, 2, dc);
 
@@ -498,12 +502,17 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = false;
             Online.Visible = false;
             EnterIP.Visible = false;
+            TextBoxImage.Visible = false;
             EndTurn.Visible = true;
             HighScoreBox.Hide();
+
+            UnitListBoxImage.Visible = false;
+            PointsLabelImage.Visible = false;
 
             StartOnlineGame.Visible = false;
             ReadyCheck.Visible = false;
             HostIPAdress.Visible = false;
+            TextBoxImage.Visible = false;
         }
         /// <summary>
         /// ends the players turn
@@ -642,8 +651,12 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = false;
             Online.Visible = false;
             EnterIP.Visible = false;
+            TextBoxImage.Visible = false;
             EndTurn.Visible = true;
             HighScoreBox.Hide();
+
+            UnitListBoxImage.Visible = false;
+            PointsLabelImage.Visible = false;
         }
 
         /// <summary>
@@ -726,13 +739,17 @@ namespace FirstSemesterExamProject
             Start.Visible = false;
             PointsLabel.Visible = false;
             Back.Visible = false;
-            PointsLabel.Visible = false;
+      
             Online.Visible = true;
             JoinGame.Visible = false;
             Host.Visible = false;
             EnterIP.Visible = false;
+            TextBoxImage.Visible = false;
             HostIPAdress.Visible = false;
             ReadyCheck.Visible = false;
+
+            UnitListBoxImage.Visible = false;
+            PointsLabelImage.Visible = false;
 
             Server.Instance.ShutDownServer();
 
@@ -776,6 +793,9 @@ namespace FirstSemesterExamProject
             redteam = new Stack<Enum>();
             blueteam = new Stack<Enum>();
             SoundEngine.PlaySound(Constant.menuButtonSound);
+
+            UnitListBoxImage.Visible = true;
+            PointsLabelImage.Visible = true;
         }
 
         /// <summary>
@@ -800,6 +820,9 @@ namespace FirstSemesterExamProject
             blueteam = new Stack<Enum>();
             greenteam = new Stack<Enum>();
             SoundEngine.PlaySound(Constant.menuButtonSound);
+
+            UnitListBoxImage.Visible = true;
+            PointsLabelImage.Visible = true;
         }
 
         /// <summary>
@@ -826,6 +849,9 @@ namespace FirstSemesterExamProject
             greenteam = new Stack<Enum>();
             yellowteam = new Stack<Enum>();
             SoundEngine.PlaySound(Constant.menuButtonSound);
+
+            UnitListBoxImage.Visible = true;
+            PointsLabelImage.Visible = true;
         }
         /// <summary>
         /// Add the string "Archer" into the selected teams stacks. The stack is choosen when you click the team
@@ -1300,6 +1326,8 @@ namespace FirstSemesterExamProject
             Label.Visible = false;
             Start.Visible = false;
             PointsLabel.Visible = false;
+            UnitListBoxImage.Visible = false;
+            PointsLabelImage.Visible = false;
             ListBox1.Visible = false;
             AddArcher.Visible = false;
             AddCleric.Visible = false;
@@ -1312,6 +1340,7 @@ namespace FirstSemesterExamProject
             Host.Visible = true;
             JoinGame.Visible = true;
             EnterIP.Visible = true;
+            TextBoxImage.Visible = true;
             Client.Instance.ValidIp = false;
             Online.Visible = false;
             StartOnlineGame.Visible = false;
@@ -1351,6 +1380,7 @@ namespace FirstSemesterExamProject
                 // Do things
                 JoinGame.Visible = false;
                 EnterIP.Visible = false;
+                TextBoxImage.Visible = true;
                 HostIPAdress.Visible = true;
                 Back.Visible = true;
                 PointsLabel.Visible = true;
@@ -1368,6 +1398,8 @@ namespace FirstSemesterExamProject
                 ReadyCheck.Visible = true;
                 HostIPAdress.Text = Server.Instance.serverIp;
                 Label.Visible = false;
+                UnitListBoxImage.Visible = true;
+                PointsLabelImage.Visible = true;
 
                 //portLabel.Text = Server.Instance.port;
                 /*
@@ -1531,6 +1563,7 @@ namespace FirstSemesterExamProject
                 clientThread = new Thread(Client.Instance.ConnectClient);
                 clientThread.Start();
                 clientThread.IsBackground = true;
+
                 //UpdateIpLabelText();
             }
         }
@@ -1599,11 +1632,15 @@ namespace FirstSemesterExamProject
             JoinGame.Visible = false;
             Online.Visible = false;
             EnterIP.Visible = false;
+            TextBoxImage.Visible = false;
             HighScoreBox.Hide();
 
             StartOnlineGame.Visible = false;
             ReadyCheck.Visible = false;
             HostIPAdress.Visible = false;
+
+            UnitListBoxImage.Visible = true;
+            PointsLabelImage.Visible = false;
 
 
         }

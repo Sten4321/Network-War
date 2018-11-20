@@ -73,11 +73,17 @@ namespace FirstSemesterExamProject
             this.BlueCheckMark = new System.Windows.Forms.PictureBox();
             this.GreenCheckMark = new System.Windows.Forms.PictureBox();
             this.YellowCheckMark = new System.Windows.Forms.PictureBox();
+            this.TextBoxImage = new System.Windows.Forms.PictureBox();
+            this.UnitListBoxImage = new System.Windows.Forms.PictureBox();
+            this.PointsLabelImage = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.LobbyPlayerListImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RedCheckMark)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BlueCheckMark)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GreenCheckMark)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.YellowCheckMark)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TextBoxImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.UnitListBoxImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PointsLabelImage)).BeginInit();
             this.SuspendLayout();
             // 
             // Tick
@@ -122,13 +128,18 @@ namespace FirstSemesterExamProject
             // 
             // ListBox1
             // 
+            this.ListBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.ListBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ListBox1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.ListBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListBox1.ForeColor = System.Drawing.Color.Maroon;
             this.ListBox1.FormattingEnabled = true;
-            this.ListBox1.Location = new System.Drawing.Point(550, 334);
+            this.ListBox1.ItemHeight = 24;
+            this.ListBox1.Location = new System.Drawing.Point(544, 300);
             this.ListBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ListBox1.Name = "ListBox1";
             this.ListBox1.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.ListBox1.Size = new System.Drawing.Size(159, 186);
+            this.ListBox1.Size = new System.Drawing.Size(149, 216);
             this.ListBox1.TabIndex = 16;
             this.ListBox1.Visible = false;
             this.ListBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
@@ -287,9 +298,11 @@ namespace FirstSemesterExamProject
             // PointsLabel
             // 
             this.PointsLabel.AutoSize = true;
+            this.PointsLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
             this.PointsLabel.Cursor = System.Windows.Forms.Cursors.Default;
             this.PointsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PointsLabel.Location = new System.Drawing.Point(554, 528);
+            this.PointsLabel.ForeColor = System.Drawing.Color.Maroon;
+            this.PointsLabel.Location = new System.Drawing.Point(540, 541);
             this.PointsLabel.Name = "PointsLabel";
             this.PointsLabel.Size = new System.Drawing.Size(31, 20);
             this.PointsLabel.TabIndex = 30;
@@ -428,8 +441,9 @@ namespace FirstSemesterExamProject
             // Online
             // 
             this.Online.FlatAppearance.BorderSize = 0;
+            this.Online.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Online.Image = ((System.Drawing.Image)(resources.GetObject("Online.Image")));
-            this.Online.Location = new System.Drawing.Point(570, 566);
+            this.Online.Location = new System.Drawing.Point(570, 579);
             this.Online.Name = "Online";
             this.Online.Size = new System.Drawing.Size(118, 44);
             this.Online.TabIndex = 38;
@@ -440,6 +454,7 @@ namespace FirstSemesterExamProject
             // Host
             // 
             this.Host.FlatAppearance.BorderSize = 0;
+            this.Host.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Host.Image = ((System.Drawing.Image)(resources.GetObject("Host.Image")));
             this.Host.Location = new System.Drawing.Point(550, 422);
             this.Host.Name = "Host";
@@ -449,11 +464,11 @@ namespace FirstSemesterExamProject
             this.Host.UseVisualStyleBackColor = true;
             this.Host.Visible = false;
             this.Host.Click += new System.EventHandler(this.Host_Click);
-
             // 
             // JoinGame
             // 
             this.JoinGame.FlatAppearance.BorderSize = 0;
+            this.JoinGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.JoinGame.Image = ((System.Drawing.Image)(resources.GetObject("JoinGame.Image")));
             this.JoinGame.Location = new System.Drawing.Point(748, 585);
             this.JoinGame.Name = "JoinGame";
@@ -466,9 +481,13 @@ namespace FirstSemesterExamProject
             // 
             // EnterIP
             // 
-            this.EnterIP.Location = new System.Drawing.Point(522, 598);
+            this.EnterIP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.EnterIP.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.EnterIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EnterIP.ForeColor = System.Drawing.Color.Maroon;
+            this.EnterIP.Location = new System.Drawing.Point(542, 591);
             this.EnterIP.Name = "EnterIP";
-            this.EnterIP.Size = new System.Drawing.Size(220, 19);
+            this.EnterIP.Size = new System.Drawing.Size(166, 24);
             this.EnterIP.TabIndex = 41;
             this.EnterIP.Visible = false;
             this.EnterIP.TextChanged += new System.EventHandler(this.EnterIP_TextChanged);
@@ -476,9 +495,12 @@ namespace FirstSemesterExamProject
             // HostIPAdress
             // 
             this.HostIPAdress.AutoSize = true;
-            this.HostIPAdress.Location = new System.Drawing.Point(605, 601);
+            this.HostIPAdress.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(122)))), ((int)(((byte)(87)))));
+            this.HostIPAdress.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HostIPAdress.ForeColor = System.Drawing.Color.Maroon;
+            this.HostIPAdress.Location = new System.Drawing.Point(540, 590);
             this.HostIPAdress.Name = "HostIPAdress";
-            this.HostIPAdress.Size = new System.Drawing.Size(37, 13);
+            this.HostIPAdress.Size = new System.Drawing.Size(72, 25);
             this.HostIPAdress.TabIndex = 42;
             this.HostIPAdress.Text = "00000";
             this.HostIPAdress.Visible = false;
@@ -487,6 +509,7 @@ namespace FirstSemesterExamProject
             // StartOnlineGame
             // 
             this.StartOnlineGame.FlatAppearance.BorderSize = 0;
+            this.StartOnlineGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.StartOnlineGame.Image = ((System.Drawing.Image)(resources.GetObject("StartOnlineGame.Image")));
             this.StartOnlineGame.Location = new System.Drawing.Point(1070, 560);
             this.StartOnlineGame.Name = "StartOnlineGame";
@@ -500,6 +523,7 @@ namespace FirstSemesterExamProject
             // ReadyCheck
             // 
             this.ReadyCheck.FlatAppearance.BorderSize = 0;
+            this.ReadyCheck.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ReadyCheck.Image = ((System.Drawing.Image)(resources.GetObject("ReadyCheck.Image")));
             this.ReadyCheck.Location = new System.Drawing.Point(1070, 491);
             this.ReadyCheck.Name = "ReadyCheck";
@@ -632,11 +656,47 @@ namespace FirstSemesterExamProject
             this.YellowCheckMark.TabStop = false;
             this.YellowCheckMark.Visible = false;
             // 
+            // TextBoxImage
+            // 
+            this.TextBoxImage.Image = global::FirstSemesterExamProject.Properties.Resources.TextBox;
+            this.TextBoxImage.Location = new System.Drawing.Point(534, 579);
+            this.TextBoxImage.Name = "TextBoxImage";
+            this.TextBoxImage.Size = new System.Drawing.Size(186, 48);
+            this.TextBoxImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.TextBoxImage.TabIndex = 57;
+            this.TextBoxImage.TabStop = false;
+            this.TextBoxImage.Visible = false;
+            // 
+            // UnitListBoxImage
+            // 
+            this.UnitListBoxImage.Image = global::FirstSemesterExamProject.Properties.Resources.unitsstackListboxImage;
+            this.UnitListBoxImage.Location = new System.Drawing.Point(534, 291);
+            this.UnitListBoxImage.Name = "UnitListBoxImage";
+            this.UnitListBoxImage.Size = new System.Drawing.Size(186, 234);
+            this.UnitListBoxImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.UnitListBoxImage.TabIndex = 58;
+            this.UnitListBoxImage.TabStop = false;
+            this.UnitListBoxImage.Visible = false;
+            // 
+            // PointsLabelImage
+            // 
+            this.PointsLabelImage.Image = global::FirstSemesterExamProject.Properties.Resources.TextBox;
+            this.PointsLabelImage.Location = new System.Drawing.Point(534, 531);
+            this.PointsLabelImage.Name = "PointsLabelImage";
+            this.PointsLabelImage.Size = new System.Drawing.Size(186, 42);
+            this.PointsLabelImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.PointsLabelImage.TabIndex = 59;
+            this.PointsLabelImage.TabStop = false;
+            this.PointsLabelImage.Visible = false;
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1265, 639);
+            this.Controls.Add(this.PointsLabelImage);
+            this.Controls.Add(this.UnitListBoxImage);
+            this.Controls.Add(this.TextBoxImage);
             this.Controls.Add(this.YellowCheckMark);
             this.Controls.Add(this.GreenCheckMark);
             this.Controls.Add(this.BlueCheckMark);
@@ -690,6 +750,9 @@ namespace FirstSemesterExamProject
             ((System.ComponentModel.ISupportInitialize)(this.BlueCheckMark)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GreenCheckMark)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.YellowCheckMark)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TextBoxImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.UnitListBoxImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PointsLabelImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -739,5 +802,8 @@ namespace FirstSemesterExamProject
         private System.Windows.Forms.PictureBox BlueCheckMark;
         private System.Windows.Forms.PictureBox GreenCheckMark;
         private System.Windows.Forms.PictureBox YellowCheckMark;
+        private System.Windows.Forms.PictureBox TextBoxImage;
+        private System.Windows.Forms.PictureBox UnitListBoxImage;
+        private System.Windows.Forms.PictureBox PointsLabelImage;
     }
 }
