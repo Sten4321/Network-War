@@ -228,7 +228,7 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void FindNewClients()
         {
-            while (LessThanMaxClients() && isOnline)
+            while (LessThanMaxClients() && isOnline && Window.GameState is UnitChoiceGameState)
             {
                 SearchAndAddClient();
 
@@ -342,6 +342,7 @@ namespace FirstSemesterExamProject
                             if (_clientObject.clientsTurn)
                             {
                                 int nextPlayerInt = NextAvailablePlayerNum(clientNum);
+
                                 //change turn 
                                 WriteServerMessage("EndTurn;" + nextPlayerInt);
 
@@ -417,8 +418,8 @@ namespace FirstSemesterExamProject
                     }
                 }
             }
-
             CheckIfGameOver();
+
             WriteServerMessage("RemoveAll;" + team.ToString());
         }
 
@@ -442,7 +443,7 @@ namespace FirstSemesterExamProject
                     //Applies data to own game 
                     DataConverter.ApplyDataToself(data.information);
                 }
-            }           
+            }
 
         }
         private bool MessageDirectlyToServer(Data data)
@@ -460,17 +461,12 @@ namespace FirstSemesterExamProject
             }
             if (data.information.Contains("UnitStack;"))
             {
-                if (Server.Instance.isOnline)
-                {
-                    Server.Instance.AddUnitStringToClient(data);
-                }
+                AddUnitStringToClient(data);
             }
             if (data.information.Contains("EndTurn;"))
             {
-
                 ManageTurnChange(data);
                 return true;
-
             }
 
             return false;
@@ -590,6 +586,10 @@ namespace FirstSemesterExamProject
         {
             int readyCount = 0;
 
+            if (isReady)
+            {
+                readyCount++;
+            }
             //Check if all clients are ready
             foreach (ClientObject client in clientObjects)
             {
@@ -602,7 +602,7 @@ namespace FirstSemesterExamProject
                     break;
                 }
             }
-            if (readyCount == clientObjects.Count && /*host*/ isReady && readyCount > 1)
+            if (readyCount == clientObjects.Count + 1 && readyCount > 1)
             {
                 System.Diagnostics.Debug.WriteLine("All players are ready!");
 
@@ -775,8 +775,6 @@ namespace FirstSemesterExamProject
 
         public void ManageTurnChange(Data data)
         {
-
-
             int playerTurn = Convert.ToInt32(data.information.Split(';')[1]);
 
             clientObjects[playerTurn - 1].clientsTurn = false;
@@ -842,7 +840,6 @@ namespace FirstSemesterExamProject
                         return (int)PlayerTeam.RedTeam;
 
                     }
-
                 }
                 else
                 {
