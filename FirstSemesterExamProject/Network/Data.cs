@@ -12,7 +12,7 @@ namespace FirstSemesterExamProject
     /// </summary>
     public struct Data
     {
-        public ClientObject clientStruct;
+        public ClientObject clientReference;
         
         public string information;
 
@@ -23,7 +23,7 @@ namespace FirstSemesterExamProject
         /// <param name="_sender">the client who sent the infornation</param>
         public Data (string _data, ClientObject _sender)
         {
-            clientStruct = _sender;
+            clientReference = _sender;
             information = _data;
         }
        
