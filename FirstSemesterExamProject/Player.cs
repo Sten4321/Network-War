@@ -487,7 +487,7 @@ namespace FirstSemesterExamProject
                             {
                                 if ((unit.Team == selectedUnit.Team) && ((selectedUnitX != x) || (selectedUnitY != y)) && unit.Health < unit.MaxHealth)
                                 {
-                                    if ((unit.Team == selectedUnit.Team && ((selectedUnitX < x - 1) || (selectedUnitX > y + 1) || (selectedUnitY < y - 1) || (selectedUnitY > y + 1))))
+                                    if ((unit.Team == selectedUnit.Team && ((selectedUnitX < x - 1) || (selectedUnitX > x + 1) || (selectedUnitY < y - 1) || (selectedUnitY > y + 1))))
                                     {
                                         AttackMove(unit, x, y);
                                         System.Diagnostics.Debug.WriteLine(selectedUnit.ToString() + " MOVED AND HEALED > " + unit.ToString());
