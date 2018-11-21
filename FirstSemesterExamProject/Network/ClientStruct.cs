@@ -13,18 +13,22 @@ namespace FirstSemesterExamProject
     /// </summary>
     public class ClientObject
     {
-        public TcpClient tcpClient; // client to write to
+        // client to write to
+        public TcpClient tcpClient; 
 
         //is client ready to start a game?
         public bool ready;
 
+        //Should not get turn if not alive
         public bool isAlive = true;
 
         //What team are they on?
         public PlayerTeam? Team { get; set; } //Nullable enum (if it's not assigned, returns null)
 
+        //Is it the clients turn?
         public bool clientsTurn;
 
+        //Team Composition for Rest server
         public string unitTeamComposition = string.Empty;
 
         public ClientObject(TcpClient _client)

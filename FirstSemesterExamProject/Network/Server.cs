@@ -15,7 +15,6 @@ namespace FirstSemesterExamProject
         public string serverIp;
         public int port = 13001;
         public bool isOnline = false;
-        private readonly byte clientsMaxAmount = 3;
         private static TcpListener tcpListener;
 
         //Collections
@@ -32,6 +31,8 @@ namespace FirstSemesterExamProject
 
         //Singleton Instance 
         private static Server instance;
+        private readonly byte clientsMaxAmount = 3; //the game supports host + 3 clients
+
 
         //Host info
         public PlayerTeam serverTeam = PlayerTeam.RedTeam;
@@ -74,7 +75,7 @@ namespace FirstSemesterExamProject
             foreach (ClientObject client in clientObjects)
             {
                 //if it's the sender of the unitStack message
-                if (client == data.clientStruct)
+                if (client == data.clientReference)
                 {
                     string teamComposition = "";
 
@@ -127,14 +128,11 @@ namespace FirstSemesterExamProject
             {
                 tcpListener = new TcpListener(IPAddress.Any, port);
                 tcpListener.Start();
-                //
             }
-
 
             isOnline = true;
 
             StartServerThreads();
-
 
             //Prints Status and info to debug output
             System.Diagnostics.Debug.WriteLine("Server online status: " + isOnline);
@@ -143,7 +141,7 @@ namespace FirstSemesterExamProject
 
         private void StartServerThreads()
         {
-            //a thread to handle server logic
+            //a thread to handle server logic -> distributes received data to other clients
             Thread serverUpdateThread = new Thread(ServerUpdate)
             {
                 IsBackground = true
@@ -176,7 +174,6 @@ namespace FirstSemesterExamProject
 
                     foreach (UnicastIPAddressInformation ip in networkInterface.GetIPProperties().UnicastAddresses)
                     {
-
                         if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
                         {
                             output = ip.Address.ToString();
@@ -231,7 +228,7 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void FindNewClients()
         {
-            while (LessThanMaxClients() && isOnline)
+            while (LessThanMaxClients() && isOnline && Window.GameState is UnitChoiceGameState)
             {
                 SearchAndAddClient();
 
@@ -246,23 +243,23 @@ namespace FirstSemesterExamProject
         {
             // wait for client connection
             TcpClient newClient = tcpListener.AcceptTcpClient();
-            // client found.
 
-            ClientObject _clientStruct = new ClientObject(newClient);
+            // client found.
+            ClientObject _clientObject = new ClientObject(newClient);
 
             //add to collection
-            _clientStruct.Team = (PlayerTeam)clientObjects.Count + 1;
-            clientObjects.Add(_clientStruct);
+            _clientObject.Team = (PlayerTeam)clientObjects.Count + 1;
+            clientObjects.Add(_clientObject);
 
             //Tells the client what team it's assigned to
-            AssignNewClientToTeam(_clientStruct);
+            AssignNewClientToTeam(_clientObject);
 
             // If there are already existing teams, tell the new client
-            SendExistingTeamsToLateClient(_clientStruct);
+            SendExistingTeamsToLateClient(_clientObject);
 
             // create a thread to handle communication
             Thread clientThread = new Thread(new ParameterizedThreadStart(ClientUpdate));
-            clientThread.Start(_clientStruct);
+            clientThread.Start(_clientObject);
         }
 
         /// <summary>
@@ -326,62 +323,10 @@ namespace FirstSemesterExamProject
                 {
                     //if client disconnects
 
-                    System.Diagnostics.Debug.WriteLine(endPoint.Port.ToString() + " " + localPoint.Port.ToString() + " lukkede forbindelsen");
-                    int clientNum = (int)_clientObject.Team;
 
-                    lock (clientsListKey)
-                    {
-                        _clientObject.tcpClient = null;
-
-                        if (Window.GameState is UnitChoiceGameState)
-                        {
-                            clientObjects.Remove(_clientObject);
-                        }
-
-                        if (Window.GameState is BattleGameState)
-                        {
-
-                            //If it's the disconnected client's turn
-                            if (_clientObject.clientsTurn)
-                            {
-                                int nextPlayerInt = NextAvailablePlayerNum(clientNum);
-                                //change turn 
-                                WriteServerMessage("EndTurn;" + nextPlayerInt);
-
-                                DataConverter.ChangePlayerTurnText(nextPlayerInt);
+                    RemoveClient(_clientObject);
 
 
-                            }
-                            //removes all his units                          
-
-                            _clientObject.isAlive = false;
-
-                            RemoveAllUnitsFromClient(_clientObject.Team);
-
-                        }
-                        else
-                        {
-                            WriteServerMessage("PlayerLeft;" + clientNum + "," + clientObjects.Count);
-
-                            foreach (ClientObject client in clientObjects)
-                            {
-                                if ((int)client.Team > clientNum)
-                                {//if client is on a higher team, than the one who quit, they all go one team down
-
-                                    //yellow -> green -> blue
-                                    //if green leaves, and there are 4 players, yellow becomes green
-                                    client.Team = (PlayerTeam)(int)client.Team - 1;
-                                }
-                            }
-
-                            DataConverter.UpdateLobbyList(clientObjects.Count);
-                            Window.lobbyChangeHasHappened = true;
-
-                        }
-
-
-
-                    }
                     Thread.CurrentThread.Abort();
                 }
 
@@ -394,21 +339,106 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary>
+        /// Takes the necessary actions needed for the game to continue, if a client disconnects or leaves.
+        /// </summary>
+        /// <param name="_clientObject"></param>
+        private void RemoveClient(ClientObject _clientObject)
+        {
+            //Identify the client
+            int clientNum = (int)_clientObject.Team;
+
+            lock (clientsListKey)
+            {
+                //So we don't attempt to send it information
+                _clientObject.tcpClient = null;
+
+                //If it's in the lobby (and not in the actual game)
+                if (!(Window.GameState is BattleGameState))
+                {
+                    clientObjects.Remove(_clientObject);
+                }
+
+                if (Window.GameState is BattleGameState)
+                {
+
+                    //If it's the disconnected client's turn
+                    if (_clientObject.clientsTurn)
+                    {
+                        int nextPlayerInt = NextAvailablePlayerNum(clientNum);
+
+                        //change turn 
+                        WriteServerMessage("EndTurn;" + nextPlayerInt);
+
+                        DataConverter.ChangePlayerTurnText(nextPlayerInt);
+
+                        if (Server.Instance.isOnline && nextPlayerInt == 0)
+                        {
+                            if (BattleGameState.isAlive)
+                            {
+                                if (Window.GameState is BattleGameState bs)
+                                {
+                                    bs.ResetUnitMoves();
+                                }
+
+                                Server.Instance.turn = true;
+                                System.Diagnostics.Debug.WriteLine("It's your turn!");
+                            }
+
+                        }
+                    }
+
+                    _clientObject.isAlive = false;
+
+                    //removes all his units                          
+                    RemoveAllUnitsFromClient(_clientObject.Team);
+
+                }
+                else
+                {
+                    //Makes all clients on higher team go one team down, so there won't be a gap
+                    WriteServerMessage("PlayerLeft;" + clientNum + "," + clientObjects.Count);
+
+                    foreach (ClientObject client in clientObjects)
+                    {
+                        if ((int)client.Team > clientNum)
+                        {//if client is on a higher team, than the one who quit, they all go one team down
+
+                            //yellow -> green -> blue
+                            //if green leaves, and there are 4 players, yellow becomes green
+                            client.Team = (PlayerTeam)(int)client.Team - 1;
+                        }
+                    }
+
+                    //update ui
+                    DataConverter.UpdateLobbyList(clientObjects.Count);
+                    Window.lobbyChangeHasHappened = true;
+
+                }
+            }
+        }
+
+        /// <summary>
+        /// removes all units from a team, and politely, yet firmly requests that the clients do the same
+        /// </summary>
+        /// <param name="team">The team to remove</param>
         private void RemoveAllUnitsFromClient(PlayerTeam? team)
         {
-
             for (int X = 0; X < GameBoard.UnitMap.GetLength(0); X++)
             {
                 for (int Y = 0; Y < GameBoard.UnitMap.GetLength(1); Y++)
                 {
                     if (GameBoard.UnitMap[X, Y] is Unit unit && unit.Team == team)
                     {
+                        //for every unit that is this team's unit, remove it
                         GameBoard.RemoveObject[X, Y] = unit;
                     }
                 }
             }
-
+            //was the client the last client left? then game over
             CheckIfGameOver();
+
+            //informs client of the removal of the player
             WriteServerMessage("RemoveAll;" + team.ToString());
         }
 
@@ -423,46 +453,45 @@ namespace FirstSemesterExamProject
 
             lock (receivedDataKey)
             {
+                //If the data is not something only the server should know                
                 if (MessageDirectlyToServer(data) == false)
                 {
+                    //The data is ready to be distributed to all other clients
                     receivedDataQueue.Enqueue(data);
+
+                    //Applies data to own game 
+                    DataConverter.ApplyDataToself(data.information);
                 }
             }
 
-            //Applies data to own game - if it's not a message to the server (Ready, EndTurn ect)
-
-            if (MessageDirectlyToServer(data) == false)
-            {
-                DataConverter.ApplyDataToself(data.information);
-            }
-
         }
+        /// <summary>
+        /// Determines whether or not the data is meant for the server only
+        /// For some information, server may manipulate it, so it follows the rules of the game
+        /// </summary>
+        /// <param name="data">the message</param>
+        /// <returns></returns>
         private bool MessageDirectlyToServer(Data data)
         {
 
             if (data.information.Contains("Ready;"))
             {
-                ReadyMessageHandler(data);
+                ReadyMessageHandler(data); //Checks if all players are ready
 
             }
             if (data.information.Contains("PlayerDead;"))
             {
-                DeathMessageHandler(data);
+                DeathMessageHandler(data); //Handles what happens if a player dies
                 return true;
             }
             if (data.information.Contains("UnitStack;"))
             {
-                if (Server.Instance.isOnline)
-                {
-                    Server.Instance.AddUnitStringToClient(data);
-                }
+                AddUnitStringToClient(data); //saves the client's initial team composition
             }
             if (data.information.Contains("EndTurn;"))
             {
-
-                ManageTurnChange(data);
+                ManageTurnChange(data); //finds the next available player and passes the turn
                 return true;
-
             }
 
             return false;
@@ -481,7 +510,7 @@ namespace FirstSemesterExamProject
             //Finds the sender of the message
             foreach (ClientObject client in clientObjects)
             {
-                if (data.clientStruct == client)
+                if (data.clientReference == client)
                 {
                     //he won't be walking for a long time >:~)
                     client.isAlive = false;
@@ -497,10 +526,13 @@ namespace FirstSemesterExamProject
 
             //How many is alive?
             byte playersAlive = 0;
+            
+            //is host alive?
             if (BattleGameState.isAlive)
             {
                 playersAlive++;
             }
+            //are any of the clients alive?
             foreach (ClientObject client in clientObjects)
             {
                 if (client.isAlive)
@@ -526,11 +558,12 @@ namespace FirstSemesterExamProject
                 {
                     if (client.isAlive)
                     {
-                        //this client one
+                        //this client won
                         winner = client.Team;
                     }
                 }
 
+                //Informs clients
                 AnnounceWinner(winner);
 
             }
@@ -562,18 +595,22 @@ namespace FirstSemesterExamProject
 
         private void ReadyMessageHandler(Data data)
         {
-            //This client is ready
+            //fx "Ready;BlueTeam" -> extracts "BlueTeam" from the message
             Enum.TryParse(data.information.Split(';')[1], out PlayerTeam _rdyTeam);
+
+            //This client is ready (updates UI)
             DataConverter.UpdateLobbyListSetTeamReady(_rdyTeam);
 
+            //find the sender of the message
             foreach (ClientObject _client in clientObjects)
             {
-                if (_client.tcpClient == data.clientStruct.tcpClient)
+                if (_client.tcpClient == data.clientReference.tcpClient)
                 {
-                    _client.SetReady();
+                    _client.SetReady(); //for keeping track
                     System.Diagnostics.Debug.WriteLine(_client.Team + " is ready!");
                 }
             }
+            //If all is ready, start button appears
             CheckIfCanStart();
 
         }
@@ -582,6 +619,10 @@ namespace FirstSemesterExamProject
         {
             int readyCount = 0;
 
+            if (isReady)//host
+            {
+                readyCount++;
+            }
             //Check if all clients are ready
             foreach (ClientObject client in clientObjects)
             {
@@ -591,10 +632,11 @@ namespace FirstSemesterExamProject
                 }
                 else
                 {
-                    break;
+                    break; //if someone is not ready, stop checking. 
                 }
             }
-            if (readyCount == clientObjects.Count && /*host*/ isReady)
+            //if everyone is ready, and there are more players than just host
+            if (readyCount == clientObjects.Count + 1 && readyCount > 1)
             {
                 System.Diagnostics.Debug.WriteLine("All players are ready!");
 
@@ -608,7 +650,7 @@ namespace FirstSemesterExamProject
         {
             if (AllIsReady())
             {
-                Window.allPlayersReady = true;
+                Window.allPlayersReady = true; //shows START button
 
             }
         }
@@ -619,7 +661,7 @@ namespace FirstSemesterExamProject
         /// <param name="mapNum"></param>
         public void SendMapInfo(int mapNum)
         {
-            WriteServerMessage("Map;" + mapNum + "," + (clientObjects.Count + 1)); //+1 for self
+            WriteServerMessage("Map;" + mapNum + "," + (clientObjects.Count + 1)); //+1 for host
 
         }
 
@@ -645,9 +687,9 @@ namespace FirstSemesterExamProject
             {
                 for (int i = 0; i < clientObjects.Count; i++)
                 {
-                    if (clientObjects[i].tcpClient != _data.clientStruct.tcpClient) //if the client is not the sender of the data
+                    if (clientObjects[i].tcpClient != _data.clientReference.tcpClient) //if the client is not the sender of the data
                     {
-                        if (clientObjects[i].tcpClient != null)
+                        if (clientObjects[i].tcpClient != null) // if the client reference has not disconnected
                         {
 
                             //Writes to the specefic client
@@ -664,11 +706,16 @@ namespace FirstSemesterExamProject
                     }
 
                 }
-                System.Diagnostics.Debug.WriteLine("Forwarded Client Message From " + _data.clientStruct.Team.ToString() + ": " + _data.information);
+                System.Diagnostics.Debug.WriteLine("Forwarded Client Message From " +
+                    _data.clientReference.Team.ToString() + ": " + _data.information);
             }
 
         }
 
+        /// <summary>
+        /// Writes a message to all clients 
+        /// </summary>
+        /// <param name="message"></param>
         public void WriteServerMessage(string message)
         {
             lock (clientsListKey)
@@ -737,10 +784,14 @@ namespace FirstSemesterExamProject
             teamComposition = tmp;
         }
 
+        /// <summary>
+        /// Tells the database which team won and what their team composition was
+        /// </summary>
+        /// <param name="team"></param>
         public void WriteWinnerTeamCompositionToDatabase(PlayerTeam team)
         {
 
-            string message = "Morten McFart was here! Test!";
+            string message = "Yeehaw partner, there seems to be one o' 'em problems down ye ol' (tell database team composition) method-a-ting"; //error message
 
             if (team == PlayerTeam.RedTeam)
             {
@@ -754,6 +805,7 @@ namespace FirstSemesterExamProject
                     if (team == client.Team)
                     {
                         message = client.unitTeamComposition;
+                        break;
                     }
                 }
 
@@ -765,47 +817,50 @@ namespace FirstSemesterExamProject
 
         public void ManageTurnChange(Data data)
         {
-
-
+            // number of the player who sent the endturn message (0 = red 1 = blue ect)
             int playerTurn = Convert.ToInt32(data.information.Split(';')[1]);
 
+            // that client no longer has the turn (client 0 is team 1 (therefor -1))
             clientObjects[playerTurn - 1].clientsTurn = false;
 
+            //Calculates the next available player based on the player ended the turn
             playerTurn = NextAvailablePlayerNum(playerTurn);
 
-
+            if (Window.GameState is BattleGameState bs) //if it's in the actual game
+            {
+                bs.ResetUnitMoves(); // just in case
+            }
+            //if it's the servers turn
             if (Server.Instance.isOnline && playerTurn == 0)
             {
-                if (BattleGameState.isAlive)
+                if (BattleGameState.isAlive) // if server isalive
                 {
-                    if (Window.GameState is BattleGameState bs)
-                    {
-                        bs.ResetUnitMoves();
-                    }
 
+
+                    //host can now move
                     Server.Instance.turn = true;
-                    System.Diagnostics.Debug.WriteLine("It's your turn!");
-                    Server.Instance.WriteServerMessage("EndTurn;" + 0);
-                    //    DataConverter.ChangePlayerTurnText(0);
-                }
-                else
-                {
-                    Server.Instance.WriteServerMessage("EndTurn;" + NextAvailablePlayerNum(0));
-                    DataConverter.ChangePlayerTurnText(playerTurn);
 
-                    return;
+                    System.Diagnostics.Debug.WriteLine("It's your turn!");
+
                 }
+
             }
+            //Tell all client whos turn it is
             Server.Instance.WriteServerMessage("EndTurn;" + playerTurn);
 
-
+            //resets move points
             Player.playerMove = Player.playerMaxMove;
 
-
+            //update UI
             DataConverter.ChangePlayerTurnText(playerTurn);
 
         }
 
+        /// <summary>
+        /// Calculates the next available player, based on the current player's index
+        /// </summary>
+        /// <param name="currentNum">Find next Relative to this player index</param>
+        /// <returns></returns>
         public int NextAvailablePlayerNum(int currentNum)
         {
 
@@ -829,10 +884,10 @@ namespace FirstSemesterExamProject
                     //is next team host?
                     if (BattleGameState.isAlive)
                     {
+                        //It's host's turn
                         return (int)PlayerTeam.RedTeam;
 
                     }
-
                 }
                 else
                 {
@@ -845,7 +900,8 @@ namespace FirstSemesterExamProject
                             if (client.isAlive)
                             {
                                 client.clientsTurn = true;
-                                //it's this client
+
+                                //it's this client's turn
                                 return (int)client.Team;
                             }
                         }
@@ -860,44 +916,54 @@ namespace FirstSemesterExamProject
                     //resets if the number exceeds 
                     nextPlayerNum = 0;
                 }
+
                 _nextTeam = (PlayerTeam)nextPlayerNum;
 
             }
 
         }
+
+        /// <summary>
+        /// Informs new clients what teams have been made, if they arrive late
+        /// </summary>
+        /// <param name="client"></param>
         private void SendExistingTeamsToLateClient(ClientObject client)
         {
+            //the new client
             StreamWriter sWriter = new StreamWriter(client.tcpClient.GetStream(), Encoding.ASCII);
 
             if (teamComposition != string.Empty)
             {
-
-                //sends data
+                //tell new client what team host picked
                 sWriter.WriteLine("UnitStack;" + PlayerTeam.RedTeam.ToString() + "," + teamComposition);
 
-                //Clears buffer
                 sWriter.Flush();
+
+                if (isReady)
+                {
+                    //tells new client host is ready
+                    sWriter.WriteLine("Ready;" + PlayerTeam.RedTeam.ToString());
+
+                    sWriter.Flush();
+                }
             }
 
 
+            //Same for each existing client
             foreach (ClientObject _client in clientObjects)
             {
                 if (_client.unitTeamComposition != string.Empty)
                 {
 
-                    //sends data
                     sWriter.WriteLine("UnitStack;" + _client.Team.ToString() + "," + _client.unitTeamComposition);
 
-                    //Clears buffer
                     sWriter.Flush();
                 }
 
                 if (_client.ready)
                 {
-                    //sends data
                     sWriter.WriteLine("Ready;" + _client.Team.ToString());
 
-                    //Clears buffer
                     sWriter.Flush();
                 }
             }

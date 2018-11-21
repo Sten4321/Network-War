@@ -27,13 +27,11 @@ namespace HighScore
             }
         }
 
-        public List<string> User { get => user; set => user = value; }
-        public List<int> Score { get => score; set => score = value; }
+        public Dictionary<string, int> DatabaseData { get => databaseData; set => databaseData = value; }
 
         SQLiteConnection sqlite2 = new SQLiteConnection("Data Source=C:\\Database\\Highscore.db");
-        private List<string> user;
-        private List<int> score;
 
+        Dictionary<string, int> databaseData;
 
         public void CreateDatabase()
         {
@@ -45,15 +43,14 @@ namespace HighScore
             CreateTables();
         }
 
-        public List<string> ReadHighScoreList(string select)
+        public Dictionary<string,int> ReadHighScoreList(string select)
         {
             //Read highscoreList from database
             sqlite2.Open();
             string sql = select;
             //"select * from users" +
             //"order by score desc"
-            user = new List<string>();
-            score = new List<int>();
+            DatabaseData = new Dictionary<string, int>();
 
             SQLiteCommand command = new SQLiteCommand(sql, sqlite2);
             SQLiteDataReader reader = command.ExecuteReader();
@@ -62,12 +59,11 @@ namespace HighScore
             {
                 string a = reader.GetString(1);
                 int b = reader.GetInt32(2);
-                score.Add(b);
-                User.Add(a);
+                DatabaseData.Add(a, b);
             }
 
             sqlite2.Close();
-            return User;
+            return DatabaseData;
         }
         
 
