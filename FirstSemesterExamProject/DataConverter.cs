@@ -23,8 +23,11 @@ namespace FirstSemesterExamProject
             {
                 string[] splitStrings = dataInformation.Split(';');
 
-                string command = string.Empty;// Move, Map, EndTurn ect.
-                string information = string.Empty;// x1,y1,x2,y2... yellow,archer,knight,mage ect
+                // "Move", "Map", "EndTurn" ect.
+                string command = string.Empty;
+
+                // "x1,y1,x2,y2"... "yellow,archer,knight,mage" ect
+                string information = string.Empty;
 
                 //fx "Move"
                 command = splitStrings[0];
@@ -240,8 +243,7 @@ namespace FirstSemesterExamProject
             //To
             int dx = Int32.Parse(sData[2]);
             int dy = Int32.Parse(sData[3]);
-
-            //Player.Select(int x, int y, int dx, int dy) get player from 
+         
             if (Window.GameState is BattleGameState)
             {
                 if (BattleGameState.Players.Count != 0)
