@@ -94,7 +94,7 @@ namespace FirstSemesterExamProject
 
             if (error != true)
             {
-                windowRef.UpdateIpLabelText(); //UpdateIpLabelText();
+                windowRef.UpdateIpLabelText(); 
                 ClientHandler();
             }
         }
@@ -120,12 +120,19 @@ namespace FirstSemesterExamProject
         private void ReaderThread()
         {
             string sData;
+
             clientConnected = true;
+
             while (clientConnected)
             {
                 if (Team != null) //Starts when it has been assigned to a team
                 {
+                    //Waits for server message.
                     sData = ReceiveFromHost();
+                    
+                    //message is found.
+
+                    //Apllies message to self
                     UseServerData(sData);
 
                     System.Diagnostics.Debug.WriteLine(sData);
