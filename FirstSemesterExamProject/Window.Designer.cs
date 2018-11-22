@@ -743,6 +743,7 @@ namespace FirstSemesterExamProject
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "fps:";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Window_FormClosing);
             this.Load += new System.EventHandler(this.Window_Load);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Window_MouseClick);
             ((System.ComponentModel.ISupportInitialize)(this.LobbyPlayerListImage)).EndInit();
