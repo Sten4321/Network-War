@@ -1832,6 +1832,23 @@ namespace FirstSemesterExamProject
             }
         }
 
+        /// <summary>
+        /// Before Closing the form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Client.Instance.clientConnected)
+            {
+                Client.Instance.clientConnected = false;
+            }
+            if (Server.Instance.isOnline)
+            {
+                Server.Instance.ShutDownServer();
+            }
+        }
+
         /// <summary> 
         /// Returns true if it's the player's turn 
         /// </summary> 
