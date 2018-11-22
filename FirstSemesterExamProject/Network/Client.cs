@@ -140,6 +140,7 @@ namespace FirstSemesterExamProject
                 }
                 Thread.Sleep(sleepDelay);
             }
+            client.Close();
         }
 
 

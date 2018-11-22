@@ -75,6 +75,10 @@ namespace FirstSemesterExamProject
             {
                 players.Add(new Player((PlayerTeam)Client.Instance.Team, Window.playerAmount));
             }
+            else if (Server.Instance.isOnline)
+            {
+                players.Add(new Player(Server.Instance.serverTeam, Server.Instance.clientObjects.Count + 1));
+            }
             else
             {
                 for (int i = 0; i < playerNumber; i++)
@@ -223,13 +227,8 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void OnlineChangeTurn()
         {
-
             ServerChangeTurn();
             ClientChangeTurn();
-
-
-
-
         }
 
         private void ServerChangeTurn()
@@ -248,8 +247,6 @@ namespace FirstSemesterExamProject
 
                 //Server cannot do any actions
                 Server.Instance.turn = false;
-
-
 
                 //resets the amount of moves a player have
                 players[0].PlayerMove = players[0].PlayerMaxMove;
