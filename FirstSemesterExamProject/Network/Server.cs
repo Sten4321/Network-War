@@ -203,7 +203,6 @@ namespace FirstSemesterExamProject
                 SendDataToOtherClients();
 
             }
-
         }
 
         /// <summary>
@@ -228,12 +227,15 @@ namespace FirstSemesterExamProject
         /// </summary>
         private void FindNewClients()
         {
-            while (LessThanMaxClients() && isOnline && Window.GameState is UnitChoiceGameState)
+            while (isOnline && Window.GameState is UnitChoiceGameState)
             {
-                SearchAndAddClient();
+                if (LessThanMaxClients())
+                {
+                    SearchAndAddClient();
+                    System.Diagnostics.Debug.WriteLine("Clients found: " + clientObjects.Count);
+                }
 
-                System.Diagnostics.Debug.WriteLine("Clients found: " + clientObjects.Count);
-
+                Thread.Sleep(17);
             }
         }
         /// <summary>
@@ -260,6 +262,7 @@ namespace FirstSemesterExamProject
             // create a thread to handle communication
             Thread clientThread = new Thread(new ParameterizedThreadStart(ClientUpdate));
             clientThread.Start(_clientObject);
+            clientThread.IsBackground = true;
         }
 
         /// <summary>
@@ -526,7 +529,7 @@ namespace FirstSemesterExamProject
 
             //How many is alive?
             byte playersAlive = 0;
-            
+
             //is host alive?
             if (BattleGameState.isAlive)
             {
@@ -750,6 +753,7 @@ namespace FirstSemesterExamProject
             {
                 thread.Abort();
             }
+            isOnline = false;
 
             instance = null;
 
