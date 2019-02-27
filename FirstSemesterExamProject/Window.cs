@@ -785,6 +785,7 @@ namespace FirstSemesterExamProject
             TwoPlayer.Visible = false;
             ThreePlayer.Visible = false;
             FourPlayer.Visible = false;
+            Online.Visible = false;
             Back.Visible = true;
             Label.Visible = false;
             Start.Visible = true;
@@ -811,6 +812,7 @@ namespace FirstSemesterExamProject
             TwoPlayer.Visible = false;
             ThreePlayer.Visible = false;
             FourPlayer.Visible = false;
+            Online.Visible = false;
             Back.Visible = true;
             Label.Visible = false;
             Start.Visible = true;
@@ -839,6 +841,7 @@ namespace FirstSemesterExamProject
             TwoPlayer.Visible = false;
             ThreePlayer.Visible = false;
             FourPlayer.Visible = false;
+            Online.Visible = false;
             Back.Visible = true;
             Label.Visible = false;
             Start.Visible = true;
